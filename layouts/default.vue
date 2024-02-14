@@ -1,6 +1,8 @@
 <template>
-  <div>
+<div class="min-h-dvh container mx-auto flex flex-col items-center">
+	<div class="flex-grow w-full flex items-center justify-center">
 		<slot></slot>
-		<small>This page is publicly accessible for all users!</small>
-  </div>
+	</div>
+	<Footer />
+</div>
 </template>
