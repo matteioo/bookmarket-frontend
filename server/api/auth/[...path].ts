@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 	};
 
 	if (event.method !== 'GET') {
-		fetchOptions.headers['Content-Type'] = 'application/json'; // Assuming JSON. Adjust if the API expects a different format.
+		fetchOptions.headers['Content-Type'] = 'application/json';
 		fetchOptions.body = JSON.stringify(await readBody(event));
 	}
 
