@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full max-w-80">
-		<h1 class="font-semibold text-xl text-center text-primary-100 p-4">Login für FV-Mitglieder</h1>
+		<h1 class="font-semibold text-xl text-center text-primary-900 dark:text-primary-100 p-4">Login für FV-Mitglieder</h1>
 		<UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
 			<UFormGroup label="Benutzername" name="username">
 				<UInput v-model="state.username" type="text" />
