@@ -5,5 +5,5 @@
     </NuxtLayout>
   </div>
 
-	<UNotifications />
+  <UNotifications />
 </template>
