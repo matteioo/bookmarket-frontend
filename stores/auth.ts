@@ -42,48 +42,39 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async login(username: string, password: string) {
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, password }),
-        });
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-        if (response.ok) {
-          const tokenResponse: TokenResponse = await response.json();
+      if (response.ok) {
+        const tokenResponse: TokenResponse = await response.json();
 
-          const authStore = useAuthStore();
-          authStore.token = tokenResponse.access;
-          authStore.refreshToken = tokenResponse.refresh;
+        const authStore = useAuthStore();
+        authStore.token = tokenResponse.access;
+        authStore.refreshToken = tokenResponse.refresh;
 
-          await authStore.fetchUser();
-        } else {
-          console.error('Login failed:', response.status);
-        }
-      } catch (error) {
-        console.error('Login failed:', error);
+        await authStore.fetchUser();
+      } else {
+        throw new Error('Login fehlgeschlagen. Bitte versuche es erneut.');
       }
     },
     async fetchUser() {
-      if (typeof window === 'undefined') return
-      try {
-        const response = await fetch('/api/auth/user', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-          },
-        });
+      let response = await fetch('/api/auth/user', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${this.token}`,
+        },
+      });
 
-        if (response.ok) {
-          const user: User = await response.json();
-          this.user = user;
-        } else {
-          console.error('Failed to fetch user:', response.status);
-        }
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
+      if (response.ok) {
+        const user: User = await response.json();
+        this.user = user;
+      } else {
+        throw new Error('User konnte nicht geladen werden.');
       }
     },
     async initializeStore() {

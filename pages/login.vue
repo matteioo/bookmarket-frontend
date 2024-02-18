@@ -20,8 +20,6 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
-const toast = useToast()
-
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -39,16 +37,15 @@ const validate = (state: any): FormError[] => {
 
 async function login(event: FormSubmitEvent<any>) {
   try {
-    await authStore.login(event.data.username, event.data.password);
+    await authStore.login(event.data.username, event.data.password)
     router.push('/fv');
   } catch (error) {
-    if (error instanceof Error) {
-      toast.add({
-        title: error.message,
-        icon: 'i-heroicons-exclamation-triangle',
-        color: 'red',
-      })
-    }
+    useToast().add({
+      title: 'Fehler',
+      description: (error as Error).message,
+      icon: 'i-heroicons-exclamation-triangle',
+      color: 'red',
+    });
   } finally {
     state.username = '';
     state.password = '';
