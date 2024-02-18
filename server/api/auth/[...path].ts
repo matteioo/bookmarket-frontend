@@ -1,9 +1,15 @@
+interface FetchOptions {
+	method: string;
+	headers: { [key: string]: string };
+	body?: string;
+}
+
 export default defineEventHandler(async (event) => {
 	if (!process.env.NUXT_API_BASE_URL) throw new Error('NUXT_API_BASE_URL is not set');
 	
 	const baseUrl = process.env.NUXT_API_BASE_URL;
 	const path = event.context.params!.path;
-  const apiUrl = `${baseUrl}auth/${path}`;
+  const apiUrl = `${baseUrl}/auth/${path}`;
 	
 	const fetchOptions: FetchOptions = {
 		method: String(event.method),
@@ -24,9 +30,3 @@ export default defineEventHandler(async (event) => {
 		console.error('error', error);
 	}
 });
-
-interface FetchOptions {
-	method: string;
-	headers: { [key: string]: string };
-	body?: string;
-}

@@ -1,10 +1,17 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
-	const authStore = useAuthStore()
+export default defineNuxtRouteMiddleware((to, from) => {
+	const authStore = useAuthStore();
 
-	// Initialize or rehydrate the auth store
-	authStore.initializeAuth()
-
-	if (!authStore.token && !authStore.refreshToken) {
-		return navigateTo('/login')
+	if (!isTokenValid()) {
+		return navigateTo('/login');
 	}
-})
+
+	function isTokenValid(): boolean {
+		if (authStore.user === null) {
+			return false;
+		}
+
+		const tokenExpiration = authStore.getTokenExpiration ?? 0;
+
+		return tokenExpiration > Date.now() / 1000;
+	}
+});

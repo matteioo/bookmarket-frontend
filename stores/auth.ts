@@ -1,97 +1,10 @@
-import { defineStore } from "pinia";
+import { jwtDecode } from 'jwt-decode'
 
 interface AuthState {
 	user: User | null;
 	token: string | null;
 	refreshToken: string | null;
 }
-
-export const useAuthStore = defineStore('auth', {
-	state: (): AuthState => {
-		return {
-			user: null,
-			token: null,
-			refreshToken: null,
-		}
-	},
-	actions: {
-		setUser(user: User) {
-			this.user = user;
-		},
-		setToken(token: string) {
-			this.token = token;
-      localStorage.setItem('authToken', token)
-		},
-		setRefreshToken(refreshToken: string) {
-			this.refreshToken = refreshToken;
-			localStorage.setItem('authRefreshToken', refreshToken)
-		},
-		logout() {
-			this.user = null;
-			this.token = null;
-			this.refreshToken = null;
-			localStorage.removeItem('authToken');
-			localStorage.removeItem('authRefreshToken');
-
-			// Redirect to the start page
-			const router = useRouter();
-			router.push('/');
-		},
-    async initializeAuth() {
-			if (typeof window === 'undefined') return
-			
-      const token = localStorage.getItem('authToken')
-			const refreshToken = localStorage.getItem('authRefreshToken')
-      if (token && refreshToken) {
-				// TODO: check if tokens are still valid
-
-        this.setToken(token)
-				this.setRefreshToken(refreshToken)
-				await this.loadUserDetails()
-      } else {
-				this.logout()
-			}
-    },
-		async login(username: string, password: string) {
-			const response = await fetch('/api/auth/login', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ username, password }),
-			});
-			const data: TokenResponse = await response.json();
-
-			if (response.ok && data.access && data.refresh) {
-				this.setToken(data.access);
-				this.setRefreshToken(data.refresh);
-
-				await this.loadUserDetails();
-
-				// Redirect to the start page
-				const router = useRouter();
-				router.push('/fv');
-			} else {
-				throw new Error('Login fehlgeschlagen. Bitte versuche es erneut.');
-			}
-		},
-		async loadUserDetails() {
-			const userResponse = await fetch('/api/auth/user', {
-					method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${this.token}`,
-					},
-				});
-
-				if (userResponse.ok) {
-					const user: User = await userResponse.json();
-					this.setUser(user);
-				} else {
-					this.logout();
-				}
-		},
-	}
-})
 
 interface User {
 	id: number;
@@ -103,3 +16,87 @@ interface TokenResponse {
 	refresh: string;
 	access: string;
 }
+
+export const useAuthStore = defineStore('auth', {
+  state: (): AuthState => {
+		return {
+			user: null,
+			token: null,
+			refreshToken: null
+		}
+  },
+  getters: {
+		getTokenExpiration: (state): number | null => {
+			if (!state.token || !state.refreshToken) {
+				return null;
+			}
+		
+			try {
+				const decodedToken: any = jwtDecode(state.token);
+				return decodedToken.exp;
+			} catch (error) {
+				console.error('Failed to decode token:', error);
+			}
+			return null;
+		}
+	},
+  actions: {
+    async login(username: string, password: string) {
+			try {
+				const response = await fetch('/api/auth/login', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ username, password }),
+				});
+
+				if (response.ok) {
+					const tokenResponse: TokenResponse = await response.json();
+
+					const authStore = useAuthStore();
+					authStore.token = tokenResponse.access;
+					authStore.refreshToken = tokenResponse.refresh;
+
+					await authStore.fetchUser();
+				} else {
+					console.error('Login failed:', response.status);
+				}
+			} catch (error) {
+				console.error('Login failed:', error);
+			}
+    },
+		async fetchUser() {
+			if (typeof window === 'undefined') return
+			try {
+				const response = await fetch('/api/auth/user', {
+					method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${this.token}`,
+					},
+				});
+
+				if (response.ok) {
+					const user: User = await response.json();
+					this.user = user;
+				} else {
+					console.error('Failed to fetch user:', response.status);
+				}
+			} catch (error) {
+				console.error('Failed to fetch user:', error);
+			}
+		},
+    async initializeStore() {
+      if (this.getTokenExpiration && this.getTokenExpiration > Date.now() / 1000 && this.refreshToken) {
+				await this.fetchUser();
+      } else {
+				this.logout();
+			}
+    },
+    logout() {
+			this.user = null;
+      this.token = null;
+			this.refreshToken = null;
+    },
+  }
+});

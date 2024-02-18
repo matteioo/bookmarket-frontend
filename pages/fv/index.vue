@@ -1,15 +1,16 @@
 <template>
-	<div>
-		<p>Logged in as: {{ user.username }} with ID {{ user.id }} and email {{ user.email }}</p>
-	</div>
+  <div>
+    <h1>Protected Index Page</h1>
+		<NuxtLink to="/fv/search">Search</NuxtLink>
+		<p>Current user: {{ authStore.user?.id }}, {{ authStore.user?.email }}, {{ authStore.user?.username }}</p>
+  </div>
 </template>
 
 <script setup>
 definePageMeta({
-  layout: "protected",
 	middleware: 'auth',
+	layout: 'protected',
 });
 
-const authStore = useAuthStore()
-const user = ref(authStore.user)
+const authStore = useAuthStore();
 </script>
