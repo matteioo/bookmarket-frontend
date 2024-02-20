@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   const baseUrl = process.env.NUXT_API_BASE_URL;
   const requestParams = getRequestURL(event).search ?? '';
-  const apiUrl = `${baseUrl}/sellers${requestParams}`;
+  const apiUrl = `${baseUrl}/offers${requestParams}`;
 
   const fetchOptions: FetchOptions = {
     method: String(event.method),

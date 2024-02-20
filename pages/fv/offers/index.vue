@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-screen-md flex flex-col items-center gap-y-4">
+  <div class="w-full max-w-screen-xl flex flex-col items-center gap-y-4">
     <div class="w-full inline-flex flex-row justify-between">
       <UInput placeholder="Suchen..." />
       <UButton
@@ -19,6 +19,14 @@
         :rows="data !== null ? data.results : []"
         :columns="columns"
       >
+        <template #marked-data="{ row }">
+          <UBadge size="xs" :label="row.marked ? 'Completed' : 'In Progress'" :color="row.marked ? 'green' : 'orange'" variant="soft" />
+        </template>
+        
+        <template #active-data="{ row }">
+          <div v-if="row.marked"><UIcon name="i-heroicons-x-circle-20-solid" class="text-lg text-red-600" /></div>
+          <div v-else><UIcon name="i-heroicons-check-circle-20-solid" class="text-lg text-green-600" /></div>
+        </template>
       </UTable>
     </div>
     <div>
@@ -29,7 +37,7 @@
 
 <script setup lang="ts">
 import type { Page } from '~/interfaces/Page';
-import type { Seller } from '~/interfaces/Seller';
+import type { Offer } from '~/interfaces/Offer';
 
 definePageMeta({
   middleware: 'auth',
@@ -45,7 +53,7 @@ const fetchParams = computed(() => ({
   offset: (currentPage.value - 1) * itemsPerPage.value,
 }));
 
-const { data, pending, error, refresh } = useFetch<Page<Seller>>('/api/sellers', {
+const { data, pending, error, refresh } = useFetch<Page<Offer>>('/api/offers', {
   headers: {
     Authorization: `Bearer ${authStore.token}`,
   },
@@ -54,8 +62,15 @@ const { data, pending, error, refresh } = useFetch<Page<Seller>>('/api/sellers',
 
 const columns = [
   { key: 'id', label: 'ID' },
-  { key: 'fullName', label: 'Name' },
-  { key: 'matriculationNumber', label: 'Matr-Nr.' },
-  { key: 'email', label: 'Email' },
+  { key: 'seller', label: 'Verkäufer' },
+  { key: 'isbn', label: 'ISBN' },
+  { key: 'price', label: 'Preis' },
+  { key: 'active', label: 'Aktiv' },
+  { key: 'marked', label: 'Beschriftet' },
+  { key: 'location', label: 'Ort' },
+  { key: 'member', label: 'FV-Mitglied' },
+  { key: 'createdAt', label: 'Erstellt' },
+  { key: 'modified', label: 'Aktualisiert' },
 ];
+
 </script>

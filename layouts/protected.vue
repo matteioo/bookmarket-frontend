@@ -9,7 +9,7 @@
         <UButton color="gray" variant="ghost" size="lg" @click="logoutAndRedirect" icon="i-heroicons-arrow-right-start-on-rectangle" trailing>Logout</UButton>
       </div>
     </header>
-    <div class="flex-grow w-full flex items-center justify-center">
+    <div class="flex-grow w-full flex items-center justify-center m-2">
       <slot></slot>
     </div>
     <Footer />
