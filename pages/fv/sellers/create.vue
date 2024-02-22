@@ -1,5 +1,6 @@
 <template>
-  <UForm ref="form" :validate="validate" :state="state" class="w-full max-w-xs space-y-4" @submit="createSeller">
+  <div class="flex-grow w-full flex items-center justify-center">
+    <UForm ref="form" :validate="validate" :state="state" class="w-full max-w-xs space-y-4" @submit="createSeller">
       <UFormGroup label="Name" name="fullName" hint="vollständiger Name" required>
         <UInput v-model="state.fullName" type="text" />
       </UFormGroup>
@@ -16,6 +17,7 @@
         Anlegen
       </UButton>
     </UForm>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-screen-md flex flex-col items-center gap-y-4">
+  <div class="flex-grow flex flex-col items-center justify-center gap-y-4 w-full max-w-screen-md mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
       <UInput placeholder="Suchen..." />
       <UButton

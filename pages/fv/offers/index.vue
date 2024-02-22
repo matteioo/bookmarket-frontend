@@ -1,15 +1,25 @@
 <template>
-  <div class="w-full max-w-screen-xl flex flex-col items-center gap-y-4">
+  <div class="flex-grow flex flex-col items-center justify-center gap-y-4 w-full max-w-screen-xl mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
-      <UInput placeholder="Suchen..." />
-      <UButton
-        icon="i-heroicons-plus"
-        size="sm"
-        color="primary"
-        variant="outline"
-        label="Hinzufügen"
-        to="/fv/sellers/create"
-      />
+      <UInput placeholder="Suchen..." v-model="searchInput" />
+      <div class="inline-flex gap-x-4">
+        <UButton
+          icon="i-heroicons-plus"
+          size="sm"
+          color="primary"
+          variant="outline"
+          label="Buch hinzufügen"
+          to="/fv/offers/create-book"
+        />
+        <UButton
+          icon="i-heroicons-tag-solid"
+          size="sm"
+          color="primary"
+          variant="solid"
+          label="Angebot erstellen"
+          to="/fv/offers/create"
+        />
+      </div>
     </div>
     <div class="w-full rounded bg-white dark:bg-gray-900 shadow">
       <UTable
@@ -46,11 +56,13 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const currentPage = ref(1);
-const itemsPerPage = ref(2);
+const itemsPerPage = ref(10);
+const searchInput = ref('');
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
   offset: (currentPage.value - 1) * itemsPerPage.value,
+  search: searchInput.value,
 }));
 
 const { data, pending, error, refresh } = useFetch<Page<Offer>>('/api/offers', {
