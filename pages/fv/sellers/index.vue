@@ -1,7 +1,7 @@
 <template>
-  <div class="flex-grow flex flex-col items-center justify-center gap-y-4 w-full max-w-screen-md mx-auto">
+  <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-md mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
-      <UInput placeholder="Suchen..." />
+      <UInput placeholder="Suchen..." v-model="searchInput" />
       <UButton
         icon="i-heroicons-plus"
         size="sm"
@@ -38,11 +38,13 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const currentPage = ref(1);
-const itemsPerPage = ref(2);
+const itemsPerPage = ref(10);
+const searchInput = ref('');
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
   offset: (currentPage.value - 1) * itemsPerPage.value,
+  search: searchInput.value,
 }));
 
 const { data, pending, error, refresh } = useFetch<Page<Seller>>('/api/sellers', {

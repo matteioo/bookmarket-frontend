@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-grow flex flex-col items-center justify-center gap-y-4 w-full max-w-screen-xl mx-auto">
+  <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-xl mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
       <UInput placeholder="Suchen..." v-model="searchInput" />
       <div class="inline-flex gap-x-4">
@@ -29,6 +29,14 @@
         :rows="data !== null ? data.results : []"
         :columns="columns"
       >
+        <template #seller-data="{ row }">
+          <span>{{ row.seller.matriculationNumber }} &middot; {{ row.seller.fullName }}</span>
+        </template>
+
+        <template #member-data="{ row }">
+          <span>{{ row.member.username }}</span>
+        </template>
+
         <template #marked-data="{ row }">
           <UBadge size="xs" :label="row.marked ? 'Completed' : 'In Progress'" :color="row.marked ? 'green' : 'orange'" variant="soft" />
         </template>
@@ -36,6 +44,14 @@
         <template #active-data="{ row }">
           <div v-if="row.marked"><UIcon name="i-heroicons-x-circle-20-solid" class="text-lg text-red-600" /></div>
           <div v-else><UIcon name="i-heroicons-check-circle-20-solid" class="text-lg text-green-600" /></div>
+        </template>
+
+        <template #createdAt-data="{ row }">
+          <span>{{ formatDate(row.createdAt) }}</span>
+        </template>
+
+        <template #modified-data="{ row }">
+          <span>{{ formatDate(row.createdAt) }}</span>
         </template>
       </UTable>
     </div>
@@ -82,7 +98,17 @@ const columns = [
   { key: 'location', label: 'Ort' },
   { key: 'member', label: 'FV-Mitglied' },
   { key: 'createdAt', label: 'Erstellt' },
-  { key: 'modified', label: 'Aktualisiert' },
+  //{ key: 'modified', label: 'Aktualisiert' },
 ];
+
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+  return new Intl.DateTimeFormat('de-AT', options).format(date);
+};
 
 </script>
