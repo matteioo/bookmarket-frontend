@@ -2,7 +2,7 @@
   <div class="flex-grow w-full flex items-center justify-center">
     <div>
       <h1>Protected Search Page</h1>
-      <p>Current user: {{ authStore.user?.username }}</p>
+      <p>Current user: {{ authStore.member?.username }}</p>
     </div>
   </div>
 </template>

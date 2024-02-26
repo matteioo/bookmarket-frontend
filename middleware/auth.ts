@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 
   function isTokenValid(): boolean {
-    if (authStore.user === null) {
+    if (authStore.member === null) {
       return false;
     }
 

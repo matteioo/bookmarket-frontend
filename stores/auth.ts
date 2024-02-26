@@ -1,15 +1,10 @@
 import { jwtDecode } from 'jwt-decode'
+import type { Member } from '~/interfaces/Member';
 
 interface AuthState {
-  user: User | null;
+  member: Member | null;
   token: string | null;
   refreshToken: string | null;
-}
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
 }
 
 interface TokenResponse {
@@ -20,7 +15,7 @@ interface TokenResponse {
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
     return {
-      user: null,
+      member: null,
       token: null,
       refreshToken: null
     }
@@ -38,6 +33,9 @@ export const useAuthStore = defineStore('auth', {
         console.error('Failed to decode token:', error);
       }
       return null;
+    },
+    getMember: (state): Member | null => {
+      return state.member;
     }
   },
   actions: {
@@ -71,10 +69,10 @@ export const useAuthStore = defineStore('auth', {
       });
 
       if (response.ok) {
-        const user: User = await response.json();
-        this.user = user;
+        const member: Member = await response.json();
+        this.member = member;
       } else {
-        throw new Error('User konnte nicht geladen werden.');
+        throw new Error('Member konnte nicht geladen werden.');
       }
     },
     async initializeStore() {
@@ -85,7 +83,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     logout() {
-      this.user = null;
+      this.member = null;
       this.token = null;
       this.refreshToken = null;
     },

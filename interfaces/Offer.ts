@@ -1,14 +1,16 @@
 import type { Seller } from "./Seller";
+import type { Book } from "./Book";
+import type { Member } from "./Member";
 
 export interface Offer {
-  id: number;
+  id?: number;
+  book: Book;
+  price: number;
   seller: Seller;
-  isbn: string;
-  price: string;
+  member: Member;
   active: boolean;
+  createdAt: Date;
+  modified: Date;
   marked: boolean;
   location: string;
-  member: number;
-  createdAt: string;
-  modified: string;
 }

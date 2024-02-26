@@ -1,7 +1,7 @@
 <template>
   <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
     <UFormGroup label="Name" name="fullName" hint="vollständiger Name" required>
-      <UInput v-model="state.fullName" type="text" />
+      <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" />
     </UFormGroup>
 
     <UFormGroup label="Matrikelnummer" name="matriculationNumber" required>

@@ -19,7 +19,7 @@
   </USelectMenu>
 
   <div v-if="selected" class="w-full">
-    <div class="grid grid-cols-4 gap-x-2 gap-y-2" @click="console.log(selected.matriculationNumber)">
+    <div class="grid grid-cols-4 gap-2">
       <DataLabel label="Name" :data="selected.fullName" class="col-span-3" />
       <DataLabel label="Matrikelnr." :data="selected.matriculationNumber" class="col-span-1" />
       <DataLabel label="Email" :data="selected.email" class="col-span-4" />
