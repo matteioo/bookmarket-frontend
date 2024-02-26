@@ -91,7 +91,6 @@ const { data, pending, error, refresh } = useFetch<Page<Offer>>('/api/offers', {
 const columns = [
   { key: 'id', label: 'ID' },
   { key: 'seller', label: 'Verkäufer' },
-  //{ key: 'isbn', label: 'ISBN' },
   { key: 'price', label: 'Preis' },
   { key: 'active', label: 'Aktiv' },
   { key: 'marked', label: 'Beschriftet' },
