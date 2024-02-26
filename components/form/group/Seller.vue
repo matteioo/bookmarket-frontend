@@ -5,11 +5,11 @@
     </UFormGroup>
 
     <UFormGroup label="Matrikelnummer" name="matriculationNumber" required>
-      <UInput v-model="state.matriculationNumber" type="text" />
+      <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" />
     </UFormGroup>
 
     <UFormGroup label="Email" name="email" required>
-      <UInput v-model="state.email" type="email" />
+      <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
     </UFormGroup>
 
     <UButton type="submit" class="float-right" :loading="loading" :variant="(props.buttonVariant as ButtonVariant)">
