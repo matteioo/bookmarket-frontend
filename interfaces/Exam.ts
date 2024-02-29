@@ -1,4 +1,4 @@
 export interface Exam {
-  id: number;
+  id: number | null;
   name: string;
 }

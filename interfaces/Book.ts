@@ -7,5 +7,5 @@ export interface Book {
   maxPrice: number;
   edition: string;
   publisher: string;
-  exam: Exam;
+  exam: Exam | null;
 }
