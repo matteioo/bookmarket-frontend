@@ -1,13 +1,15 @@
 <template>
-  <div class="mx-auto">
-    <FormSteps :steps="steps" @step-clicked="handleStepClicked" />
+  <div class="mx-auto w-full max-w-lg mb-4">
+    <FormSteps :steps="steps" @step-clicked="handleStepClicked" :active="currentStep" />
   </div>
-  <div class="flex-grow w-full max-w-md mx-auto flex flex-col items-center justify-center gap-y-6">
-    <div>
-      Offers create offer | step: {{ currentStep }}
+  <div class="flex-grow flex flex-col items-center gap-y-6" :class="{ 'justify-center': currentStep === 1 }">
+    <div v-if="currentStep === 1" class="w-full max-w-md mx-auto">
+      <FormGroupStepSeller :onSubmit="handleSellerSubmit" />
     </div>
-    <FormGroupStepSeller :onSubmit="handleSellerSubmit" v-if="currentStep === 1" />
-    <div v-else-if="currentStep == 2">
+    <div v-else-if="currentStep === 2" class="w-full max-w-screen-xl mx-auto">
+      <FormGroupStepOffer :onSubmit="handleOfferSubmit" :seller="offers.seller" />
+    </div>
+    <div v-else-if="currentStep === 3">
       {{ offers }}
     </div>
   </div>
@@ -15,7 +17,7 @@
 
 <script setup lang="ts">
 import type { Seller } from '~/interfaces/Seller';
-import type { Book } from '~/interfaces/Book';
+import type { Offer } from '~/interfaces/Offer';
 
 definePageMeta({
   middleware: 'auth',
@@ -23,7 +25,7 @@ definePageMeta({
 });
 
 let currentStep = ref(1);
-let offers = ref({} as Offers);
+let offers = ref({} as NewOffers);
 
 const steps = [
   { step: 1, title: 'Verkäufer:in zuordnen' },
@@ -43,8 +45,14 @@ const handleSellerSubmit = (submittedSeller: Seller) => {
   currentStep.value = 2;
 }
 
-interface Offers {
+const handleOfferSubmit = (submittedOffers: Offer[]) => {
+  offers.value.offers = submittedOffers;
+  console.log('offers', offers.value);
+  currentStep.value = 3;
+}
+
+interface NewOffers {
   seller: Seller;
-  books: Book[];
+  offers: Offer[];
 }
 </script>
