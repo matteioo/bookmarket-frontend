@@ -4,7 +4,7 @@
   </div>
   <div class="flex-grow flex flex-col items-center gap-y-6" :class="{ 'justify-center': currentStep === 1 }">
     <div v-if="currentStep === 1" class="w-full max-w-md mx-auto">
-      <FormGroupStepSeller :onSubmit="handleSellerSubmit" />
+      <FormGroupStepSeller :current-seller="offers.seller" :onSubmit="handleSellerSubmit" />
     </div>
     <div v-else-if="currentStep === 2" class="w-full max-w-screen-xl mx-auto">
       <FormGroupStepOffer :onSubmit="handleOfferSubmit" :seller="offers.seller" />
@@ -29,7 +29,7 @@ let offers = ref({} as NewOffers);
 
 const steps = [
   { step: 1, title: 'Verkäufer:in zuordnen' },
-  { step: 2, title: 'Bücher anlegen' },
+  { step: 2, title: 'Bücher hinzufügen' },
   { step: 3, title: 'Kontrolle' },
 ]
 

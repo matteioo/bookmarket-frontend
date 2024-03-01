@@ -49,10 +49,14 @@ const props = defineProps({
     type: Function as PropType<(userData: Seller) => void>,
     required: true,
   },
+  currentSeller: {
+    type: Object as PropType<Seller>,
+    required: false,
+  },
 });
 
 const loading = ref(false);
-const selected = ref(undefined as Seller | undefined);
+const selected = ref(props.currentSeller);
 const authStore = useAuthStore();
 
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
