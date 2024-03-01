@@ -7,7 +7,7 @@
       <FormGroupStepSeller :current-seller="offers.seller" :onSubmit="handleSellerSubmit" />
     </div>
     <div v-else-if="currentStep === 2" class="w-full max-w-screen-xl mx-auto">
-      <FormGroupStepOffer :onSubmit="handleOfferSubmit" :seller="offers.seller" />
+      <FormGroupStepOffer :current-offers="offers.offers" :onSubmit="handleOfferSubmit" :seller="offers.seller" />
     </div>
     <div v-else-if="currentStep === 3">
       {{ offers }}

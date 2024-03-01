@@ -78,7 +78,7 @@
         </div>
         <div class="sticky bottom-0 w-full p-4 inline-flex flex-row justify-between backdrop-blur-md">
           <div>Preis: {{ currentPrice }}</div>
-          <UButton label="Weiter" />
+          <UButton label="Weiter" @click="handleSubmitOffers" />
         </div>
       </div>
       <div v-else class="py-16 text-center">
@@ -109,6 +109,10 @@ const props = defineProps({
     type: Function as PropType<(userData: Offer[]) => void>,
     required: true,
   },
+  currentOffers: {
+    type: Array as PropType<Offer[]>,
+    default: () => [],
+  }
 });
 
 const authStore = useAuthStore();
@@ -116,7 +120,7 @@ const loading = ref(false);
 const loadingIsbn = ref(false);
 const form = ref()
 const selected = ref(undefined as Book | undefined);
-const offers = ref([] as Offer[]);
+const offers = ref(props.currentOffers as Offer[]);
 const checkedIsbn = ref(false);
 const exams = ref([] as Exam[]);
 const currentPrice = ref(0);
@@ -240,6 +244,11 @@ const handleDeleteItem = (item: Offer) => {
   if (index !== -1) {
     offers.value.splice(index, 1);
   }
+}
+
+const handleSubmitOffers = () => {
+  console.log('offers', offers.value);
+  props.onSubmit(offers.value);
 }
 
 const member: Member = {
