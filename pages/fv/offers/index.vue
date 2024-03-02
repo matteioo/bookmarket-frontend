@@ -9,7 +9,7 @@
           color="primary"
           variant="outline"
           label="Buch hinzufügen"
-          to="/fv/offers/create-book"
+          to="/fv/offers/create/book"
         />
         <UButton
           icon="i-heroicons-tag-solid"
