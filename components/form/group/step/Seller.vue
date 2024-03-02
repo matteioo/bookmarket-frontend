@@ -62,7 +62,6 @@ const authStore = useAuthStore();
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
 const handleSearchSubmit = () => {
   if (selected.value) {
-    console.log('selected seller', selected.value);
     props.onSubmit(selected.value);
   } else {
     console.error('No seller selected');
@@ -72,9 +71,7 @@ const handleSearchSubmit = () => {
 // This anonymous function is called by the FormGroup component to intercept the submitted data
 const handleSubmit = (userData: Seller) => {
   if (userData) {
-    let formSeller: Seller = userData;
-    console.log('formSeller', formSeller);
-    props.onSubmit(formSeller);
+    props.onSubmit(userData);
   } else {
     console.error('No seller selected');
   }

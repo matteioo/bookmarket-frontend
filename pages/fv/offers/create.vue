@@ -10,7 +10,7 @@
       <FormGroupStepOffer :current-offers="offers.offers" :onSubmit="handleOfferSubmit" :seller="offers.seller" />
     </div>
     <div v-else-if="currentStep === 3">
-      {{ offers }}
+      <FormGroupStepOverview :modelValue="offers" />
     </div>
   </div>
 </template>
@@ -41,13 +41,11 @@ const handleStepClicked = (step: number) => {
 
 const handleSellerSubmit = (submittedSeller: Seller) => {
   offers.value.seller = submittedSeller;
-  console.log('offers', offers.value);
   currentStep.value = 2;
 }
 
 const handleOfferSubmit = (submittedOffers: Offer[]) => {
   offers.value.offers = submittedOffers;
-  console.log('offers', offers.value);
   currentStep.value = 3;
 }
 

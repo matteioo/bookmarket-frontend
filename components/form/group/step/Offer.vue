@@ -37,7 +37,7 @@
             </UFormGroup>
           </div>
 
-          <UFormGroup v-if="!selected && checkedIsbn" label="Prüfung" name="exam_id">  
+          <UFormGroup v-if="!selected && checkedIsbn" label="Prüfung" name="exam_id">
             <USelect v-model="formState.exam_id" :options="exams" option-attribute="name" value-attribute="id" />
           </UFormGroup>
 
@@ -71,14 +71,13 @@
       </div>
     </div>
     <!-- right side -->
-    <div class="flex flex-grow flex-col gap-y-2">
-      <div v-if="offers.length !== 0">
+    <div>
+      <div v-if="offers.length !== 0" class="flex flex-grow flex-col gap-y-4">
         <div v-for="(offer, index) in offers" :key="offer.id">
-          <CheckoutOfferItemCreate v-model="offers[index]" @delete-item="handleDeleteItem" />
+          <CheckoutOfferItemCreate v-model="offers[index]" @delete-item="handleDeleteItem" @update:has-errors="(newValue) => offerErrors = newValue" />
         </div>
-        <div class="sticky bottom-0 w-full p-4 inline-flex flex-row justify-between backdrop-blur-md">
-          <div>Preis: {{ currentPrice }}</div>
-          <UButton label="Weiter" @click="handleSubmitOffers" />
+        <div class="w-full py-4 inline-flex flex-row justify-end backdrop-blur-md">
+          <UButton label="Weiter" :disabled="offerErrors" @click="handleSubmitOffers" />
         </div>
       </div>
       <div v-else class="py-16 text-center">
@@ -124,6 +123,7 @@ const offers = ref(props.currentOffers as Offer[]);
 const checkedIsbn = ref(false);
 const exams = ref([] as Exam[]);
 const currentPrice = ref(0);
+const offerErrors = ref(false);
 
 const formState = reactive({
   isbn: '',
@@ -247,7 +247,6 @@ const handleDeleteItem = (item: Offer) => {
 }
 
 const handleSubmitOffers = () => {
-  console.log('offers', offers.value);
   props.onSubmit(offers.value);
 }
 
@@ -277,6 +276,7 @@ function createOffer(book: Book | undefined) {
   };
 
   offers.value.push(offer);
+  clearForm();
 }
 
 const clearForm = () => {
