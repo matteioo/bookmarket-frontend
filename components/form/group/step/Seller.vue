@@ -1,43 +1,48 @@
 <template>
-  <USelectMenu
-    v-model="selected"
-    :loading="loading"
-    :searchable="search"
-    placeholder="Suche nach Verkäufer:in..."
-    option-attribute="fullName"
-    trailing
-    by="id"
-    class="w-full"
-  >
-    <template #label>
-      <span v-if="selected" class="truncate">{{ selected?.matriculationNumber }} &middot; {{ selected?.fullName }}</span>
-    </template>
-
-    <template #option="{ option: person }">
-      <span class="truncate">{{ person.matriculationNumber }} &middot; {{ person.fullName }}</span>
-    </template>
-  </USelectMenu>
-
-  <div v-if="selected" class="w-full">
-    <div class="grid grid-cols-4 gap-2">
-      <DataLabel label="Name" :data="selected.fullName" class="col-span-3" />
-      <DataLabel label="Matrikelnr." :data="selected.matriculationNumber" class="col-span-1" />
-      <DataLabel label="Email" :data="selected.email" class="col-span-4" />
+  <div class="flex flex-col gap-y-4">
+    <div class="flex flex-col gap-y-2">
+      <USelectMenu
+        v-model="selected"
+        :loading="loading"
+        :searchable="search"
+        placeholder="Suche nach Verkäufer:in..."
+        option-attribute="fullName"
+        trailing
+        by="id"
+        class="w-full"
+      >
+        <template #label>
+          <span v-if="selected" class="truncate">{{ selected?.matriculationNumber }} &middot; {{ selected?.fullName }}</span>
+        </template>
+    
+        <template #option="{ option: person }">
+          <span class="truncate">{{ person.matriculationNumber }} &middot; {{ person.fullName }}</span>
+        </template>
+      </USelectMenu>
+    
+      <div v-if="selected" class="w-full">
+        <div class="grid grid-cols-4 gap-2">
+          <DataLabel label="Name" :data="selected.fullName" class="col-span-3" />
+          <DataLabel label="Matrikelnr." :data="selected.matriculationNumber" class="col-span-1" />
+          <DataLabel label="Email" :data="selected.email" class="col-span-4" />
+        </div>
+        <div class="float-right">
+          <UButton
+            size="sm"
+            color="primary"
+            variant="outline"
+            label="Weiter"
+            :disabled="!selected"
+            @click="handleSearchSubmit"
+          />
+        </div>
+      </div>
     </div>
-    <div class="float-right">
-      <UButton
-        size="sm"
-        color="primary"
-        variant="outline"
-        label="Weiter"
-        :disabled="!selected"
-        @click="handleSearchSubmit"
-      />
-    </div>
+  
+    <UDivider label="ODER ANLEGEN" />
+  
+    <FormGroupSeller :onSubmit="handleSubmit" buttonVariant="outline" />
   </div>
-
-  <UDivider label="ODER ANLEGEN" />
-  <FormGroupSeller :onSubmit="handleSubmit" buttonVariant="outline" />
 </template>
 
 <script setup lang="ts">
