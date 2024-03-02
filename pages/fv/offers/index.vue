@@ -37,13 +37,14 @@
           <span>{{ row.member.username }}</span>
         </template>
 
-        <template #marked-data="{ row }">
-          <UBadge size="xs" :label="row.marked ? 'Completed' : 'In Progress'" :color="row.marked ? 'green' : 'orange'" variant="soft" />
-        </template>
-        
         <template #active-data="{ row }">
-          <div v-if="row.marked"><UIcon name="i-heroicons-x-circle-20-solid" class="text-lg text-red-600" /></div>
-          <div v-else><UIcon name="i-heroicons-check-circle-20-solid" class="text-lg text-green-600" /></div>
+          <div v-if="row.active"><UIcon name="i-heroicons-check-circle-20-solid" class="text-lg text-green-600" /></div>
+          <div v-else><UIcon name="i-heroicons-x-circle-20-solid" class="text-lg text-orange-600" /></div>
+        </template>
+
+        <template #marked-data="{ row }">
+          <UIcon v-if="row.marked" name="i-heroicons-paint-brush-20-solid" class="text-lg text-sky-600" />
+          <span v-else></span>
         </template>
 
         <template #createdAt-data="{ row }">
@@ -55,7 +56,11 @@
         </template>
       </UTable>
     </div>
-    <div>
+    <div class="w-full flex flex-row justify-between">
+      <div class="inline-flex items-center gap-x-2">
+        <div>Seitengröße</div>
+        <USelectMenu v-model="itemsPerPage" :options="pageSizes" />
+      </div>
       <UPagination v-model="currentPage" :page-count="itemsPerPage" :total="data !== null ? data.count : 0" />
     </div>
   </div>
@@ -72,7 +77,8 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const pageSizes = [5, 10, 20, 50];
+const itemsPerPage = ref(pageSizes[1]);
 const searchInput = ref('');
 
 const fetchParams = computed(() => ({

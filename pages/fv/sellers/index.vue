@@ -21,7 +21,11 @@
       >
       </UTable>
     </div>
-    <div>
+    <div class="w-full flex flex-row justify-between">
+      <div class="inline-flex items-center gap-x-2">
+        <div>Seitengröße</div>
+        <USelectMenu v-model="itemsPerPage" :options="pageSizes" />
+      </div>
       <UPagination v-model="currentPage" :page-count="itemsPerPage" :total="data !== null ? data.count : 0" />
     </div>
   </div>
@@ -38,6 +42,7 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const currentPage = ref(1);
+const pageSizes = [5, 10, 20, 50];
 const itemsPerPage = ref(10);
 const searchInput = ref('');
 
