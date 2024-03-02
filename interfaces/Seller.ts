@@ -3,4 +3,5 @@ export interface Seller {
   fullName: string;
   matriculationNumber: string;
   email: string;
+  note?: string;
 }

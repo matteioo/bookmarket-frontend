@@ -12,6 +12,10 @@
       <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
     </UFormGroup>
 
+    <UFormGroup label="Anmerkung" name="note">
+      <UTextarea autoresize :maxrows="5" v-model="state.note" placeholder="Anmerkung über Verkäufer:in" />
+    </UFormGroup>
+
     <UButton type="submit" class="float-right" :loading="loading" :variant="(props.buttonVariant as ButtonVariant)">
       {{ props.buttonContent }}
     </UButton>
@@ -53,6 +57,7 @@ const state = reactive({
   fullName: '',
   matriculationNumber: '',
   email: '',
+  note: '',
 })
 
 const validate = (state: any): FormError[] => {
@@ -64,6 +69,7 @@ const validate = (state: any): FormError[] => {
   if (state.matriculationNumber && state.matriculationNumber.toString().length !== 8)
     errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
   if (!state.email) errors.push({ path: 'email', message: 'Email ist verpflichtend' })
+  if (state.note && state.note.length > 255) errors.push({ path: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
   return errors
 }
 
