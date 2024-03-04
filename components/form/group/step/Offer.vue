@@ -122,7 +122,6 @@ const selected = ref(undefined as Book | undefined);
 const offers = ref(props.currentOffers as Offer[]);
 const checkedIsbn = ref(false);
 const exams = ref([] as Exam[]);
-const currentPrice = ref(0);
 const offerErrors = ref(false);
 
 const formState = reactive({
@@ -301,12 +300,4 @@ async function fetchExams() {
   exams.value.push({id: null, name: ''});
   exams.value.push(...response.results);
 }
-
-watch(offers, () => {
-  const sum = offers.value.reduce((sum: number, offer) => {
-    const priceAsNumber: number = parseFloat(String(offer.price)) || 0;
-    return sum + priceAsNumber;
-  }, 0);
-  currentPrice.value = Math.round(sum * 100) / 100;
-}, { deep: true });
 </script>
