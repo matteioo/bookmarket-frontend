@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/ui": "^2.13.0",
+    "@nuxt/ui": "^2.14.1",
     "@pinia/nuxt": "^0.5.1",
     "jwt-decode": "^4.0.0",
     "nuxt": "^3.10.1",
