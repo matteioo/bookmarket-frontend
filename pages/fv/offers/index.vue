@@ -3,38 +3,55 @@
     <div class="w-full inline-flex flex-row justify-between">
       <UInput placeholder="Suchen..." v-model="searchInput" />
       <div class="inline-flex gap-x-4">
-        <UButton
-          icon="i-heroicons-plus"
-          size="sm"
-          color="primary"
-          variant="outline"
-          label="Buch hinzufügen"
-          to="/fv/offers/create/book"
-        />
-        <UButton
-          icon="i-heroicons-tag-solid"
-          size="sm"
-          color="primary"
-          variant="solid"
-          label="Angebot erstellen"
-          to="/fv/offers/create"
-        />
+        <UPopover mode="hover" :popper="{ placement: 'bottom-end' }">
+          <UButton color="primary" label="Hinzufügen" trailing-icon="i-heroicons-chevron-down-20-solid" />
+
+          <template #panel>
+            <div class="p-4 flex flex-col gap-y-2">
+              <UButton
+                icon="i-heroicons-plus"
+                size="sm"
+                color="primary"
+                variant="outline"
+                label="Buch hinzufügen"
+                to="/fv/offers/create/book"
+              />
+              <UButton
+                icon="i-heroicons-tag-solid"
+                size="sm"
+                color="primary"
+                variant="solid"
+                label="Angebot erstellen"
+                to="/fv/offers/create"
+              />
+            </div>
+          </template>
+        </UPopover>
       </div>
     </div>
-    <div class="w-full rounded bg-white dark:bg-gray-900 shadow">
+    <div class="w-full rounded bg-white dark:bg-gray-900 shadow divide-y divide-gray-200 dark:divide-gray-700">
+      <div class="px-4 py-3">
+        <USelectMenu class="w-fit" v-slot="{ open }" v-model="selectedColumns" :options="columns" multiple>
+          <UButton color="gray" class="flex-1 justify-between">
+            Spalten auswählen
+
+            <UIcon name="i-heroicons-chevron-right-20-solid" class="w-5 h-5 transition-transform text-gray-400 dark:text-gray-500" :class="[open && 'transform rotate-90']" />
+          </UButton>
+        </USelectMenu>
+      </div>
       <UTable
         :loading="pending"
         :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
         class="w-full"
         :rows="data !== null ? data.results : []"
-        :columns="columns"
+        :columns="selectedColumns"
       >
         <template #seller-data="{ row }">
-          <span>{{ row.seller.matriculationNumber }} &middot; {{ row.seller.fullName }}</span>
+          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv/sellers/create`">{{ row.seller.matriculationNumber }} &middot; {{ row.seller.fullName }}</UButton>
         </template>
 
         <template #member-data="{ row }">
-          <span>{{ row.member.username }}</span>
+          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv/members/create`">{{ row.member.username }}</UButton>
         </template>
 
         <template #active-data="{ row }">
@@ -75,11 +92,24 @@ definePageMeta({
   layout: 'protected',
 });
 
+const columns = [
+  { key: 'id', label: 'ID' },
+  { key: 'seller', label: 'Verkäufer' },
+  { key: 'price', label: 'Preis' },
+  { key: 'active', label: 'Aktiv' },
+  { key: 'marked', label: 'Beschriftet' },
+  { key: 'location', label: 'Ort' },
+  { key: 'member', label: 'FV-Mitglied' },
+  { key: 'createdAt', label: 'Erstellt' },
+  //{ key: 'modified', label: 'Aktualisiert' },
+];
+
 const authStore = useAuthStore();
 const currentPage = ref(1);
 const pageSizes = [5, 10, 20, 50];
 const itemsPerPage = ref(pageSizes[1]);
 const searchInput = ref('');
+const selectedColumns = ref([...columns])
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
@@ -93,18 +123,6 @@ const { data, pending, error, refresh } = useFetch<Page<Offer>>('/api/offers', {
   },
   params: fetchParams,
 });
-
-const columns = [
-  { key: 'id', label: 'ID' },
-  { key: 'seller', label: 'Verkäufer' },
-  { key: 'price', label: 'Preis' },
-  { key: 'active', label: 'Aktiv' },
-  { key: 'marked', label: 'Beschriftet' },
-  { key: 'location', label: 'Ort' },
-  { key: 'member', label: 'FV-Mitglied' },
-  { key: 'createdAt', label: 'Erstellt' },
-  //{ key: 'modified', label: 'Aktualisiert' },
-];
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);

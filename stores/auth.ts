@@ -61,10 +61,11 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async fetchUser() {
-      let response = await fetch('/api/auth/user', {
+      const path = useRuntimeConfig().myProxyUrl;
+      let response = await fetch(`${path}/auth/user`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${this.token}`,
+          //'Authorization': `Bearer ${this.token}`,
         },
       });
 
