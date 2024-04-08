@@ -88,7 +88,6 @@ import type { Page } from '~/interfaces/Page';
 import type { Offer } from '~/interfaces/Offer';
 
 definePageMeta({
-  middleware: 'auth',
   layout: 'protected',
 });
 
@@ -104,7 +103,7 @@ const columns = [
   //{ key: 'modified', label: 'Aktualisiert' },
 ];
 
-const authStore = useAuthStore();
+const { token } = useAuth();
 const currentPage = ref(1);
 const pageSizes = [5, 10, 20, 50];
 const itemsPerPage = ref(pageSizes[1]);
@@ -119,7 +118,7 @@ const fetchParams = computed(() => ({
 
 const { data, pending, error, refresh } = useFetch<Page<Offer>>('/api/offers', {
   headers: {
-    Authorization: `Bearer ${authStore.token}`,
+    Authorization: `Bearer ${token.value}`,
   },
   params: fetchParams,
 });

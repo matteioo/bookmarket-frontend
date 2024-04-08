@@ -47,7 +47,7 @@ const props = defineProps({
   }
 });
 
-const authStore = useAuthStore()
+const { token } = useAuth()
 const router = useRouter()
 const form = ref()
 const loading = ref(false)
@@ -91,7 +91,7 @@ async function createSeller(event: FormSubmitEvent<any>) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `Bearer ${token.value}`,
     },
     body: JSON.stringify(event.data),
   })

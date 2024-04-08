@@ -52,7 +52,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const authStore = useAuthStore();
+const { token } = useAuth();
 
 const buttonLabel = computed(() => {
   return props.modelValue.offers.length === 1 ? 'Angebot anlegen' : 'Angebote anlegen';
@@ -73,7 +73,7 @@ const submitOffers = async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(createOffers),
   });

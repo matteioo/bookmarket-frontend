@@ -36,11 +36,10 @@ import type { Page } from '~/interfaces/Page';
 import type { Seller } from '~/interfaces/Seller';
 
 definePageMeta({
-  middleware: 'auth',
   layout: 'protected',
 });
 
-const authStore = useAuthStore();
+const { token } = useAuth();
 const currentPage = ref(1);
 const pageSizes = [5, 10, 20, 50];
 const itemsPerPage = ref(10);
@@ -54,7 +53,7 @@ const fetchParams = computed(() => ({
 
 const { data, pending, error, refresh } = useFetch<Page<Seller>>('/api/sellers', {
   headers: {
-    Authorization: `Bearer ${authStore.token}`,
+    Authorization: `Bearer ${token.value}`,
   },
   params: fetchParams,
 });

@@ -20,7 +20,6 @@ import type { Seller } from '~/interfaces/Seller';
 import type { Offer } from '~/interfaces/Offer';
 
 definePageMeta({
-  middleware: 'auth',
   layout: 'protected',
 });
 

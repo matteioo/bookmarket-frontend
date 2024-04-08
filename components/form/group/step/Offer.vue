@@ -114,7 +114,7 @@ const props = defineProps({
   }
 });
 
-const authStore = useAuthStore();
+const { token } = useAuth();
 const loading = ref(false);
 const loadingIsbn = ref(false);
 const form = ref()
@@ -177,7 +177,7 @@ const handleIsbnSearch = async () => {
   try {
     const singleBook = await $fetch<Book>(`/api/books/${formState.isbn}`, {
       headers: {
-        Authorization: `Bearer ${authStore.token}`,
+        Authorization: `Bearer ${token.value}`,
       },
     });
 
@@ -210,7 +210,7 @@ const onBookCreate = async (event: FormSubmitEvent<any>) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `Bearer ${token.value}`,
     },
     body: JSON.stringify(body),
   });
@@ -293,7 +293,7 @@ const clearForm = () => {
 async function fetchExams() {
   const response = await $fetch<Page<Exam>>('/api/exams', {
     headers: {
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `Bearer ${token.value}`,
     },
   });
   

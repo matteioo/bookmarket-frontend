@@ -64,7 +64,7 @@ const props = defineProps({
   }
 });
 
-const authStore = useAuthStore()
+const { token } = useAuth();
 const form = ref()
 const loading = ref(false)
 const exams = ref([] as Exam[]);
@@ -118,7 +118,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `Bearer ${token.value}`,
     },
     body: JSON.stringify(event.data),
   })
@@ -170,7 +170,7 @@ const clearForm = () => {
 async function fetchExams() {
   const response = await $fetch<Page<Exam>>('/api/exams', {
     headers: {
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `Bearer ${token.value}`,
     },
   });
   
