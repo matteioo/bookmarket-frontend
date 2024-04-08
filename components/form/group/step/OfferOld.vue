@@ -110,9 +110,9 @@ const handleSearchSubmit = () => {
 async function search(query: string) {
   loading.value = true;
   
-  const sellers = await $fetch<Page<Book>>('/api/books', {
+  const sellers = await $fetch<Page<Book>>(useRuntimeConfig().public.apiUrl + '/books', {
     headers: {
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `$value}`,
     },
     params: {
       search: query,

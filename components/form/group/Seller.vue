@@ -87,11 +87,11 @@ async function createSeller(event: FormSubmitEvent<any>) {
   loading.value = true;
   form.value.clear();
 
-  const response = await fetch('/api/sellers', {
+  const response = await fetch(useRuntimeConfig().public.apiUrl + '/sellers', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `${token.value}`,
     },
     body: JSON.stringify(event.data),
   })

@@ -47,11 +47,11 @@
         :columns="selectedColumns"
       >
         <template #seller-data="{ row }">
-          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv/sellers/create`">{{ row.seller.matriculationNumber }} &middot; {{ row.seller.fullName }}</UButton>
+          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv/sellers/${row.seller.id}`">{{ row.seller.matriculationNumber }} &middot; {{ row.seller.fullName }}</UButton>
         </template>
 
         <template #member-data="{ row }">
-          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv/members/create`">{{ row.member.username }}</UButton>
+          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv`">{{ row.member.username }}</UButton>
         </template>
 
         <template #active-data="{ row }">
@@ -116,9 +116,9 @@ const fetchParams = computed(() => ({
   search: searchInput.value,
 }));
 
-const { data, pending, error, refresh } = useFetch<Page<Offer>>('/api/offers', {
+const { data, pending, error, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   headers: {
-    Authorization: `Bearer ${token.value}`,
+    Authorization: `${token.value}`,
   },
   params: fetchParams,
 });

@@ -85,10 +85,10 @@ const handleSubmit = (userData: Seller) => {
 // This function is called by the selectMenu component to search for sellers
 async function search(query: string) {
   loading.value = true;
-  
-  const sellers = await $fetch<Page<Seller>>('/api/sellers', {
+
+  const sellers = await $fetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
     headers: {
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `${token.value}`,
     },
     params: {
       search: query,

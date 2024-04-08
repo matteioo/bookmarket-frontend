@@ -69,11 +69,11 @@ const submitOffers = async () => {
     location: offer.location,
   }));
 
-  const response = await fetch('/api/offers/bulk', {
+  const response = await fetch(useRuntimeConfig().public.apiUrl + '/offers/bulk', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `${token}`,
     },
     body: JSON.stringify(createOffers),
   });
