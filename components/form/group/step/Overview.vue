@@ -73,7 +73,7 @@ const submitOffers = async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `${token}`,
+      Authorization: `${token.value}`,
     },
     body: JSON.stringify(createOffers),
   });
