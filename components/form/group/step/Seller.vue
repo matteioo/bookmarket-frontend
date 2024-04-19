@@ -62,7 +62,7 @@ const props = defineProps({
 
 const loading = ref(false);
 const selected = ref(props.currentSeller);
-const authStore = useAuthStore();
+const { token } = useAuth();
 
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
 const handleSearchSubmit = () => {
@@ -85,10 +85,10 @@ const handleSubmit = (userData: Seller) => {
 // This function is called by the selectMenu component to search for sellers
 async function search(query: string) {
   loading.value = true;
-  
-  const sellers = await $fetch<Page<Seller>>('/api/sellers', {
+
+  const sellers = await $fetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
     headers: {
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `${token.value}`,
     },
     params: {
       search: query,

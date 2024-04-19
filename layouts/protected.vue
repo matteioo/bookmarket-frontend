@@ -19,11 +19,9 @@
 </template>
 
 <script setup lang="ts">
-const authStore = useAuthStore();
-const router = useRouter();
+const { signOut } = useAuth();
 
-const logoutAndRedirect = () => {
-  authStore.logout();
-  router.push('/login');
+const logoutAndRedirect = async () => {
+  await signOut({ callbackUrl: '/login' })
 };
 </script>

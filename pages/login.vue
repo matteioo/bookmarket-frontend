@@ -20,8 +20,14 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
-const router = useRouter()
-const authStore = useAuthStore()
+definePageMeta({
+  auth: {
+    unauthenticatedOnly: true,
+    navigateAuthenticatedTo: '/fv',
+  }
+})
+
+const { signIn } = useAuth()
 
 const state = reactive({
   username: '',
@@ -37,12 +43,11 @@ const validate = (state: any): FormError[] => {
 
 async function login(event: FormSubmitEvent<any>) {
   try {
-    await authStore.login(event.data.username, event.data.password)
-    router.push('/fv');
+    await signIn({ username: event.data.username, password: event.data.password }, { callbackUrl: '/fv' })
   } catch (error) {
     useToast().add({
       title: 'Fehler',
-      description: (error as Error).message,
+      description: 'Benutzername oder Passwort ist falsch',
       icon: 'i-heroicons-exclamation-triangle',
       color: 'red',
     });

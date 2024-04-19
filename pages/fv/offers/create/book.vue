@@ -10,7 +10,6 @@
 import type { Book } from '~/interfaces/Book';
 
 definePageMeta({
-  middleware: 'auth',
   layout: 'protected',
 });
 

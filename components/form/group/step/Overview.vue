@@ -52,7 +52,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const authStore = useAuthStore();
+const { token } = useAuth();
 
 const buttonLabel = computed(() => {
   return props.modelValue.offers.length === 1 ? 'Angebot anlegen' : 'Angebote anlegen';
@@ -69,11 +69,11 @@ const submitOffers = async () => {
     location: offer.location,
   }));
 
-  const response = await fetch('/api/offers/bulk', {
+  const response = await fetch(useRuntimeConfig().public.apiUrl + '/offers/bulk', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `${token.value}`,
     },
     body: JSON.stringify(createOffers),
   });

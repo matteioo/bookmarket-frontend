@@ -8,7 +8,6 @@
 import type { Seller } from '~/interfaces/Seller';
 
 definePageMeta({
-  middleware: 'auth',
   layout: 'protected',
 });
 

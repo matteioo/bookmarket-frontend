@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
     '@pinia/nuxt',
+    'nuxt-auth-fork',
   ],
   postcss: {
     plugins: {
@@ -13,6 +14,29 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
+    public: {
+      apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
+    },
     myProxyUrl: '',
+  },
+  auth: {
+    baseURL: process.env.AUTH_ORIGIN,
+    provider: {
+      type: 'local',
+      endpoints: {
+        getSession: { path: '/user', method: 'get' },
+      },
+      sessionDataType: {
+        id: 'string',
+        email: 'string',
+        username: 'string',
+      },
+      token: {
+        secureCookieAttribute: true,
+      }
+    },
+    globalAppMiddleware: {
+      isEnabled: true,
+    }
   }
 })

@@ -91,7 +91,7 @@ const props = defineProps({
 
 const loading = ref(false);
 const selected = ref(undefined as Book | undefined);
-const authStore = useAuthStore();
+const { token } = useAuth();
 const offers = ref([] as Offer[]);
 let currentPrice = ref(0);
 
@@ -110,9 +110,9 @@ const handleSearchSubmit = () => {
 async function search(query: string) {
   loading.value = true;
   
-  const sellers = await $fetch<Page<Book>>('/api/books', {
+  const sellers = await $fetch<Page<Book>>(useRuntimeConfig().public.apiUrl + '/books', {
     headers: {
-      Authorization: `Bearer ${authStore.token}`,
+      Authorization: `$value}`,
     },
     params: {
       search: query,
