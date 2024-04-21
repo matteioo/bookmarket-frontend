@@ -91,7 +91,7 @@
           </template>
         </UTable>
       </div>
-      <div class="w-full flex flex-row justify-between">
+      <div class="w-full flex flex-row justify-between text-gray-700 dark:text-gray-300">
         <div class="inline-flex items-center gap-x-2">
           <div>Seitengröße</div>
           <USelectMenu v-model="itemsPerPage" :options="pageSizes" />
