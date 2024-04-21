@@ -51,7 +51,7 @@
         </template>
 
         <template #member-data="{ row }">
-          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv`">{{ row.member.username }}</UButton>
+          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv/members/${row.member.id}`">{{ row.member.username }}</UButton>
         </template>
 
         <template #active-data="{ row }">
@@ -69,7 +69,11 @@
         </template>
 
         <template #modified-data="{ row }">
-          <span>{{ formatDate(row.createdAt) }}</span>
+          <span>{{ formatDate(row.modified) }}</span>
+        </template>
+
+        <template #price-data="{ row }">
+          <div class="text-right">{{ formatPrice(row.price) }}</div>
         </template>
       </UTable>
     </div>
@@ -86,20 +90,21 @@
 <script setup lang="ts">
 import type { Page } from '~/interfaces/Page';
 import type { Offer } from '~/interfaces/Offer';
+import { formatDate, formatPrice } from '#imports';
 
 definePageMeta({
   layout: 'protected',
 });
 
 const columns = [
-  { key: 'id', label: 'ID' },
+  //{ key: 'id', label: 'ID' },
+  { key: 'createdAt', label: 'Erstellt' },
   { key: 'seller', label: 'Verkäufer' },
-  { key: 'price', label: 'Preis' },
   { key: 'active', label: 'Aktiv' },
   { key: 'marked', label: 'Beschriftet' },
   { key: 'location', label: 'Ort' },
   { key: 'member', label: 'FV-Mitglied' },
-  { key: 'createdAt', label: 'Erstellt' },
+  { key: 'price', label: 'Preis', class: 'text-right' },
   //{ key: 'modified', label: 'Aktualisiert' },
 ];
 
@@ -122,15 +127,5 @@ const { data, pending, error, refresh } = useFetch<Page<Offer>>(useRuntimeConfig
   },
   params: fetchParams,
 });
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  return new Intl.DateTimeFormat('de-AT', options).format(date);
-};
 
 </script>
