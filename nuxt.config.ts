@@ -6,12 +6,19 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@pinia/nuxt',
     'nuxt-auth-fork',
+    'dayjs-nuxt',
   ],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
+  },
+  dayjs: {
+    locales: ['de'],
+    plugins: ['relativeTime', 'utc', 'timezone'],
+    defaultLocale: 'de',
+    defaultTimezone: 'Europe/Vienna',
   },
   runtimeConfig: {
     public: {

@@ -69,7 +69,11 @@
         </template>
 
         <template #modified-data="{ row }">
-          <span>{{ formatDate(row.createdAt) }}</span>
+          <span>{{ formatDate(row.modified) }}</span>
+        </template>
+
+        <template #price-data="{ row }">
+          <div class="text-right">{{ formatPrice(row.price) }}</div>
         </template>
       </UTable>
     </div>
@@ -86,6 +90,7 @@
 <script setup lang="ts">
 import type { Page } from '~/interfaces/Page';
 import type { Offer } from '~/interfaces/Offer';
+import { formatDate, formatPrice } from '#imports';
 
 definePageMeta({
   layout: 'protected',
@@ -122,15 +127,5 @@ const { data, pending, error, refresh } = useFetch<Page<Offer>>(useRuntimeConfig
   },
   params: fetchParams,
 });
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  return new Intl.DateTimeFormat('de-AT', options).format(date);
-};
 
 </script>

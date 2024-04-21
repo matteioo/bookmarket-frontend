@@ -19,6 +19,7 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "dayjs-nuxt": "^2.1.9",
     "nuxt-auth-fork": "^0.7.1"
   }
 }
