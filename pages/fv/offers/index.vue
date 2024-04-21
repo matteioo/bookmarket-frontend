@@ -51,7 +51,7 @@
         </template>
 
         <template #member-data="{ row }">
-          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv`">{{ row.member.username }}</UButton>
+          <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit" :to="`/fv/members/${row.member.id}`">{{ row.member.username }}</UButton>
         </template>
 
         <template #active-data="{ row }">
@@ -97,14 +97,14 @@ definePageMeta({
 });
 
 const columns = [
-  { key: 'id', label: 'ID' },
+  //{ key: 'id', label: 'ID' },
+  { key: 'createdAt', label: 'Erstellt' },
   { key: 'seller', label: 'Verkäufer' },
-  { key: 'price', label: 'Preis' },
   { key: 'active', label: 'Aktiv' },
   { key: 'marked', label: 'Beschriftet' },
   { key: 'location', label: 'Ort' },
   { key: 'member', label: 'FV-Mitglied' },
-  { key: 'createdAt', label: 'Erstellt' },
+  { key: 'price', label: 'Preis', class: 'text-right' },
   //{ key: 'modified', label: 'Aktualisiert' },
 ];
 
