@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row group hover:bg-white dark:hover:bg-gray-900 rounded overflow-hidden">
+  <div class="animate-flyIn flex flex-row group hover:bg-white dark:hover:bg-gray-900 rounded overflow-hidden">
     <div class="flex-grow grid grid-cols-12 p-2 gap-x-2 gap-y-1">
       <DataLabel label="Titel" :data="props.modelValue.book.title" class="col-span-7" />
       <DataLabel label="Autoren" :data="props.modelValue.book.authors" class="col-span-5" />
