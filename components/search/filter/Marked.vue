@@ -5,8 +5,8 @@
         label="Markiert"
         icon="i-heroicons-paint-brush-16-solid"
         size="xs"
-        :variant="!localMarkedFilter.value.marked || localMarkedFilter.value.unmarked ? 'outline' : 'solid'"
-        :color="!localMarkedFilter.value.marked || localMarkedFilter.value.unmarked ? 'primary' : 'gray'"
+        :variant="!localMarkedFilter.value.marked || !localMarkedFilter.value.unmarked ? 'outline' : 'solid'"
+        :color="!localMarkedFilter.value.marked || !localMarkedFilter.value.unmarked ? 'primary' : 'gray'"
       />
 
       <template #panel>
@@ -77,7 +77,7 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit (event: FormSubmitEvent<any>) {
-  if (event.data.marked === true && event.data.unmarked === false) {
+  if (event.data.marked === true && event.data.unmarked === true) {
     resetModal();
   } else {
     localMarkedFilter.value = { active: true, value: { marked: event.data.marked, unmarked: event.data.unmarked } };
@@ -91,8 +91,8 @@ async function onSubmit (event: FormSubmitEvent<any>) {
 
 function resetModal () {
   state.marked = true;
-  state.unmarked = false;
-  localMarkedFilter.value = { active: false, value: { marked: true, unmarked: false } };
+  state.unmarked = true;
+  localMarkedFilter.value = { active: false, value: { marked: true, unmarked: true } };
 
   emit('update:markedFilter', localMarkedFilter.value);
 

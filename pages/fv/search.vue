@@ -90,7 +90,7 @@ const filter = ref({
     active: false,
     value: {
       marked: true as boolean,
-      unmarked: false as boolean,
+      unmarked: true as boolean,
     }
   }
 });
