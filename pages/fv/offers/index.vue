@@ -80,9 +80,9 @@
     <div class="w-full flex flex-row justify-between text-gray-700 dark:text-gray-300">
       <div class="inline-flex items-center gap-x-2">
         <div>Seitengröße</div>
-        <USelectMenu v-model="itemsPerPage" :options="pageSizes" />
+        <USelect v-model="itemsPerPage" :options="pageSizes" />
       </div>
-      <UPagination v-model="currentPage" :page-count="itemsPerPage" :total="data !== null ? data.count : 0" />
+      <UPagination v-model="currentPage" :page-count="Number(itemsPerPage)" :total="data !== null ? data.count : 0" />
     </div>
   </div>
 </template>
