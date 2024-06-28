@@ -1,6 +1,6 @@
 <template>
   <div class="flex-grow w-full flex flex-col items-center gap-y-6">
-    <section class="z-10 sticky top-0 w-full bg-gray-50 dark:bg-gray-950">
+    <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950">
       <div class="max-w-lg mx-auto flex flex-col justify-items-stretch gap-y-2">
         <UInput
           v-model="searchQuery"
@@ -33,6 +33,7 @@
         <div class="inline-flex flex-row justify-start gap-x-2">
           <SearchFilterPrice v-model:price-filter="filter.price" />
           <SearchFilterMarked v-model:marked-filter="filter.marked" />
+          <SearchFilterExam v-model:exam-filter="filter.exam" />
         </div>
       </div>
     </section>
@@ -92,6 +93,12 @@ const filter = ref({
       marked: true as boolean,
       unmarked: true as boolean,
     }
+  },
+  exam: {
+    active: false,
+    value: {
+      exam: undefined as string | undefined,
+    }
   }
 });
 
@@ -115,14 +122,16 @@ const fetchParams = computed(() => ({
 }));
 
 const { data: offerResults, pending, error, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
-  headers: {
-    Authorization: `${token.value}`,
-  },
   params: fetchParams,
   onResponse: async (response) => {
     await navigateTo({
       path: '/fv/search',
-      query: { q: searchQuery.value },
+      query: {
+        q: searchQueryDebounced.value,
+        price_lte: fetchParams.value.price__lte,
+        price_gte: fetchParams.value.price__gte,
+        marked: markedValue()?.toString(),
+      },
     })
   },
 });

@@ -5,34 +5,28 @@
         label="Markiert"
         icon="i-heroicons-paint-brush-16-solid"
         size="xs"
-        :variant="!localMarkedFilter.value.marked || !localMarkedFilter.value.unmarked ? 'outline' : 'solid'"
-        :color="!localMarkedFilter.value.marked || !localMarkedFilter.value.unmarked ? 'primary' : 'gray'"
+        :variant="!localExamFilter.value.exam ? 'outline' : 'solid'"
+        :color="!localExamFilter.value.exam ? 'primary' : 'gray'"
       />
 
       <template #panel>
         <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
           <div class="p-4 flex flex-col gap-y-4">
-            <UFormGroup name="marked">
-              <UCheckbox v-model="state.marked" label="Markierte Angebote anzeigen" />
+            <UFormGroup name="marked" class="w-72">
+              <USelect
+                v-model="state.exam"
+                :options="exams"
+              />
             </UFormGroup>
-
-            <UFormGroup name="marked">
-              <UCheckbox v-model="state.unmarked" label="Nicht markierte Angebote anzeigen" />
-            </UFormGroup>
-
-            <div v-if="!state.marked && !state.unmarked" class="text-red-500 dark:text-red-400 text-sm">
-              Mindestens ein Feld muss aktiv sein!
-            </div>
           
             <div class="inline-flex flex-row-reverse gap-x-2 justify-stretch flex-wrap">
               <UButton
                 type="submit"
                 label="Speichern"
-                color="primary"
+                color="red"
                 variant="outline"
                 block
                 class="flex-1"
-                :disabled="!state.marked && !state.unmarked"
               />
 
               <UButton
@@ -54,19 +48,20 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
 const props = defineProps({
-  markedFilter: {
-    type: Object as PropType<MarkedFilter>,
+  examFilter: {
+    type: Object as PropType<ExamFilter>,
     required: true,
   }
 });
-const emit = defineEmits(['update:markedFilter']);
+const emit = defineEmits(['update:examFilter']);
 
 const popoverOpen = ref(false);
-const localMarkedFilter = ref<MarkedFilter>(props.markedFilter);
+const localExamFilter = ref<ExamFilter>(props.examFilter);
+
+const exams = ['Wade Cooper', 'Arlene Mccoy', 'Devon Webb', 'Tom Cook', 'Tanya Fox', 'Hellen Schmidt', 'Caroline Schultz', 'Mason Heaney', 'Claudie Smitham', 'Emil Schaefer'];
 
 const state = reactive({
-  marked: props.markedFilter.value.marked,
-  unmarked: props.markedFilter.value.unmarked,
+  exam: props.examFilter.value.exam,
 })
 
 const validate = (state: any): FormError[] => {
@@ -79,30 +74,28 @@ async function onSubmit (event: FormSubmitEvent<any>) {
   if (event.data.marked === true && event.data.unmarked === true) {
     resetModal();
   } else {
-    localMarkedFilter.value = { active: true, value: { marked: event.data.marked, unmarked: event.data.unmarked } };
-    emit('update:markedFilter', localMarkedFilter.value);
+    localExamFilter.value = { active: true, value: { exam: event.data.exam } };
+    emit('update:examFilter', localExamFilter.value);
   }
 
-  console.log(event.data.marked, event.data.marked, localMarkedFilter.value);
+  console.log(event.data.marked, event.data.marked, localExamFilter.value);
   
   popoverOpen.value = false;
 }
 
 function resetModal () {
-  state.marked = true;
-  state.unmarked = true;
-  localMarkedFilter.value = { active: false, value: { marked: true, unmarked: true } };
+  state.exam = undefined;
+  localExamFilter.value = { active: false, value: { exam: undefined } };
 
-  emit('update:markedFilter', localMarkedFilter.value);
+  emit('update:examFilter', localExamFilter.value);
 
   popoverOpen.value = false;
 }
 
-interface MarkedFilter {
+interface ExamFilter {
   active: boolean;
   value: {
-    marked: boolean;
-    unmarked: boolean;
+    exam: string | undefined;
   };
 }
 </script>

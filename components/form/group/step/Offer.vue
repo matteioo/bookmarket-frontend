@@ -52,7 +52,7 @@
             <DataLabel label="Titel" :data="selected.title" class="col-span-6" />
             <DataLabel label="ISBN" :data="selected.isbn" class="col-span-3" />
             <DataLabel label="Auflage" :data="String(selected.edition)" class="col-span-1" />
-            <DataLabel label="Max. Preis" :data="String(selected.maxPrice)" class="col-span-2" />
+            <DataLabel label="Max. Preis" :data="formatPrice(selected.maxPrice)" class="col-span-2" />
             <DataLabel label="Zugehörige Prüfung" :data="selected.exam?.name" class="col-span-6" />
             <DataLabel label="Autoren" :data="selected.authors" class="col-span-6" />
             <DataLabel label="Verlag" :data="selected.publisher" class="col-span-6" />
@@ -71,7 +71,7 @@
       </div>
     </div>
     <!-- right side -->
-    <div>
+    <div class="flex-grow">
       <div v-if="offers.length !== 0" class="flex flex-grow flex-col gap-y-4">
         <div v-for="(offer, index) in offers" :key="offer.id">
           <CheckoutOfferItemCreate v-model="offers[index]" @delete-item="handleDeleteItem" @update:has-errors="(newValue) => offerErrors = newValue" />
@@ -98,6 +98,7 @@ import type { Offer } from '~/interfaces/Offer';
 import type { Member } from '~/interfaces/Member';
 import type { Exam } from '~/interfaces/Exam';
 import type { Page } from '~/interfaces/Page';
+import { formatPrice } from '~/utils/utils';
 
 const props = defineProps({
   seller: {
