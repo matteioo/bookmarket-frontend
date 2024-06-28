@@ -6,6 +6,7 @@
         <UButton color="gray" variant="ghost" size="lg" to="/fv/offers"><span>Angebote</span></UButton>
         <UButton color="gray" variant="ghost" size="lg" to="/fv/sellers"><span>Verkäufer:innen</span></UButton>
         <UButton color="gray" variant="ghost" size="lg" to="/fv/search"><span>Suchen</span></UButton>
+        <UButton color="gray" variant="ghost" size="lg" to="/fv/sell"><span>Verkaufen</span></UButton>
         <UButton color="gray" variant="ghost" size="lg" @click="logoutAndRedirect" icon="i-heroicons-arrow-right-start-on-rectangle" trailing>Logout</UButton>
       </div>
     </header>
