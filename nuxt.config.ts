@@ -1,11 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  compatibilityDate: '2024-10-09',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   modules: [
     '@nuxt/ui',
-    '@pinia/nuxt',
-    'nuxt-auth-fork',
+    '@sidebase/nuxt-auth',
     'dayjs-nuxt',
   ],
   postcss: {
@@ -31,12 +31,15 @@ export default defineNuxtConfig({
     provider: {
       type: 'local',
       endpoints: {
-        getSession: { path: '/user', method: 'get' },
+        signIn: { path: 'login', method: 'post' },
+        getSession: { path: 'user', method: 'get' },
       },
-      sessionDataType: {
-        id: 'string',
-        email: 'string',
-        username: 'string',
+      session: {
+        dataType: {
+          id: 'string',
+          email: 'string',
+          username: 'string',
+        },
       },
       token: {
         secureCookieAttribute: true,
