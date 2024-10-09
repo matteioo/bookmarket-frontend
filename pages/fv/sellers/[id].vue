@@ -94,7 +94,7 @@
       <div class="w-full flex flex-row justify-between text-gray-700 dark:text-gray-300">
         <div class="inline-flex items-center gap-x-2">
           <div>Seitengröße</div>
-          <USelectMenu v-model="itemsPerPage" :options="pageSizes" />
+          <USelectMenu v-model="itemsPerPage" :options="pageSizes.map(size => size.toString())" />
         </div>
         <UPagination v-model="currentPage" :page-count="itemsPerPage" :total="sellerOffers !== null ? sellerOffers.count : 0" />
       </div>
