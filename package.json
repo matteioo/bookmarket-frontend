@@ -10,16 +10,14 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/ui": "^2.14.1",
-    "@pinia/nuxt": "^0.5.1",
-    "jwt-decode": "^4.0.0",
-    "nuxt": "^3.10.1",
-    "pinia": "^2.1.7",
-    "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "@nuxt/ui": "^2.18.7",
+    "vue": "^3.5.11",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
-    "dayjs-nuxt": "^2.1.9",
-    "nuxt-auth-fork": "^0.7.1"
+    "@iconify-json/heroicons": "^1.2.1",
+    "@sidebase/nuxt-auth": "^0.9.3",
+    "dayjs-nuxt": "^2.1.11",
+    "nuxt": "^3.13.2"
   }
 }
