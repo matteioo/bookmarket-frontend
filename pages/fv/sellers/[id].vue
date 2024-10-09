@@ -96,7 +96,7 @@
           <div>Seitengröße</div>
           <USelectMenu v-model="itemsPerPage" :options="pageSizes.map(size => size.toString())" />
         </div>
-        <UPagination v-model="currentPage" :page-count="itemsPerPage" :total="sellerOffers !== null ? sellerOffers.count : 0" />
+        <UPagination v-model="currentPage" :page-count="Number(itemsPerPage)" :total="sellerOffers !== null ? sellerOffers.count : 0" />
       </div>
     </section>
   </div>

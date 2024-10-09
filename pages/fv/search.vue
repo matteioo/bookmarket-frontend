@@ -48,7 +48,7 @@
       </div>
     </section>
     <section v-if="(offerResults?.count ?? 0) > 0" class="flex justify-center">
-      <UPagination v-model="currentPage" :page-count="itemsPerPage" :total="offerResults !== null ? offerResults.count : 0" />
+      <UPagination v-model="currentPage" :page-count="Number(itemsPerPage)" :total="offerResults !== null ? offerResults.count : 0" />
     </section>
   </div>
 </template>
@@ -123,6 +123,9 @@ const fetchParams = computed(() => ({
 
 const { data: offerResults, pending, error, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   params: fetchParams,
+  headers: {
+    Authorization: `${token.value}`,
+  },
   onResponse: async (response) => {
     await navigateTo({
       path: '/fv/search',
