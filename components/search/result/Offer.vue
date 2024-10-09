@@ -50,8 +50,7 @@
     <div class="p-4 flex flex-row items-center justify-between text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-950">
       <span>Preis: <b>{{ formatPrice(offer.price) }}</b> (max. {{ formatPrice(offer.book.maxPrice) }})</span>
       <div v-if="offer.active" class="inline-flex flex-row gap-x-2">
-        <UButton variant="outline" label="Hinzufügen" icon="i-heroicons-shopping-cart" />
-        <UButton label="Direkt verkaufen" icon="i-heroicons-banknotes" />
+        <UButton label="Buch verkaufen" icon="i-heroicons-banknotes" :to="`/fv/sell/${offer.id}`" />
       </div>
       <div v-else class="inline-flex flex-row items-center gap-x-1">
         <UIcon name="flex-shrink-0 i-heroicons-no-symbol-solid" class="w-5 h-5" />

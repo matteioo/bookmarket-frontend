@@ -127,6 +127,8 @@ definePageMeta({
   layout: 'protected',
 })
 
+const route = useRoute()
+const router = useRouter()
 const { token } = useAuth()
 const loadingOffer = ref(false)
 const selectedOffer = ref<Offer | null>(null)
@@ -137,8 +139,12 @@ const loadingCheckout = ref(false)
 const updatingAddedOffers = ref(false)
 
 const state = reactive({
-  offerId: '',
+  offerId: route.params.offerId[0] ?? '',
 })
+
+if (state.offerId !== '') {
+  searchOffer();
+}
 
 const isIdInvalid = computed(() => errorMsg.value !== null)
 const selectedOfferPrice = computed(() => formatPrice(addedOffers.value.reduce((acc, offer) => acc + offer.price, 0)))

@@ -21,8 +21,11 @@
 
 <script setup lang="ts">
 const { signOut } = useAuth();
+const router = useRouter();
 
 const logoutAndRedirect = async () => {
+  // TODO: Error fetching signOut endpoint (default /logout because not set), even though we simply want to remove the token as logout action
   await signOut({ callbackUrl: '/login' })
+  router.push('/login');
 };
 </script>
