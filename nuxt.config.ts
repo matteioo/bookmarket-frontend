@@ -22,17 +22,17 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
+      apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1/auth',
     },
     myProxyUrl: '',
   },
   auth: {
-    baseURL: process.env.AUTH_ORIGIN,
+    originEnvKey: 'AUTH_ORIGIN', 
     provider: {
       type: 'local',
       endpoints: {
-        signIn: { path: 'login', method: 'post' },
-        getSession: { path: 'user', method: 'get' },
+        signIn: { path: '/login', method: 'post' },
+        getSession: { path: '/user', method: 'get' },
       },
       session: {
         dataType: {
