@@ -7,12 +7,25 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@sidebase/nuxt-auth',
     'dayjs-nuxt',
+    'nuxt-security'
   ],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
+  },
+  security: {
+    headers: {
+      contentSecurityPolicy: {
+        "script-src": [
+          "'nonce-{{nonce}}'",
+          // The nonce allows the root script
+          "'strict-dynamic'" 
+          // All scripts inserted by the root script will also be allowed
+        ]
+      }
+    }
   },
   dayjs: {
     locales: ['de'],
