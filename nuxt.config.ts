@@ -17,12 +17,14 @@ export default defineNuxtConfig({
   },
   security: {
     headers: {
-      // certain header
-      xXSSProtection: '1',
-    },
-    // certain middleware
-    rateLimiter: {
-      // options
+      contentSecurityPolicy: {
+        "script-src": [
+          "'nonce-{{nonce}}'",
+          // The nonce allows the root script
+          "'strict-dynamic'" 
+          // All scripts inserted by the root script will also be allowed
+        ]
+      }
     }
   },
   dayjs: {
