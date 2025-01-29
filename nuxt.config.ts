@@ -16,15 +16,14 @@ export default defineNuxtConfig({
     },
   },
   security: {
-    nonce: true, // Enables HTML nonce support in SSR mode
     headers: {
       contentSecurityPolicy: {
-        'script-src': [
-          "'strict-dynamic'", // Modify with your custom CSP sources
-          "'nonce-{{nonce}}'" // Enables CSP nonce support for scripts in SSR mode, supported by almost any browser (level 2)
+        "script-src": [
+          "'nonce-{{nonce}}'",
+          "'strict-dynamic'"
         ]
       }
-    },
+    }
   },
   dayjs: {
     locales: ['de'],
