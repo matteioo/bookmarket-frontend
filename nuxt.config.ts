@@ -14,6 +14,17 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  security: {
+    headers: {
+      // certain header
+      xXSSProtection: '1',
+    },
+
+    // certain middleware
+    rateLimiter: {
+      // options
+    }
+  },
   dayjs: {
     locales: ['de'],
     plugins: ['relativeTime', 'utc', 'timezone'],
