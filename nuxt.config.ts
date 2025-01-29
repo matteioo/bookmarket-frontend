@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@sidebase/nuxt-auth',
     'dayjs-nuxt',
+    'nuxt-security'
   ],
   postcss: {
     plugins: {
@@ -19,7 +20,6 @@ export default defineNuxtConfig({
       // certain header
       xXSSProtection: '1',
     },
-
     // certain middleware
     rateLimiter: {
       // options
