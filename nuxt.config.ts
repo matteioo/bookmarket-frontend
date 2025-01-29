@@ -20,7 +20,9 @@ export default defineNuxtConfig({
       contentSecurityPolicy: {
         "script-src": [
           "'nonce-{{nonce}}'",
-          "'strict-dynamic'"
+          // The nonce allows the root script
+          "'strict-dynamic'" 
+          // All scripts inserted by the root script will also be allowed
         ]
       }
     }
