@@ -19,8 +19,7 @@
         class="w-full"
         :rows="data !== null ? data.results : []"
         :columns="columns"
-      >
-      </UTable>
+      />
     </div>
     <div class="w-full flex flex-row justify-between text-gray-700 dark:text-gray-300">
       <div class="inline-flex items-center gap-x-2">

@@ -11,7 +11,7 @@
       </div>
     </header>
     <div class="flex-grow w-full flex flex-col m-2">
-      <slot></slot>
+      <slot />
     </div>
     <div class="flex-grow-0">
       <Footer />

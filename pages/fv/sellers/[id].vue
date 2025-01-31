@@ -76,7 +76,7 @@
 
           <template #marked-data="{ row }">
             <UIcon v-if="row.marked" name="i-heroicons-paint-brush-20-solid" class="text-lg text-sky-600" />
-            <span v-else></span>
+            <span v-else />
           </template>
 
           <template #createdAt-data="{ row }">
