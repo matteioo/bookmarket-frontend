@@ -45,6 +45,7 @@ export default defineNuxtConfig({
         // TODO: implement cookie domain for production, when domains are defined
         //cookieDomain: process.env.NUXT_PUBLIC_COOKIE_DOMAIN || 'localhost',
         secureCookieAttribute: true,
+        sameSiteAttribute: 'none',
       }
     },
     globalAppMiddleware: {
