@@ -1,4 +1,4 @@
-name: Run Unit Tests and Lint Files
+name: Lint Files
 "on": push
 jobs:
   unit_test-lint:
