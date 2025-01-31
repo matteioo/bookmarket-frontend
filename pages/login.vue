@@ -10,7 +10,7 @@
         <UInput v-model="state.password" type="password" />
       </UFormGroup>
 
-      <UButton type="submit" class="float-right">
+      <UButton block :loading="loading" type="submit">
         Anmelden
       </UButton>
     </UForm>
@@ -34,6 +34,8 @@ const state = reactive({
   password: '',
 })
 
+const loading = ref(false)
+
 const validate = (state: any): FormError[] => {
   const errors = []
   if (!state.username) errors.push({ path: 'username', message: 'Benutzername ist verpflichtend' })
@@ -43,6 +45,7 @@ const validate = (state: any): FormError[] => {
 
 async function login(event: FormSubmitEvent<any>) {
   try {
+    loading.value = true;
     await signIn({ username: event.data.username, password: event.data.password }, { callbackUrl: '/fv' })
   } catch (error) {
     useToast().add({
@@ -52,6 +55,7 @@ async function login(event: FormSubmitEvent<any>) {
       color: 'red',
     });
   } finally {
+    loading.value = false;
     state.username = '';
     state.password = '';
   }
