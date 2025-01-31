@@ -42,7 +42,8 @@ export default defineNuxtConfig({
         },
       },
       token: {
-        cookieDomain: process.env.NUXT_PUBLIC_COOKIE_DOMAIN || 'localhost',
+        // TODO: implement cookie domain for production, when domains are defined
+        //cookieDomain: process.env.NUXT_PUBLIC_COOKIE_DOMAIN || 'localhost',
         secureCookieAttribute: true,
       }
     },
