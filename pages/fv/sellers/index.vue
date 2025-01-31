@@ -14,7 +14,8 @@
     <div class="w-full rounded bg-white dark:bg-gray-900 shadow">
       <UTable
         :loading="pending"
-        :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
+        :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Lade Verkäufer:innen...' }"
+        :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'Keine Verkäufer:in gefunden.' }"
         class="w-full"
         :rows="data !== null ? data.results : []"
         :columns="columns"
