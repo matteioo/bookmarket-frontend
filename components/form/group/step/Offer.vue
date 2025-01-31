@@ -100,6 +100,16 @@ import type { Exam } from '~/interfaces/Exam';
 import type { Page } from '~/interfaces/Page';
 import { formatPrice } from '~/utils/utils';
 
+interface BookFields {
+  isbn: string;
+  title: string;
+  authors: string;
+  publisher: string;
+  edition?: number;
+  maxPrice?: number;
+  exam_id?: number;
+}
+
 const props = defineProps({
   seller: {
     type: Object as () => Seller,
@@ -129,13 +139,13 @@ const formState = reactive({
   isbn: '',
   title: '',
   authors: '',
-  maxPrice: undefined,
-  edition: undefined,
   publisher: '',
+  edition: undefined,
+  maxPrice: undefined,
   exam_id: undefined,
 })
 
-const formValidate = (state: any): FormError[] => {
+const formValidate = (state: BookFields): FormError[] => {
   const errors = []
   
   errors.push(...isbnValidators(state));
@@ -145,12 +155,11 @@ const formValidate = (state: any): FormError[] => {
   if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
   if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
-  if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ path: 'edition', message: 'Auflage darf nur Ziffern enthalten' })
   if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
 }
 
-const isbnValidators = (state: any): FormError[] => {
+const isbnValidators = (state: BookFields): FormError[] => {
   const errors = [];
 
   if (!state.isbn) errors.push({ path: 'isbn', message: 'ISBN ist verpflichtend' })
@@ -198,7 +207,7 @@ const handleIsbnSearch = async () => {
 }
 
 // This anonymous function is called by the UForm component to create a new book
-const onBookCreate = async (event: FormSubmitEvent<any>) => {
+const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
   loading.value = true;
 
   const body = {...event.data};

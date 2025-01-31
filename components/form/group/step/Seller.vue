@@ -57,6 +57,7 @@ const props = defineProps({
   currentSeller: {
     type: Object as PropType<Seller>,
     required: false,
+    default: null,
   },
 });
 

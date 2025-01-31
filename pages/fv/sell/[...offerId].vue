@@ -195,9 +195,9 @@ async function searchOffer () {
       selectedOffer.value = null;
       console.error('No offer found with ID:', offerId);
     }
-  } catch (error: any) {
+  } catch {
     selectedOffer.value = null;
-    console.error('Failed to fetch offer:', error.data);
+    console.error('Failed to fetch offer');
   }
 
   loadingOffer.value = false;
@@ -245,8 +245,7 @@ async function checkout() {
       path: '/fv',
     })
 
-  } catch (error: any) {
-    console.error('Failed to fetch offer:', error.data.error);
+  } catch {
     confirmModalOpen.value = false;
     await updateOffers();
     useToast().add({

@@ -47,6 +47,11 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
+interface MarkedFields {
+  marked: boolean;
+  unmarked: boolean;
+}
+
 const props = defineProps({
   examFilter: {
     type: Object as PropType<ExamFilter>,
@@ -64,13 +69,13 @@ const state = reactive({
   exam: props.examFilter.value.exam,
 })
 
-const validate = (state: any): FormError[] => {
+const validate = (state: MarkedFields): FormError[] => {
   const errors = []
   if (!state.marked && !state.unmarked) errors.push({ path: 'unmarked', message: 'Mindestens ein Feld muss aktiv sein!' })
   return errors
 }
 
-async function onSubmit (event: FormSubmitEvent<any>) {
+async function onSubmit (event: FormSubmitEvent<MarkedFields>) {
   if (event.data.marked === true && event.data.unmarked === true) {
     resetModal();
   } else {

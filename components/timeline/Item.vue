@@ -39,19 +39,22 @@ const props = defineProps({
   },
   member: {
     type: Object as () => Member,
-    required: false
+    required: false,
+    default: undefined
   },
   dateTime: {
     type: Date,
-    required: false
+    required: false,
+    default: undefined
   },
   title: {
     type: String,
-    required: true
+    required: true,
   },
   body: {
     type: String,
-    required: false
+    required: false,
+    default: undefined,
   }
 });
 

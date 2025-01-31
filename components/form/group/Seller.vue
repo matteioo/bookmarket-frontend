@@ -26,10 +26,18 @@
 import type { FormError, FormSubmitEvent, ButtonVariant } from '#ui/types'
 import type { Seller } from '~/interfaces/Seller';
 
+interface SellerFields {
+  fullName: string;
+  matriculationNumber: string;
+  email: string;
+  note: string;
+}
+
 const props = defineProps({
   to: {
     type: String,
     required: false,
+    default: undefined,
   },
   buttonVariant: {
     type: String,
@@ -60,7 +68,7 @@ const state = reactive({
   note: '',
 })
 
-const validate = (state: any): FormError[] => {
+const validate = (state: SellerFields): FormError[] => {
   const errors = []
   if (!state.fullName) errors.push({ path: 'fullName', message: 'Name ist verpflichtend' })
   if (!state.matriculationNumber) errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer ist verpflichtend' })
@@ -73,7 +81,7 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-const onSubmit = async (event: FormSubmitEvent<any>) => {
+const onSubmit = async (event: FormSubmitEvent<SellerFields>) => {
   await createSeller(event);
 
   if (user.value) {
@@ -83,7 +91,7 @@ const onSubmit = async (event: FormSubmitEvent<any>) => {
   }
 };
 
-async function createSeller(event: FormSubmitEvent<any>) {
+async function createSeller(event: FormSubmitEvent<SellerFields>) {
   loading.value = true;
   form.value.clear();
 
@@ -107,7 +115,7 @@ async function createSeller(event: FormSubmitEvent<any>) {
     })
     
     if (props.to) {
-      router.push(props.to)
+      router.push(props.to);
     }
   } else {
     const data = await response.json()

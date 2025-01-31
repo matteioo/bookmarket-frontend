@@ -34,7 +34,7 @@ const _props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const updateModelValue = (newValue: any) => {
+const updateModelValue = (newValue: never) => {
   emit('update:modelValue', newValue);
 };
 </script>
