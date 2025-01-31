@@ -5,8 +5,8 @@
         <span class="block text-sm text-gray-600 dark:text-gray-400">{{ label }}</span>
       </template>
       <template #default>
-        <UInput v-if="(typeof modelValue !== 'boolean')" size="xs" :model-value="modelValue" @update:modelValue="updateModelValue" />
-        <UToggle v-else class="mt-1" :model-value="modelValue" @update:modelValue="updateModelValue" />
+        <UInput v-if="(typeof modelValue !== 'boolean')" size="xs" :model-value="modelValue" @update:model-value="updateModelValue" />
+        <UToggle v-else class="mt-1" :model-value="modelValue" @update:model-value="updateModelValue" />
       </template>
     </UFormGroup>
   </div>

@@ -22,7 +22,7 @@
     </div>
 
     <div v-if="hasContent" class="p-2 rounded border bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 ml-14">
-      <slot v-bind:content="true" />
+      <slot :content="true" />
     </div>
   </div>
 </template>
