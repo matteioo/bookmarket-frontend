@@ -42,6 +42,7 @@ export default defineNuxtConfig({
         },
       },
       token: {
+        cookieDomain: process.env.NUXT_PUBLIC_COOKIE_DOMAIN || 'localhost',
         secureCookieAttribute: true,
       }
     },
