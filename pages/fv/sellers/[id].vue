@@ -110,8 +110,7 @@ import type { Page } from '~/interfaces/Page';
 import type { Seller } from '~/interfaces/Seller';
 import { formatDate, formatPrice } from '~/utils/utils';
 
-definePageMeta
-({
+definePageMeta({
   layout: 'protected',
   validate: async (route) => {
     // Check if the id is made up of digits
