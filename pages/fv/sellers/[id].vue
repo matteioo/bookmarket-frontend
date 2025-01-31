@@ -55,7 +55,8 @@
         </div>
         <UTable
           :loading="loadingSellerOffers"
-          :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
+          :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Lade Angebote...' }"
+          :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'Kein Angebot gefunden.' }"
           class="w-full"
           :rows="sellerOffers !== null ? sellerOffers.results : []"
           :columns="selectedColumns"
