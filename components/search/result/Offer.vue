@@ -64,7 +64,7 @@
 import { formatPrice } from '~/utils/utils';
 import type { Offer } from '~/interfaces/Offer';
 
-const props = defineProps({
+const _props = defineProps({
   offer: {
     type: Object as () => Offer,
     required: true,

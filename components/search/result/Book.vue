@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import type { Book } from '~/interfaces/Book';
 
-const props = defineProps({
+const _props = defineProps({
   book: {
     type: Object as () => Book,
     required: true,

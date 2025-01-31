@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+const _props = defineProps({
   label: {
     type: String,
     required: true,

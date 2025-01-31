@@ -17,7 +17,7 @@ interface Step {
   title: string;
 }
 
-const props = defineProps({
+const _props = defineProps({
   steps: {
     type: Array as () => Step[],
     required: true,
