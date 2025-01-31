@@ -112,7 +112,7 @@ async function search(query: string) {
   
   const sellers = await $fetch<Page<Book>>(useRuntimeConfig().public.apiUrl + '/books', {
     headers: {
-      Authorization: `$value}`,
+    Authorization: `${token.value}`,
     },
     params: {
       search: query,
