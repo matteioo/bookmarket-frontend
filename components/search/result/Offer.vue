@@ -1,7 +1,5 @@
 <template>
-  <div class="w-full p-2 flex flex-row items-center gap-x-2 cursor-pointer rounded hover:bg-gray-200 dark:hover:bg-gray-900"
-    @click="modalOpen = true"
-  >
+  <div class="w-full p-2 flex flex-row items-center gap-x-2 cursor-pointer rounded hover:bg-gray-200 dark:hover:bg-gray-900" @click="modalOpen = true">
     <div class="flex-auto overflow-x-hidden">
       <div class="text-gray-700 dark:text-gray-300">
         <div class="flex items-center gap-x-1">
@@ -23,9 +21,7 @@
     </div>
   </div>
 
-  <UModal v-model="modalOpen" :ui="{
-    width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl'
-  }">
+  <UModal v-model="modalOpen" :ui="{width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl'}">
     <div class="p-4 grid grid-cols-6">
       <h2 class="mb-2 col-span-6 block font-semibold text-gray-800 dark:text-gray-200">{{ offer.book.title }}</h2>
       <DataLabel class="col-span-6" label="Autoren" :multi-line="true" :data="offer.book.authors" />

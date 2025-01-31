@@ -9,10 +9,7 @@
         <div>
           <div class="text-gray-700 dark:text-gray-300 font-medium">
             <time v-if="props.dateTime" class="block text-sm text-gray-500">{{ formatReadableDate(props.dateTime.toString()) }}</time>
-            <ULink v-if="props.member"
-              class="underline hover:text-gray-800 dark:hover:text-gray-200"
-              :to="`/fv/members/${props.member.id}`"
-              >
+            <ULink v-if="props.member" class="underline hover:text-gray-800 dark:hover:text-gray-200" :to="`/fv/members/${props.member.id}`">
               {{ props.member?.username }}
             </ULink>
             <span>&nbsp;{{ props.title }}</span>
