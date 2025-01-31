@@ -41,7 +41,7 @@
   
     <UDivider label="ODER ANLEGEN" />
   
-    <FormGroupSeller :onSubmit="handleSubmit" buttonVariant="outline" />
+    <FormGroupSeller :on-submit="handleSubmit" button-variant="outline" />
   </div>
 </template>
 

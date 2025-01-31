@@ -1,6 +1,6 @@
 <template>
   <div class="flex-grow w-full max-w-sm mx-auto flex items-center justify-center">
-    <FormGroupSeller to="/fv/sellers" :onSubmit="createSeller" />
+    <FormGroupSeller to="/fv/sellers" :on-submit="createSeller" />
   </div>
 </template>
 
