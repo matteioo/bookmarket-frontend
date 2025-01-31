@@ -42,7 +42,6 @@ definePageMeta({
   layout: 'protected',
 });
 
-const router = useRouter()
 const { data: member } = useAuth()
 const searchQuery = ref('')
 

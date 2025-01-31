@@ -51,7 +51,7 @@ const fetchParams = computed(() => ({
   search: searchInput.value,
 }));
 
-const { data, pending, error, refresh } = useFetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
+const { data, pending } = useFetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
   headers: {
     Authorization: `${token.value}`,
   },

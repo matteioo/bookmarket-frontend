@@ -47,7 +47,7 @@ async function login(event: FormSubmitEvent<any>) {
   try {
     loading.value = true;
     await signIn({ username: event.data.username, password: event.data.password }, { callbackUrl: '/fv' })
-  } catch (error) {
+  } catch {
     useToast().add({
       title: 'Fehler',
       description: 'Benutzername oder Passwort ist falsch',

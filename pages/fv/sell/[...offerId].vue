@@ -128,7 +128,6 @@ definePageMeta({
 })
 
 const route = useRoute()
-const router = useRouter()
 const { token } = useAuth()
 const loadingOffer = ref(false)
 const selectedOffer = ref<Offer | null>(null)
@@ -315,7 +314,7 @@ async function refetchOffer(id: number): Promise<Offer | null> {
       console.error('No offer found with ID:', id);
       return null;
     }
-  } catch (error: any) {
+  } catch {
     return null;
   }
 }
