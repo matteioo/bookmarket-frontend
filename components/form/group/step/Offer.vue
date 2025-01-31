@@ -201,7 +201,7 @@ const handleIsbnSearch = async () => {
 const onBookCreate = async (event: FormSubmitEvent<any>) => {
   loading.value = true;
 
-  let body = {...event.data};
+  const body = {...event.data};
 
   if (body.exam_id === undefined) {
     delete body.exam_id;
@@ -263,7 +263,7 @@ function createOffer(book: Book | undefined) {
 
   checkedIsbn.value = false;
 
-  let offer: Offer = {
+  const offer: Offer = {
     book: book,
     price: book.maxPrice,
     seller: props.seller,

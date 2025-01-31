@@ -109,7 +109,7 @@ const isbnValidators = (state: any): FormError[] => {
 async function onSubmit(event: FormSubmitEvent<any>) {
   loading.value = true;
 
-  let body = {...event.data};
+  const body = {...event.data};
   if (body.exam_id === undefined) {
     delete body.exam_id;
   }

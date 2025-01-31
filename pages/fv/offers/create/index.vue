@@ -23,8 +23,8 @@ definePageMeta({
   layout: 'protected',
 });
 
-let currentStep = ref(1);
-let offers = ref({} as NewOffers);
+const currentStep = ref(1);
+const offers = ref({} as NewOffers);
 
 const steps = [
   { step: 1, title: 'Verkäufer:in zuordnen' },

@@ -93,7 +93,7 @@ const loading = ref(false);
 const selected = ref(undefined as Book | undefined);
 const { token } = useAuth();
 const offers = ref([] as Offer[]);
-let currentPrice = ref(0);
+const currentPrice = ref(0);
 
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
 const handleSearchSubmit = () => {
@@ -139,7 +139,7 @@ const member: Member = {
 };
 
 function createOffer(book: Book) {
-  let offer: Offer = {
+  const offer: Offer = {
     book: book,
     price: book.maxPrice,
     seller: props.seller,

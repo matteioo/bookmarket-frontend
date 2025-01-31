@@ -31,7 +31,7 @@ const props = defineProps({
   },
 });
 
-let errors = ref({count: 0, price: [], location: []} as Errors);
+const errors = ref({count: 0, price: [], location: []} as Errors);
 
 const emit = defineEmits(['delete-item', 'update:modelValue', 'update:hasErrors']);
 
