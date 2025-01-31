@@ -45,6 +45,7 @@ export default defineNuxtConfig({
         // TODO: implement cookie domain for production, when domains are defined
         //cookieDomain: process.env.NUXT_PUBLIC_COOKIE_DOMAIN || 'localhost',
         secureCookieAttribute: true,
+        // TODO: remove sameSiteAttribute 'None' for production, when domains are defined
         sameSiteAttribute: 'none',
       }
     },
