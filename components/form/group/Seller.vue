@@ -13,7 +13,7 @@
     </UFormGroup>
 
     <UFormGroup label="Anmerkung" name="note">
-      <UTextarea autoresize :maxrows="5" v-model="state.note" placeholder="Anmerkung über Verkäufer:in" />
+      <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" />
     </UFormGroup>
 
     <UButton type="submit" class="float-right" :loading="loading" :variant="(props.buttonVariant as ButtonVariant)">

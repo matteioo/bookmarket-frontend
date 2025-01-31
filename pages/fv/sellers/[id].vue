@@ -30,7 +30,7 @@
           <h1 class="text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Verkäufer:in - {{ seller?.fullName }}</h1>
           <UButton icon="i-heroicons-pencil" size="sm" square variant="link" to="/fv/sellers" />
         </div>
-        <UButton label="Bearbeitungsverlauf" variant="soft" @click="editHistoryModal = true" icon="i-heroicons-rectangle-stack" />
+        <UButton label="Bearbeitungsverlauf" variant="soft" icon="i-heroicons-rectangle-stack" @click="editHistoryModal = true" />
       </div>
       <div class="grid grid-cols-2">
         <DataLabel label="Matrikelnummer" :data="seller?.matriculationNumber" />
@@ -41,11 +41,11 @@
     <section class="flex flex-col gap-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-medium text-primary-800 dark:text-primary-200">Angebote</h2>
-        <UInput placeholder="Suchen..." v-model="searchInput" />
+        <UInput v-model="searchInput" placeholder="Suchen..." />
       </div>
       <div class="w-full rounded bg-white dark:bg-gray-900 shadow divide-y divide-gray-200 dark:divide-gray-700">
         <div class="px-4 py-3">
-          <USelectMenu class="w-fit" v-slot="{ open }" v-model="selectedColumns" :options="columns" multiple>
+          <USelectMenu v-slot="{ open }" v-model="selectedColumns" class="w-fit" :options="columns" multiple>
             <UButton color="gray" class="flex-1 justify-between">
               Spalten auswählen
 

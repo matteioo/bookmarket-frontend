@@ -3,8 +3,8 @@
   <div class="flex-grow w-full flex items-center justify-center">
     <div>
       <UInput
-        class="mb-4"
         v-model="searchQuery"
+        class="mb-4"
         name="q"
         placeholder="Suche nach ISBN, Titel, Autor, ..."
         autocomplete="off"

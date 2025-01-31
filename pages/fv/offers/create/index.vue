@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto w-full max-w-lg mb-4">
-    <FormSteps :steps="steps" @step-clicked="handleStepClicked" :active="currentStep" />
+    <FormSteps :steps="steps" :active="currentStep" @step-clicked="handleStepClicked" />
   </div>
   <div class="flex-grow flex flex-col items-center gap-y-6" :class="{ 'justify-center': currentStep === 1 }">
     <div v-if="currentStep === 1" class="w-full max-w-md mx-auto">

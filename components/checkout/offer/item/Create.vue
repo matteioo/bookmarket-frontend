@@ -6,9 +6,9 @@
       <DataLabel label="ISBN" :data="props.modelValue.book.isbn" class="col-span-2" />
       <DataLabel label="Auflage" :data="String(props.modelValue.book.edition)" class="col-span-1" />
       <DataLabel label="Prüfung" :data="props.modelValue.book.exam?.name ?? '-'" class="col-span-4" />
-      <DataLabelInput label="Markiert" :model-value="props.modelValue.marked" @update:modelValue="value => props.modelValue.marked = value" class="col-span-1" />
-      <DataLabelInput label="Preis" :model-value="props.modelValue.price" :hint="'Max. ' + props.modelValue.book.maxPrice" :errors="errors?.price" @update:modelValue="value => props.modelValue.price = value" class="col-span-2" />
-      <DataLabelInput label="Lagerort" :model-value="props.modelValue.location" :errors="errors?.location" @update:modelValue="value => props.modelValue.location = value" class="col-span-2" />
+      <DataLabelInput label="Markiert" :model-value="props.modelValue.marked" class="col-span-1" @update:modelValue="value => props.modelValue.marked = value" />
+      <DataLabelInput label="Preis" :model-value="props.modelValue.price" :hint="'Max. ' + props.modelValue.book.maxPrice" :errors="errors?.price" class="col-span-2" @update:modelValue="value => props.modelValue.price = value" />
+      <DataLabelInput label="Lagerort" :model-value="props.modelValue.location" :errors="errors?.location" class="col-span-2" @update:modelValue="value => props.modelValue.location = value" />
     </div>
     <UButton
       icon="i-heroicons-trash"

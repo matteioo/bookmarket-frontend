@@ -1,7 +1,7 @@
 <template>
   <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-xl mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
-      <UInput placeholder="Suchen..." v-model="searchInput" />
+      <UInput v-model="searchInput" placeholder="Suchen..." />
       <div class="inline-flex gap-x-4">
         <UPopover mode="hover" :popper="{ placement: 'bottom-end' }">
           <UButton color="primary" label="Hinzufügen" trailing-icon="i-heroicons-chevron-down-20-solid" />
@@ -31,7 +31,7 @@
     </div>
     <div class="w-full rounded bg-white dark:bg-gray-900 shadow divide-y divide-gray-200 dark:divide-gray-700">
       <div class="px-4 py-3">
-        <USelectMenu class="w-fit" v-slot="{ open }" v-model="selectedColumns" :options="columns" multiple>
+        <USelectMenu v-slot="{ open }" v-model="selectedColumns" class="w-fit" :options="columns" multiple>
           <UButton color="gray" class="flex-1 justify-between">
             Spalten auswählen
 

@@ -6,7 +6,7 @@
         <UForm ref="form" :validate="formValidate" :state="formState" class="w-full space-y-4" @submit="onBookCreate">
           <UFormGroup label="ISBN" name="isbn" required>
             <UButtonGroup orientation="horizontal" class="w-full">
-              <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="flex-grow" @keydown.enter.prevent="handleIsbnSearch" autocomplete="off" />
+              <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="flex-grow" autocomplete="off" @keydown.enter.prevent="handleIsbnSearch" />
               <UButton :loading="loadingIsbn" icon="i-heroicons-magnifying-glass" color="gray" @click="handleIsbnSearch" />
             </UButtonGroup>
           </UFormGroup>
