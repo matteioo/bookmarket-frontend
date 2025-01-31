@@ -1,5 +1,5 @@
 <template>
-  <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
+  <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="submitBook">
     <UFormGroup label="ISBN" name="isbn" required>
       <UInput v-model="state.isbn" type="text" placeholder="9876543210987" class="flex-grow" autocomplete="off" />
     </UFormGroup>
@@ -18,7 +18,7 @@
 
     <div class="inline-flex flex-row gap-x-2">
       <UFormGroup label="Auflage" name="edition" required>
-        <UInput v-model="state.edition" type="text" placeholder="14" />
+        <UInput v-model="state.edition" type="number" placeholder="14" />
       </UFormGroup>
       
       <UFormGroup label="Max. Preis" name="maxPrice" required>
@@ -47,6 +47,16 @@ import type { Book } from '~/interfaces/Book';
 import type { Exam } from '~/interfaces/Exam';
 import type { Page } from '~/interfaces/Page';
 
+interface BookFields {
+  isbn: string;
+  title: string;
+  authors: string;
+  publisher: string;
+  edition?: number;
+  maxPrice?: number;
+  exam_id?: number;
+}
+
 const props = defineProps({
   buttonVariant: {
     type: String,
@@ -71,17 +81,17 @@ const exams = ref([] as Exam[]);
 
 onMounted(fetchExams);
 
-const state = reactive({
+const state = reactive<BookFields>({
   isbn: '',
   title: '',
   authors: '',
-  maxPrice: undefined,
-  edition: undefined,
   publisher: '',
+  edition: undefined,
+  maxPrice: undefined,
   exam_id: undefined,
 })
 
-const validate = (state: any): FormError[] => {
+const validate = (state: BookFields): FormError[] => {
   const errors = []
   
   errors.push(...isbnValidators(state));
@@ -91,12 +101,11 @@ const validate = (state: any): FormError[] => {
   if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
   if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
-  if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ path: 'edition', message: 'Auflage darf nur Ziffern enthalten' })
   if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
 }
 
-const isbnValidators = (state: any): FormError[] => {
+const isbnValidators = (state: BookFields): FormError[] => {
   const errors = [];
 
   if (!state.isbn) errors.push({ path: 'isbn', message: 'ISBN ist verpflichtend' })
@@ -106,10 +115,10 @@ const isbnValidators = (state: any): FormError[] => {
   return errors;
 }
 
-async function onSubmit(event: FormSubmitEvent<any>) {
+async function submitBook(event: FormSubmitEvent<BookFields>) {
   loading.value = true;
 
-  let body = {...event.data};
+  const body = {...event.data};
   if (body.exam_id === undefined) {
     delete body.exam_id;
   }

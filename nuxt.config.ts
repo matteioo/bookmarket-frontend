@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@sidebase/nuxt-auth',
     'dayjs-nuxt',
+    '@nuxt/eslint',
   ],
   postcss: {
     plugins: {

@@ -20,6 +20,11 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
+interface LoginFields {
+  username: string;
+  password: string;
+}
+
 definePageMeta({
   auth: {
     unauthenticatedOnly: true,
@@ -29,25 +34,25 @@ definePageMeta({
 
 const { signIn } = useAuth()
 
-const state = reactive({
+const state = reactive<LoginFields>({
   username: '',
   password: '',
 })
 
 const loading = ref(false)
 
-const validate = (state: any): FormError[] => {
+const validate = (state: LoginFields): FormError[] => {
   const errors = []
   if (!state.username) errors.push({ path: 'username', message: 'Benutzername ist verpflichtend' })
   if (!state.password) errors.push({ path: 'password', message: 'Passwort ist verpflichtend' })
   return errors
 }
 
-async function login(event: FormSubmitEvent<any>) {
+async function login(event: FormSubmitEvent<LoginFields>) {
   try {
     loading.value = true;
     await signIn({ username: event.data.username, password: event.data.password }, { callbackUrl: '/fv' })
-  } catch (error) {
+  } catch {
     useToast().add({
       title: 'Fehler',
       description: 'Benutzername oder Passwort ist falsch',

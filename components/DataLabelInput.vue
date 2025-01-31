@@ -5,15 +5,15 @@
         <span class="block text-sm text-gray-600 dark:text-gray-400">{{ label }}</span>
       </template>
       <template #default>
-        <UInput v-if="(typeof modelValue !== 'boolean')" size="xs" :model-value="modelValue" @update:modelValue="updateModelValue" />
-        <UToggle v-else class="mt-1" :model-value="modelValue" @update:modelValue="updateModelValue" />
+        <UInput v-if="(typeof modelValue !== 'boolean')" size="xs" :model-value="modelValue" @update:model-value="updateModelValue" />
+        <UToggle v-else class="mt-1" :model-value="modelValue" @update:model-value="updateModelValue" />
       </template>
     </UFormGroup>
   </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+const _props = defineProps({
   label: {
     type: String,
     required: true,
@@ -34,7 +34,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const updateModelValue = (newValue: any) => {
+const updateModelValue = (newValue: never) => {
   emit('update:modelValue', newValue);
 };
 </script>

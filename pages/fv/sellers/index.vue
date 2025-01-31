@@ -1,7 +1,7 @@
 <template>
   <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-md mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
-      <UInput placeholder="Suchen..." v-model="searchInput" />
+      <UInput v-model="searchInput" placeholder="Suchen..." />
       <UButton
         icon="i-heroicons-plus"
         size="sm"
@@ -19,8 +19,7 @@
         class="w-full"
         :rows="data !== null ? data.results : []"
         :columns="columns"
-      >
-      </UTable>
+      />
     </div>
     <div class="w-full flex flex-row justify-between text-gray-700 dark:text-gray-300">
       <div class="inline-flex items-center gap-x-2">
@@ -52,7 +51,7 @@ const fetchParams = computed(() => ({
   search: searchInput.value,
 }));
 
-const { data, pending, error, refresh } = useFetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
+const { data, pending } = useFetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
   headers: {
     Authorization: `${token.value}`,
   },

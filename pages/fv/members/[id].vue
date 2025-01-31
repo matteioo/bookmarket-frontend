@@ -1,10 +1,11 @@
 <template>
-  Test
+  <div>
+    Test
+  </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta
-({
+definePageMeta({
   layout: 'protected',
   validate: async (route) => {
     // Check if the id is made up of digits
