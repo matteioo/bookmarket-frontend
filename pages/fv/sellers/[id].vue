@@ -112,6 +112,10 @@ import type { Page } from '~/interfaces/Page';
 import type { Seller } from '~/interfaces/Seller';
 import { formatDate, formatPrice } from '~/utils/utils';
 
+useSeoMeta({
+  title: 'Verkäufer:in-Profil',
+});
+
 definePageMeta({
   layout: 'protected',
   validate: async (route) => {

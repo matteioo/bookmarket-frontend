@@ -93,6 +93,10 @@ import type { Page } from '~/interfaces/Page';
 import type { Offer } from '~/interfaces/Offer';
 import { formatDate, formatPrice } from '#imports';
 
+useSeoMeta({
+  title: 'Angebot-Übersicht',
+});
+
 definePageMeta({
   layout: 'protected',
 });

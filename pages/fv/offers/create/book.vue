@@ -9,6 +9,10 @@
 <script setup lang="ts">
 import type { Book } from '~/interfaces/Book';
 
+useSeoMeta({
+  title: 'Buch hinzufügen',
+});
+
 definePageMeta({
   layout: 'protected',
 });

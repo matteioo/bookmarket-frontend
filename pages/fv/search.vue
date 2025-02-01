@@ -58,6 +58,10 @@ import { refDebounced } from '@vueuse/core'
 import type { Offer } from '~/interfaces/Offer';
 import type { Page } from '~/interfaces/Page';
 
+useSeoMeta({
+  title: 'Suche',
+});
+
 definePageMeta({
   layout: 'protected',
 });

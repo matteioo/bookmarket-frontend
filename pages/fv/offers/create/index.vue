@@ -21,6 +21,10 @@
 import type { Seller } from '~/interfaces/Seller';
 import type { Offer } from '~/interfaces/Offer';
 
+useSeoMeta({
+  title: 'Angebot anlegen',
+});
+
 definePageMeta({
   layout: 'protected',
 });

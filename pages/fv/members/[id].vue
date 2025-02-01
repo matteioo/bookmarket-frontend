@@ -5,6 +5,10 @@
 </template>
 
 <script setup lang="ts">
+useSeoMeta({
+  title: 'Mandatar:in-Profil',
+});
+
 definePageMeta({
   layout: 'protected',
   validate: async (route) => {

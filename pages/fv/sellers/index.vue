@@ -35,6 +35,10 @@
 import type { Page } from '~/interfaces/Page';
 import type { Seller } from '~/interfaces/Seller';
 
+useSeoMeta({
+  title: 'Verkäufer:innen-Übersicht',
+});
+
 definePageMeta({
   layout: 'protected',
 });

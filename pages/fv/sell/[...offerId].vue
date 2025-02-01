@@ -123,6 +123,10 @@
 import type { Offer } from '~/interfaces/Offer';
 import { formatPrice } from '~/utils/utils';
 
+useSeoMeta({
+  title: 'Verkaufen',
+});
+
 definePageMeta({
   layout: 'protected',
 })
