@@ -25,6 +25,11 @@ interface LoginFields {
   password: string;
 }
 
+useSeoMeta({
+  title: 'Login',
+  ogTitle: 'Login',
+})
+
 definePageMeta({
   auth: {
     unauthenticatedOnly: true,
