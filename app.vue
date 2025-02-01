@@ -7,3 +7,9 @@
 
   <UNotifications />
 </template>
+
+<script setup lang="ts">
+useHead({
+  titleTemplate: title => title ? `${title} · Bücherbörse der FVJus` : 'Bücherbörse der FVJus',
+})
+</script>
