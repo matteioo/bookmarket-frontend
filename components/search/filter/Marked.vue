@@ -1,113 +1,22 @@
 <template>
   <div>
-    <UPopover v-model:open="popoverOpen">
-      <UButton
-        label="Markiert"
-        icon="i-heroicons-paint-brush-16-solid"
-        size="xs"
-        :variant="!localMarkedFilter.value.marked || !localMarkedFilter.value.unmarked ? 'outline' : 'solid'"
-        :color="!localMarkedFilter.value.marked || !localMarkedFilter.value.unmarked ? 'primary' : 'gray'"
-      />
-
-      <template #panel>
-        <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
-          <div class="p-4 flex flex-col gap-y-4">
-            <UFormGroup name="marked">
-              <UCheckbox v-model="state.marked" label="Markierte Angebote anzeigen" />
-            </UFormGroup>
-
-            <UFormGroup name="marked">
-              <UCheckbox v-model="state.unmarked" label="Nicht markierte Angebote anzeigen" />
-            </UFormGroup>
-
-            <div v-if="!state.marked && !state.unmarked" class="text-red-500 dark:text-red-400 text-sm">
-              Mindestens ein Feld muss aktiv sein!
-            </div>
-          
-            <div class="inline-flex flex-row-reverse gap-x-2 justify-stretch flex-wrap">
-              <UButton
-                type="submit"
-                label="Speichern"
-                color="primary"
-                variant="outline"
-                block
-                class="flex-1"
-                :disabled="!state.marked && !state.unmarked"
-              />
-
-              <UButton
-                label="Löschen"
-                color="gray"
-                block
-                class="flex-1"
-                @click="resetModal"
-              />
-            </div>
-          </div>
-        </UForm>
-      </template>
-    </UPopover>
+    <UButton
+      :label="filterLabel"
+      icon="i-heroicons-paint-brush-16-solid"
+      size="xs"
+      :variant="filterActive ? 'outline' : 'solid'"
+      :color="filterActive ? 'primary' : 'gray'"
+      @click="toggleFilter"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { FormError, FormSubmitEvent } from '#ui/types'
+const model = defineModel<boolean>();
+const filterActive = computed(() => !model.value);
+const filterLabel = computed(() => filterActive.value ? 'Markierte anzeigen' : 'Markierte ausblenden');
 
-interface MarkedFields {
-  marked: boolean;
-  unmarked: boolean;
-}
-
-const props = defineProps({
-  markedFilter: {
-    type: Object as PropType<MarkedFilter>,
-    required: true,
-  }
-});
-const emit = defineEmits(['update:markedFilter']);
-
-const popoverOpen = ref(false);
-const localMarkedFilter = ref<MarkedFilter>(props.markedFilter);
-
-const state = reactive({
-  marked: props.markedFilter.value.marked,
-  unmarked: props.markedFilter.value.unmarked,
-})
-
-const validate = (state: MarkedFields): FormError[] => {
-  const errors = []
-  if (!state.marked && !state.unmarked) errors.push({ path: 'unmarked', message: 'Mindestens ein Feld muss aktiv sein!' })
-  return errors
-}
-
-async function onSubmit (event: FormSubmitEvent<MarkedFields>) {
-  if (event.data.marked === true && event.data.unmarked === true) {
-    resetModal();
-  } else {
-    localMarkedFilter.value = { active: true, value: { marked: event.data.marked, unmarked: event.data.unmarked } };
-    emit('update:markedFilter', localMarkedFilter.value);
-  }
-
-  console.log(event.data.marked, event.data.marked, localMarkedFilter.value);
-  
-  popoverOpen.value = false;
-}
-
-function resetModal () {
-  state.marked = true;
-  state.unmarked = true;
-  localMarkedFilter.value = { active: false, value: { marked: true, unmarked: true } };
-
-  emit('update:markedFilter', localMarkedFilter.value);
-
-  popoverOpen.value = false;
-}
-
-interface MarkedFilter {
-  active: boolean;
-  value: {
-    marked: boolean;
-    unmarked: boolean;
-  };
+const toggleFilter = () => {
+  model.value = !model.value;
 }
 </script>

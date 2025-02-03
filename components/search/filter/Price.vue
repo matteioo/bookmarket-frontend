@@ -2,11 +2,11 @@
   <div>
     <UPopover v-model:open="popoverOpen">
       <UButton
-        label="Preis"
+        :label="priceLabel"
         icon="i-heroicons-banknotes-16-solid"
         size="xs"
-        :variant="localPriceFilter.active ? 'outline' : 'solid'"
-        :color="localPriceFilter.active ? 'primary' : 'gray'"
+        :variant="filterActive ? 'outline' : 'solid'"
+        :color="filterActive ? 'primary' : 'gray'"
       />
 
       <template #panel>
@@ -70,6 +70,7 @@ const emit = defineEmits(['update:priceFilter']);
 
 const popoverOpen = ref(false);
 const localPriceFilter = ref<PriceFilter>(props.priceFilter);
+const filterActive = computed(() => props.priceFilter.value.min !== undefined || props.priceFilter.value.max !== undefined);
 
 const state = reactive({
   minPrice: props.priceFilter.value.min,
@@ -83,6 +84,18 @@ const validate = (state: PriceFields): FormError[] => {
   if (state.minPrice && state.maxPrice && state.minPrice > state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als Min. Preis sein!' })
   return errors
 }
+
+const priceLabel = computed(() => {
+  if (localPriceFilter.value.value.min !== undefined && localPriceFilter.value.value.max !== undefined) {
+    return `Preis: ${localPriceFilter.value.value.min.toFixed(2)} - ${localPriceFilter.value.value.max.toFixed(2)} €`;
+  } else if (localPriceFilter.value.value.min !== undefined) {
+    return `Preis: ab ${localPriceFilter.value.value.min.toFixed(2)} €`;
+  } else if (localPriceFilter.value.value.max !== undefined) {
+    return `Preis: bis ${localPriceFilter.value.value.max.toFixed(2)} €`;
+  } else {
+    return 'Preis';
+  }
+})
 
 async function onSubmit (event: FormSubmitEvent<PriceFields>) {
   if (!event.data.minPrice && !event.data.maxPrice) {
@@ -104,29 +117,6 @@ function resetModal () {
 
   popoverOpen.value = false;
 }
-
-
-
-/* const updateModel = () => {
-  if (validateInput() === undefined) {
-    if (minPrice === undefined && maxPrice === undefined) {
-      filterActive.value = false;
-    } else {
-      filterActive.value = true;
-    }
-    console.log('update', localPriceFilter.value);
-
-    emit('update:priceFilter', localPriceFilter.value);
-  };
-}
-
-const resetModal = () => {
-  minPrice.value = undefined;
-  maxPrice.value = undefined;
-  filterActive.value = false;
-
-  emit('update:priceFilter', localPriceFilter.value);
-} */
 
 interface PriceFilter {
   active: boolean;
