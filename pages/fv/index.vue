@@ -1,6 +1,13 @@
 <template>
   <div class="flex-grow flex flex-col">
     <h1 class="block text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Willkommen zurück, {{ member?.username }}!</h1>
+    <div class="my-10 grid grid-cols-4 gap-4">
+      <WidgetsStatisticsSoldBooks />
+      <WidgetsStatisticsRevenue />
+      <WidgetsStatisticsRevenue class="col-span-2 row-span-2" />
+      <WidgetsStatisticsRevenue />
+      <!-- Widgets: Meistgesucht, Meistverkauft -->
+    </div>
     <div class="flex-grow w-full flex items-center justify-center">
       <div>
         <UInput
