@@ -77,7 +77,6 @@ onMounted(async () => {
   exams.push(...(examsPage.value?.results.map((exam) => exam.name) ?? []));
   
   // Set the initial value of state.exam after fetching the exams
-  console.log('props.examFilter.value.exam', props.examFilter.value.exam);
   state.exam = props.examFilter.value.exam;
 });
 

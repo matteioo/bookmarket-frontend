@@ -1,7 +1,6 @@
 <template>
   <div class="flex-grow w-full flex flex-col items-center gap-y-6">
     <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950">
-      <!-- <SearchComponent :search-query="searchQuery" :filter="{ price_lt: 17.89 }" /> -->
       <div class="max-w-3xl mx-auto flex flex-col justify-items-stretch gap-y-2">
         <UInput
           v-model="searchQuery"
@@ -108,7 +107,7 @@ const fetchParams = computed(() => ({
   search: searchQueryDebounced.value,
   price__lte: filter.value.price.value.max,
   price__gte: filter.value.price.value.min,
-  marked: filter.value.marked.value.marked,
+  marked: filter.value.marked.value.marked ? undefined : 'false',
   book__exam__name__icontains: filter.value.exam.value.exam,
 }))
 
@@ -122,9 +121,9 @@ const { data: offerResults, refresh } = useFetch<Page<Offer>>(useRuntimeConfig()
       path: '/fv/search',
       query: {
         q: searchQueryDebounced.value,
-        price_gte: fetchParams.value.price__gte,
-        price_lte: fetchParams.value.price__lte,
-        marked: fetchParams.value.marked?.toString(),
+        price_gte: filter.value.price.value.min,
+        price_lte: filter.value.price.value.max,
+        marked: filter.value.marked.value.marked?.toString(),
         exam: filter.value.exam.value.exam,
       },
     })
@@ -132,10 +131,6 @@ const { data: offerResults, refresh } = useFetch<Page<Offer>>(useRuntimeConfig()
 })
 
 async function search() {
-  if (!searchQueryDebounced.value || searchQueryDebounced.value === '') {
-    return
-  }
-
   await navigateTo({
     path: '/fv/search',
     query: { q: searchQueryDebounced.value },
