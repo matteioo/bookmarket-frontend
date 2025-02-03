@@ -15,3 +15,7 @@ export interface MarkedFilter {
 export interface ExamFilter {
   exam: string | undefined;
 }
+
+export interface OfferActiveFilter {
+  active: boolean | undefined;
+}

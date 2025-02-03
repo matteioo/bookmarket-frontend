@@ -3,7 +3,10 @@
     <div class="flex-auto overflow-x-hidden">
       <div class="text-gray-700 dark:text-gray-300">
         <div class="flex items-center gap-x-1">
-          <h2 class="flex-shrink truncate font-semibold">{{ offer.book.title }}</h2>
+          <UTooltip v-if="!offer.active" text="Verkauft oder Inaktiv">
+            <UIcon name="i-heroicons-eye-slash-solid" class="w-4 h-4 flex-shrink-0 text-primary-600 dark:text-primary-400" mode="svg" />
+          </UTooltip>
+          <h2 class="flex-shrink truncate" :class="{ 'italic': !offer.active, 'font-semibold': offer.active }">{{ offer.book.title }}</h2>
           <UTooltip v-if="offer.marked" text="Markiert oder Beschrieben">
             <UIcon name="i-heroicons-paint-brush-solid" class="w-4 h-4 flex-shrink-0 text-sky-600 dark:text-sky-400" mode="svg" />
           </UTooltip>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex-grow w-full flex flex-col items-center gap-y-6">
-    <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950">
+    <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950/30">
       <div class="max-w-3xl mx-auto flex flex-col justify-items-stretch gap-y-2">
         <UInput
           v-model="searchQuery"
@@ -35,13 +35,14 @@
           <SearchFilterPrice v-model:price-filter="filter.price" />
           <SearchFilterMarked v-model="filter.marked.value.marked" />
           <SearchFilterExam v-model:exam-filter="filter.exam" />
+          <SearchFilterOfferActive v-model="filter.active.active" />
         </div>
       </div>
     </section>
     <section class="w-full max-w-3xl mx-auto">
       <div v-if="offerResults?.count !== 0">
         <div class="flex flex-col">
-          <SearchResultOffer v-for="offer in offerResults?.results" :key="offer.id" :offer="offer" />
+          <SearchResultOffer v-for="offer in offerResults?.results" :key="offer.id" :offer="offer" class="z-0" />
         </div>
       </div>
       <div v-else>
@@ -58,7 +59,7 @@
 import { refDebounced } from '@vueuse/core'
 import type { Offer } from '~/interfaces/Offer';
 import type { Page } from '~/interfaces/Page';
-import type { Filter, PriceFilter, MarkedFilter, ExamFilter } from '~/interfaces/SearchFilters';
+import type { Filter, PriceFilter, MarkedFilter, ExamFilter, OfferActiveFilter } from '~/interfaces/SearchFilters';
 
 useSeoMeta({
   title: 'Suche',
@@ -99,6 +100,9 @@ const filter = ref({
       exam: undefined as string | undefined,
     }
   } as Filter<ExamFilter>,
+  active: {
+    active: true as boolean,
+  } as OfferActiveFilter,
 })
 
 const fetchParams = computed(() => ({
@@ -109,6 +113,7 @@ const fetchParams = computed(() => ({
   price__gte: filter.value.price.value.min,
   marked: filter.value.marked.value.marked ? undefined : 'false',
   book__exam__name__icontains: filter.value.exam.value.exam,
+  active: filter.value.active.active ? undefined : 'true',
 }))
 
 const { data: offerResults, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
@@ -125,6 +130,7 @@ const { data: offerResults, refresh } = useFetch<Page<Offer>>(useRuntimeConfig()
         price_lte: filter.value.price.value.max,
         marked: filter.value.marked.value.marked?.toString(),
         exam: filter.value.exam.value.exam,
+        active: filter.value.active.active?.toString(),
       },
     })
   },

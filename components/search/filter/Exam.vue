@@ -2,7 +2,7 @@
   <div>
     <UPopover v-model:open="popoverOpen">
       <UButton
-        label="Prüfung"
+        :label="localExamFilter.value.exam ? `Prüfung: ${localExamFilter.value.exam}` : 'Prüfung'"
         icon="i-heroicons-academic-cap-16-solid"
         size="xs"
         :variant="localExamFilter.value.exam ? 'outline' : 'solid'"
