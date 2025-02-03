@@ -45,8 +45,9 @@
           <SearchResultOffer v-for="offer in offerResults?.results" :key="offer.id" :offer="offer" class="z-0" />
         </div>
       </div>
-      <div v-else>
-        No results found
+      <div v-else class="flex flex-col items-center gap-y-4 my-4 text-gray-600 dark:text-gray-400">
+        <UIcon name="i-heroicons-cube-transparent" class="w-8 h-8" />
+        <span>Kein passendes Angebot gefunden...</span>
       </div>
     </section>
     <section v-if="(offerResults?.count ?? 0) > 0" class="flex justify-center">
