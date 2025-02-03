@@ -1,7 +1,7 @@
 <template>
   <div>
     <UButton
-      :label="filterActive ? 'Markierte ausblenden' : 'Markierte anzeigen'"
+      :label="`Zustand: ${filterActive ? 'unbeschriftet' : 'egal'}`"
       icon="i-heroicons-paint-brush-16-solid"
       size="xs"
       :variant="filterActive ? 'outline' : 'solid'"
