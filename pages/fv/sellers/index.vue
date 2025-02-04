@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-md mx-auto">
+  <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-lg mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
       <UInput v-model="searchInput" placeholder="Suchen..." />
       <UButton
@@ -19,7 +19,17 @@
         class="w-full"
         :rows="data !== null ? data.results : []"
         :columns="columns"
-      />
+        :ui="{ tr: { base: 'group' } }">
+        <template #actions-data="{ row }">
+          <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <UButtonGroup size="sm" orientation="horizontal" class="shadow-none">
+              <UButton icon="i-heroicons-information-circle" color="sky" variant="ghost" :to="`/fv/sellers/${row.id}`" />
+              <UButton icon="i-heroicons-pencil-square" color="primary" variant="ghost" :to="`/fv/sellers/${row.id}`" />
+              <UButton icon="i-heroicons-trash" color="red" variant="ghost" />
+            </UButtonGroup>
+          </div>
+        </template>
+      </UTable>
     </div>
     <div class="w-full flex flex-row justify-between text-gray-700 dark:text-gray-300">
       <div class="inline-flex items-center gap-x-2">
@@ -63,9 +73,9 @@ const { data, pending } = useFetch<Page<Seller>>(useRuntimeConfig().public.apiUr
 });
 
 const columns = [
-  { key: 'id', label: 'ID' },
-  { key: 'fullName', label: 'Name' },
   { key: 'matriculationNumber', label: 'Matr-Nr.' },
+  { key: 'fullName', label: 'Name' },
   { key: 'email', label: 'Email' },
+  { key: 'actions', label: '' },
 ];
 </script>
