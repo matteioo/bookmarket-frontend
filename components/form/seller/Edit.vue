@@ -1,0 +1,137 @@
+<template>
+  <UModal v-model="showModal">
+    <UCard>
+      <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
+        <UFormGroup label="Name" name="fullName" hint="vollständiger Name" required>
+          <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" />
+        </UFormGroup>
+
+        <UFormGroup label="Matrikelnummer" name="matriculationNumber" required>
+          <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" />
+        </UFormGroup>
+
+        <UFormGroup label="Email" name="email" required>
+          <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
+        </UFormGroup>
+
+        <UFormGroup label="Anmerkung" name="note">
+          <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" />
+        </UFormGroup>
+
+        <div class="inline-flex flex-row-reverse gap-x-2 w-full">
+          <UButton type="submit" :loading="false" variant="solid">
+            Verkäufer:in bearbeiten
+          </UButton>
+          <UButton type="clear" :loading="false" variant="soft">
+            Abbrechen
+          </UButton>
+        </div>
+      </UForm>
+    </UCard>
+  </UModal>
+</template>
+
+<script lang="ts" setup>
+import type { FormError, FormSubmitEvent } from '#ui/types'
+import type { Seller } from '~/interfaces/Seller'
+
+interface SellerFields {
+  fullName: string
+  matriculationNumber: string
+  email: string
+  note: string
+}
+
+const props = defineProps({
+  initialSeller: {
+    type: Object as PropType<Seller>,
+    required: true
+  },
+  onSubmit: {
+    type: Function as PropType<(userData: Seller) => void>,
+    required: true
+  },
+})
+const showModal = defineModel<boolean>()
+
+const { token } = useAuth()
+const form = ref()
+const loading = ref(false)
+const user = ref(null as Seller | null)
+
+const state = reactive({
+  fullName: props.initialSeller.fullName,
+  matriculationNumber: props.initialSeller.matriculationNumber,
+  email: props.initialSeller.email,
+  note: props.initialSeller.note,
+})
+
+const validate = (state: SellerFields): FormError[] => {
+  const errors = []
+  if (!state.fullName) errors.push({ path: 'fullName', message: 'Name ist verpflichtend' })
+  if (!state.matriculationNumber) errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer ist verpflichtend' })
+  if (state.matriculationNumber && !/^\d+$/.test(state.matriculationNumber))
+    errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer darf nur Ziffern enthalten' })
+  if (state.matriculationNumber && state.matriculationNumber.toString().length !== 8)
+    errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
+  if (!state.email) errors.push({ path: 'email', message: 'Email ist verpflichtend' })
+  if (state.note && state.note.length > 255) errors.push({ path: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
+  return errors
+}
+
+const onSubmit = async (event: FormSubmitEvent<SellerFields>) => {
+  await createSeller(event)
+
+  if (user.value) {
+    props.onSubmit(user.value)
+  } else {
+    console.error('No seller submitted')
+  }
+}
+
+async function createSeller(event: FormSubmitEvent<SellerFields>) {
+  loading.value = true
+  form.value.clear()
+
+  const response = await fetch(useRuntimeConfig().public.apiUrl + '/sellers/' + props.initialSeller.id, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${token.value}`,
+    },
+    body: JSON.stringify(event.data),
+  })
+  loading.value = false
+  
+  if (response.ok) {
+    user.value = await response.json()
+    useToast().add({
+      title: 'Erfolg',
+      description: 'Verkäufer:in erfolgreich bearbeitet.',
+      icon: 'i-heroicons-check-circle',
+      color: 'green',
+    })
+    showModal.value = false
+  } else {
+    const data = await response.json()
+    
+    const errors = []
+    for (const field in data) {
+      if (data[field].length > 0) {
+        errors.push({
+          path: field,
+          message: data[field][0]
+        })
+      }
+    }
+    form.value.setErrors(errors)
+
+    useToast().add({
+      title: 'Fehler',
+      description: 'Verkäufer:in konnte nicht bearbeitet werden!',
+      icon: 'i-heroicons-exclamation-triangle',
+      color: 'red',
+    })
+  }
+}
+</script>

@@ -28,10 +28,11 @@
       <section>
         <div class="flex items-center justify-between">
           <div class="inline-flex items-center gap-x-2">
-            <h1 class="text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Verkäufer:in - {{ seller?.fullName }}</h1>
-            <UButton icon="i-heroicons-pencil" size="sm" square variant="link" to="/fv/sellers" />
+            <h1 class="text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Verkäufer:in &middot; {{ seller?.fullName }}</h1>
+            <UButton icon="i-heroicons-pencil-square-solid" size="sm" square variant="ghost" @click="editSellerModal = true" />
+            <FormSellerEdit v-if="seller" v-model="editSellerModal" :initial-seller="seller" :on-submit="onEditSeller" />
           </div>
-          <UButton label="Bearbeitungsverlauf" variant="soft" icon="i-heroicons-rectangle-stack" @click="editHistoryModal = true" />
+          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-heroicons-rectangle-stack" @click="editHistoryModal = true" />
         </div>
         <div class="grid grid-cols-2">
           <DataLabel label="Matrikelnummer" :data="seller?.matriculationNumber" />
@@ -41,7 +42,10 @@
       </section>
       <section class="flex flex-col gap-y-4">
         <div class="flex items-center justify-between">
-          <h2 class="text-xl font-medium text-primary-800 dark:text-primary-200">Angebote</h2>
+          <div class="flex items-center gap-x-2">
+            <h2 class="text-xl font-medium text-primary-800 dark:text-primary-200">Angebote</h2>
+            <UBadge v-if="sellerOffers?.count" color="primary" variant="subtle" size="md">{{ sellerOffers?.count }}</UBadge>
+          </div>
           <UInput v-model="searchInput" placeholder="Suchen..." />
         </div>
         <div class="w-full rounded bg-white dark:bg-gray-900 shadow divide-y divide-gray-200 dark:divide-gray-700">
@@ -138,6 +142,7 @@ const columns = [
 const { token } = useAuth()
 const route = useRoute()
 const editHistoryModal = ref(false)
+const editSellerModal = ref(false)
 const currentPage = ref(1)
 const pageSizes = [5, 10, 20, 50]
 const itemsPerPage = ref(pageSizes[1])
@@ -156,7 +161,7 @@ const fetchParams = computed(() => ({
   seller: route.params.id,
 }));
 
-const { data: seller } = useFetch<Seller>(useRuntimeConfig().public.apiUrl + '/sellers/' + route.params.id, {
+const { data: seller, refresh: refreshSellerData } = useFetch<Seller>(useRuntimeConfig().public.apiUrl + '/sellers/' + route.params.id, {
   headers: {
     Authorization: `${token.value}`,
   },
@@ -171,4 +176,8 @@ const { data: sellerOffers, pending: loadingSellerOffers } = useFetch<Page<Offer
   },
   params: fetchParams,
 });
+
+const onEditSeller = async () => {
+  refreshSellerData()
+}
 </script>
