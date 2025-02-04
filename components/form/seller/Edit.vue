@@ -7,7 +7,7 @@
         </UFormGroup>
 
         <UFormGroup label="Matrikelnummer" name="matriculationNumber" required>
-          <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" />
+          <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" :disabled="true" />
         </UFormGroup>
 
         <UFormGroup label="Email" name="email" required>
@@ -19,10 +19,10 @@
         </UFormGroup>
 
         <div class="inline-flex flex-row-reverse gap-x-2 w-full">
-          <UButton type="submit" :loading="false" variant="solid">
+          <UButton type="submit" :loading="loading" variant="solid">
             Verkäufer:in bearbeiten
           </UButton>
-          <UButton type="clear" :loading="false" variant="soft">
+          <UButton :loading="loading" variant="soft" @click="clearForm">
             Abbrechen
           </UButton>
         </div>
@@ -66,6 +66,13 @@ const state = reactive({
   note: props.initialSeller.note,
 })
 
+watch(() => props.initialSeller, (newSeller) => {
+  state.fullName = newSeller.fullName
+  state.matriculationNumber = newSeller.matriculationNumber
+  state.email = newSeller.email
+  state.note = newSeller.note
+}, { deep: true })
+
 const validate = (state: SellerFields): FormError[] => {
   const errors = []
   if (!state.fullName) errors.push({ path: 'fullName', message: 'Name ist verpflichtend' })
@@ -80,7 +87,9 @@ const validate = (state: SellerFields): FormError[] => {
 }
 
 const onSubmit = async (event: FormSubmitEvent<SellerFields>) => {
+  loading.value = true
   await createSeller(event)
+  loading.value = false
 
   if (user.value) {
     props.onSubmit(user.value)
@@ -133,5 +142,15 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
       color: 'red',
     })
   }
+}
+
+const clearForm = () => {
+  form.value.clear()
+  state.fullName = props.initialSeller.fullName
+  state.matriculationNumber = props.initialSeller.matriculationNumber
+  state.email = props.initialSeller.email
+  state.note = props.initialSeller.note
+
+  showModal.value = false
 }
 </script>
