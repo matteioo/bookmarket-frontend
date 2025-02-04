@@ -26,16 +26,17 @@ export default defineNuxtConfig({
       ],
     }
   },
+  runtimeConfig: {
+    public: {
+      appVersion: 'v0.1.0-alpha',
+      apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
+    },
+  },
   dayjs: {
     locales: ['de'],
     plugins: ['relativeTime', 'utc', 'timezone'],
     defaultLocale: 'de',
     defaultTimezone: 'Europe/Vienna',
-  },
-  runtimeConfig: {
-    public: {
-      apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
-    },
   },
   auth: {
     originEnvKey: 'AUTH_ORIGIN', 
