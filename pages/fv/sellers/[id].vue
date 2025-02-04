@@ -110,15 +110,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Member } from '~/interfaces/Member';
-import type { Offer } from '~/interfaces/Offer';
-import type { Page } from '~/interfaces/Page';
-import type { Seller } from '~/interfaces/Seller';
-import { formatDate, formatPrice } from '~/utils/utils';
+import type { Member } from '~/interfaces/Member'
+import type { Offer } from '~/interfaces/Offer'
+import type { Page } from '~/interfaces/Page'
+import type { Seller } from '~/interfaces/Seller'
+import { formatDate, formatPrice } from '~/utils/utils'
 
 useSeoMeta({
   title: 'Verkäufer:in-Profil',
-});
+})
 
 definePageMeta({
   layout: 'protected',
@@ -137,10 +137,11 @@ const columns = [
   { key: 'member', label: 'FV-Mitglied' },
   { key: 'price', label: 'Preis', class: 'text-right' },
   //{ key: 'modified', label: 'Aktualisiert' },
-];
+]
 
 const { token } = useAuth()
 const route = useRoute()
+const router = useRouter()
 const editHistoryModal = ref(false)
 const editSellerModal = ref(false)
 const currentPage = ref(1)
@@ -152,30 +153,31 @@ const member = ref<Member>({
   id: 1,
   username: 'max.mustermann',
   email: '',
-});
+})
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
   offset: (currentPage.value - 1) * itemsPerPage.value,
   search: searchInput.value,
   seller: route.params.id,
-}));
+}))
 
 const { data: seller, refresh: refreshSellerData } = useFetch<Seller>(useRuntimeConfig().public.apiUrl + '/sellers/' + route.params.id, {
   headers: {
     Authorization: `${token.value}`,
   },
   onResponseError: () => {
-    console.log('Seller not found');
+    console.log('Seller not found')
+    router.push('/fv/sellers')
   },
-});
+})
 
 const { data: sellerOffers, pending: loadingSellerOffers } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   headers: {
     Authorization: `${token.value}`,
   },
   params: fetchParams,
-});
+})
 
 const onEditSeller = async () => {
   refreshSellerData()
