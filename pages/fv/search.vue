@@ -58,9 +58,9 @@
 
 <script setup lang="ts">
 import { refDebounced } from '@vueuse/core'
-import type { Offer } from '~/interfaces/Offer';
-import type { Page } from '~/interfaces/Page';
-import type { Filter, PriceFilter, MarkedFilter, ExamFilter, OfferActiveFilter } from '~/interfaces/SearchFilters';
+import type { Offer } from '~/interfaces/Offer'
+import type { Page } from '~/interfaces/Page'
+import type { Filter, PriceFilter, MarkedFilter, ExamFilter, OfferActiveFilter } from '~/interfaces/SearchFilters'
 
 useSeoMeta({
   title: 'Suche',

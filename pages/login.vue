@@ -21,8 +21,8 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
 interface LoginFields {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 
 useSeoMeta({
@@ -71,7 +71,7 @@ function getCallbackUrl(): string {
   } catch {
     // Ignore invalid URLs
   }
-  return defaultCallback;
+  return defaultCallback
 }
 
 async function login(event: FormSubmitEvent<LoginFields>) {
@@ -90,5 +90,5 @@ async function login(event: FormSubmitEvent<LoginFields>) {
     state.username = ''
     state.password = ''
   }
-};
+}
 </script>

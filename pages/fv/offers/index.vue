@@ -89,17 +89,17 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '~/interfaces/Page';
-import type { Offer } from '~/interfaces/Offer';
-import { formatDate, formatPrice } from '#imports';
+import type { Page } from '~/interfaces/Page'
+import type { Offer } from '~/interfaces/Offer'
+import { formatDate, formatPrice } from '#imports'
 
 useSeoMeta({
   title: 'Angebot-Übersicht',
-});
+})
 
 definePageMeta({
   layout: 'protected',
-});
+})
 
 const columns = [
   //{ key: 'id', label: 'ID' },
@@ -111,26 +111,26 @@ const columns = [
   { key: 'member', label: 'FV-Mitglied' },
   { key: 'price', label: 'Preis', class: 'text-right' },
   //{ key: 'modified', label: 'Aktualisiert' },
-];
+]
 
-const { token } = useAuth();
-const currentPage = ref(1);
-const pageSizes = [5, 10, 20, 50];
-const itemsPerPage = ref(pageSizes[1]);
-const searchInput = ref('');
+const { token } = useAuth()
+const currentPage = ref(1)
+const pageSizes = [5, 10, 20, 50]
+const itemsPerPage = ref(pageSizes[1])
+const searchInput = ref('')
 const selectedColumns = ref([...columns])
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
   offset: (currentPage.value - 1) * itemsPerPage.value,
   search: searchInput.value,
-}));
+}))
 
 const { data, pending } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   headers: {
     Authorization: `${token.value}`,
   },
   params: fetchParams,
-});
+})
 
 </script>
