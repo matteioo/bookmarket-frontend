@@ -38,6 +38,8 @@ definePageMeta({
 })
 
 const { signIn } = useAuth()
+const route = useRoute()
+const router = useRouter()
 
 const state = reactive<LoginFields>({
   username: '',
@@ -53,21 +55,40 @@ const validate = (state: LoginFields): FormError[] => {
   return errors
 }
 
+function getCallbackUrl(): string {
+  const defaultCallback = '/fv'
+  const redirect = route.query.redirect as string | undefined
+  if (!redirect) return defaultCallback
+
+  try {
+    const parsedUrl = new URL(redirect, window.location.origin)
+    if (parsedUrl.origin === window.location.origin && parsedUrl.pathname.startsWith('/fv')) {
+      const resolved = router.resolve(parsedUrl.pathname)
+      if (resolved.matched.length > 0) {
+        return parsedUrl.pathname + parsedUrl.search
+      }
+    }
+  } catch {
+    // Ignore invalid URLs
+  }
+  return defaultCallback;
+}
+
 async function login(event: FormSubmitEvent<LoginFields>) {
   try {
-    loading.value = true;
-    await signIn({ username: event.data.username, password: event.data.password }, { callbackUrl: '/fv' })
+    loading.value = true
+    await signIn({ username: event.data.username, password: event.data.password }, { callbackUrl: getCallbackUrl() })
   } catch {
     useToast().add({
       title: 'Fehler',
       description: 'Benutzername oder Passwort ist falsch',
       icon: 'i-heroicons-exclamation-triangle',
       color: 'red',
-    });
+    })
   } finally {
-    loading.value = false;
-    state.username = '';
-    state.password = '';
+    loading.value = false
+    state.username = ''
+    state.password = ''
   }
 };
 </script>
