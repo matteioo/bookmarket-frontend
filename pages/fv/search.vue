@@ -42,7 +42,7 @@
     <section class="w-full max-w-3xl mx-auto">
       <div v-if="offerResults?.count !== 0">
         <div class="flex flex-col">
-          <SearchResultOffer v-for="offer in offerResults?.results" :key="offer.id" :offer="offer" class="z-0" />
+          <SearchResultOffer v-for="offer in offerResults?.results" :key="offer.id" :offer="offer" />
         </div>
       </div>
       <div v-else class="flex flex-col items-center gap-y-4 my-4 text-gray-600 dark:text-gray-400">
