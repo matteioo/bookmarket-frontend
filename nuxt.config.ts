@@ -36,7 +36,6 @@ export default defineNuxtConfig({
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
     },
-    myProxyUrl: '',
   },
   auth: {
     originEnvKey: 'AUTH_ORIGIN', 
