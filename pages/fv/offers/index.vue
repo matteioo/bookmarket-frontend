@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-xl mx-auto">
+  <div class="flex-grow flex flex-col items-center gap-y-4 w-full mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
       <UInput v-model="searchInput" placeholder="Suchen..." />
       <div class="inline-flex gap-x-4">
@@ -76,6 +76,30 @@
         <template #price-data="{ row }">
           <div class="text-right">{{ formatPrice(row.price) }}</div>
         </template>
+
+        <template #book-data="{ row }">
+          <UPopover mode="hover" :popper="{ placement: 'left' }">
+            <UButton color="gray" variant="ghost" class="-my-1.5 !text-inherit">{{ row.book.isbn }}</UButton>
+
+            <template #panel>
+              <div class="p-4 w-full max-w-lg">
+                <h4 class="w-full font-semibold truncate">{{ row.book.title }}</h4>
+                <div class="w-full flex items-center gap-x-1">
+                  <UIcon name="i-heroicons-user-group-16-solid" class="flex-shrink-0" />
+                  <span class="flex-grow truncate text-sm">{{ row.book.authors }}</span>
+                </div>
+                <div class="flex items-center gap-x-2 justify-between flex-wrap">
+                  <span>Auflage: {{ row.book.edition }}</span>
+                  <span>Max. Preis: {{ formatPrice(row.book.maxPrice) }}</span>
+                </div>
+                <div v-if="row.book.exam" class="flex items-center gap-x-1">
+                  <UIcon name="i-heroicons-academic-cap-16-solid" class="flex-shrink-0" />
+                  <span class="flex-grow truncate text-sm">Prüfung: {{ row.book.exam.name }}</span>
+                </div>
+              </div>
+            </template>
+          </UPopover>
+        </template>
       </UTable>
     </div>
     <div class="w-full flex flex-row justify-between text-gray-700 dark:text-gray-300">
@@ -89,48 +113,49 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '~/interfaces/Page';
-import type { Offer } from '~/interfaces/Offer';
-import { formatDate, formatPrice } from '#imports';
+import type { Page } from '~/interfaces/Page'
+import type { Offer } from '~/interfaces/Offer'
+import { formatDate, formatPrice } from '#imports'
 
 useSeoMeta({
   title: 'Angebot-Übersicht',
-});
+})
 
 definePageMeta({
   layout: 'protected',
-});
+})
 
 const columns = [
-  //{ key: 'id', label: 'ID' },
+  { key: 'id', label: 'ID' },
   { key: 'createdAt', label: 'Erstellt' },
+  { key: 'modified', label: 'Aktualisiert' },
   { key: 'seller', label: 'Verkäufer' },
   { key: 'active', label: 'Aktiv' },
   { key: 'marked', label: 'Beschriftet' },
   { key: 'location', label: 'Ort' },
   { key: 'member', label: 'FV-Mitglied' },
+  { key: 'book', label: 'Buch-ISBN' },
   { key: 'price', label: 'Preis', class: 'text-right' },
-  //{ key: 'modified', label: 'Aktualisiert' },
-];
+]
 
-const { token } = useAuth();
-const currentPage = ref(1);
-const pageSizes = [5, 10, 20, 50];
-const itemsPerPage = ref(pageSizes[1]);
-const searchInput = ref('');
+const { token } = useAuth()
+const currentPage = ref(1)
+const pageSizes = [5, 10, 20, 50]
+const itemsPerPage = ref(pageSizes[1])
+const searchInput = ref('')
 const selectedColumns = ref([...columns])
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
   offset: (currentPage.value - 1) * itemsPerPage.value,
   search: searchInput.value,
-}));
+}))
 
 const { data, pending } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   headers: {
     Authorization: `${token.value}`,
   },
   params: fetchParams,
-});
+})
 
 </script>

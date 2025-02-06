@@ -7,21 +7,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Book } from '~/interfaces/Book';
+import type { Book } from '~/interfaces/Book'
 
 useSeoMeta({
   title: 'Buch hinzufügen',
-});
+})
 
 definePageMeta({
   layout: 'protected',
-});
+})
 
-const router = useRouter();
+const router = useRouter()
 
 async function createBook(event: Book) {
   if (event) {
-    router.push('/fv/offers');
+    router.push('/fv/offers')
   }
-};
+}
 </script>

@@ -3,15 +3,18 @@
     <div class="flex-auto overflow-x-hidden">
       <div class="text-gray-700 dark:text-gray-300">
         <div class="flex items-center gap-x-1">
-          <h2 class="flex-shrink truncate font-semibold">{{ offer.book.title }}</h2>
+          <UTooltip v-if="!offer.active" text="Verkauft oder Inaktiv">
+            <UIcon name="i-heroicons-eye-slash-solid" class="w-4 h-4 flex-shrink-0 text-primary-600 dark:text-primary-400" mode="svg" />
+          </UTooltip>
+          <h2 class="flex-shrink truncate" :class="{ 'italic': !offer.active, 'font-semibold': offer.active }">{{ offer.book.title }}</h2>
           <UTooltip v-if="offer.marked" text="Markiert oder Beschrieben">
-            <UIcon name="flex-shrink-0 i-heroicons-paint-brush-solid text-sky-600 dark:text-sky-400" class="w-4 h-4" />
+            <UIcon name="i-heroicons-paint-brush-solid" class="w-4 h-4 flex-shrink-0 text-sky-600 dark:text-sky-400" mode="svg" />
           </UTooltip>
         </div>
       </div>
       <div class="text-gray-600 dark:text-gray-400">
         <div class="flex items-center gap-x-1">
-          <UIcon name="flex-shrink-0 i-heroicons-users-solid" class="w-4 h-4" />
+          <UIcon name="i-heroicons-users-solid" class="w-4 h-4 flex-shrink-0" />
           <div class="flex-auto truncate">{{ offer.book.authors }}</div>
         </div>
       </div>
@@ -39,7 +42,7 @@
           class="inline-flex flex-row gap-x-1 items-center text-gray-700 dark:text-gray-300 hover:text-gray-600 hover:dark:text-gray-400"
         >
           <span>{{ offer.seller.fullName }}</span>
-          <UIcon name="flex-shrink-0 i-heroicons-arrow-top-right-on-square-solid" class="w-5 h-5" />
+          <UIcon name="i-heroicons-arrow-top-right-on-square-solid" class="w-5 h-5 flex-shrink-0" />
         </ULink>
       </DataLabelSlotted>
     </div>
@@ -49,7 +52,7 @@
         <UButton label="Buch verkaufen" icon="i-heroicons-banknotes" :to="`/fv/sell/${offer.id}`" />
       </div>
       <div v-else class="inline-flex flex-row items-center gap-x-1">
-        <UIcon name="flex-shrink-0 i-heroicons-no-symbol-solid" class="w-5 h-5" />
+        <UIcon name="i-heroicons-no-symbol-solid" class="w-5 h-5 flex-shrink-0" />
         <i>Angebot inaktiv!</i>
       </div>
     </div>

@@ -5,17 +5,17 @@
 </template>
 
 <script setup lang="ts">
-import type { Seller } from '~/interfaces/Seller';
+import type { Seller } from '~/interfaces/Seller'
 
 useSeoMeta({
   title: 'Verkäufer:in anlegen',
-});
+})
 
 definePageMeta({
   layout: 'protected',
-});
+})
 
 async function createSeller(event: Seller) {
-  console.log('createSeller', event);
-};
+  console.log('createSeller', event)
+}
 </script>

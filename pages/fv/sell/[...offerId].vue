@@ -120,12 +120,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Offer } from '~/interfaces/Offer';
-import { formatPrice } from '~/utils/utils';
+import type { Offer } from '~/interfaces/Offer'
+import { formatPrice } from '~/utils/utils'
 
 useSeoMeta({
   title: 'Verkaufen',
-});
+})
 
 definePageMeta({
   layout: 'protected',
@@ -146,87 +146,87 @@ const state = reactive({
 })
 
 if (state.offerId !== '') {
-  searchOffer();
+  searchOffer()
 }
 
 const isIdInvalid = computed(() => errorMsg.value !== null)
 const selectedOfferPrice = computed(() => formatPrice(addedOffers.value.reduce((acc, offer) => acc + offer.price, 0)))
 const offerCount = computed(() => {
   if (addedOffers.value.length === 1) {
-    return 'ein Buch';
+    return 'ein Buch'
   } else {
-    return `${addedOffers.value.length} Bücher`;
+    return `${addedOffers.value.length} Bücher`
   }
 })
 const addedOffersActive = computed(() => addedOffers.value.every(offer => offer.active))
 
 function isOfferIdValid() {
   if (!Number.isInteger(Number(state.offerId)) || Number(state.offerId) < 0) {
-    errorMsg.value = 'Angebots-ID muss eine positive Zahl sein!';
+    errorMsg.value = 'Angebots-ID muss eine positive Zahl sein!'
   } else if (addedOffers.value.find(offer => offer.id === Number(state.offerId))) {
-    errorMsg.value = 'Angebot mit dieser ID wurde bereits hinzugefügt.';
+    errorMsg.value = 'Angebot mit dieser ID wurde bereits hinzugefügt.'
   } else {
-    errorMsg.value = null;
+    errorMsg.value = null
   }
 }
 
 async function searchOffer () {
-  isOfferIdValid();
+  isOfferIdValid()
   if (errorMsg.value) {
-    selectedOffer.value = null;
-    return;
-  };
-  loadingOffer.value = true;
+    selectedOffer.value = null
+    return
+  }
+  loadingOffer.value = true
 
-  const offerId = Number(state.offerId);
+  const offerId = Number(state.offerId)
   try {
     const offerById = await $fetch<Offer>(useRuntimeConfig().public.apiUrl + '/offers/' + offerId, {
       method: 'GET',
       headers: {
         Authorization: `${token.value}`,
       },
-    });
+    })
 
     if (offerById) {
-      selectedOffer.value = offerById;
+      selectedOffer.value = offerById
 
       if (!selectedOffer.value.active) {
-        errorMsg.value = 'Angebot ist nicht aktiv!';
-        state.offerId = '';
-        selectedOffer.value = null;
+        errorMsg.value = 'Angebot ist nicht aktiv!'
+        state.offerId = ''
+        selectedOffer.value = null
       }
     } else {
-      selectedOffer.value = null;
-      console.error('No offer found with ID:', offerId);
+      selectedOffer.value = null
+      console.error('No offer found with ID:', offerId)
     }
   } catch {
-    selectedOffer.value = null;
-    console.error('Failed to fetch offer');
+    selectedOffer.value = null
+    console.error('Failed to fetch offer')
   }
 
-  loadingOffer.value = false;
+  loadingOffer.value = false
 }
 
 function addOffer() {
-  console.log('adding offer', selectedOffer.value);
+  console.log('adding offer', selectedOffer.value)
   if (selectedOffer.value) {
-    addedOffers.value.push(selectedOffer.value);
-    selectedOffer.value = null;
-    state.offerId = '';
+    addedOffers.value.push(selectedOffer.value)
+    selectedOffer.value = null
+    state.offerId = ''
   }
 }
 
 function removeOffer(offer: Offer) {
-  const index = addedOffers.value.indexOf(offer);
+  const index = addedOffers.value.indexOf(offer)
   if (index > -1) {
-    addedOffers.value.splice(index, 1);
+    addedOffers.value.splice(index, 1)
   }
-  console.log('removed offer - offers:', addedOffers.value);
+  console.log('removed offer - offers:', addedOffers.value)
 }
 
 async function checkout() {
-  loadingCheckout.value = true;
-  console.log('checkout', addedOffers.value, addedOfferIds());
+  loadingCheckout.value = true
+  console.log('checkout', addedOffers.value, addedOfferIds())
 
   try {
     await $fetch(useRuntimeConfig().public.apiUrl + '/offers/sell' , {
@@ -237,7 +237,7 @@ async function checkout() {
       body: JSON.stringify({
         offers: addedOfferIds(),
       }),
-    });
+    })
 
     useToast().add({
       title: 'Bücher wurden erfolgreich verkauft!',
@@ -250,8 +250,8 @@ async function checkout() {
     })
 
   } catch {
-    confirmModalOpen.value = false;
-    await updateOffers();
+    confirmModalOpen.value = false
+    await updateOffers()
     useToast().add({
       title: 'Fehler',
       description: 'Bücher konnten nicht verkauft werden!',
@@ -262,44 +262,44 @@ async function checkout() {
         variant: 'outline',
         color: 'red',
         click: () => {
-          addedOffers.value = [];
+          addedOffers.value = []
         },
       }]
     })
   } finally {
-    loadingCheckout.value = false;
+    loadingCheckout.value = false
   }
 
-  confirmModalOpen.value = false;
+  confirmModalOpen.value = false
 }
 
 function addedOfferIds() {
-  return addedOffers.value.map(offer => offer.id);
+  return addedOffers.value.map(offer => offer.id)
 }
 
 async function updateOffers() {
-  updatingAddedOffers.value = true;
+  updatingAddedOffers.value = true
   // Filter all offers where offer.id is null
-  addedOffers.value = addedOffers.value.filter(offer => offer.id);
+  addedOffers.value = addedOffers.value.filter(offer => offer.id)
 
   // Create an array of promises to refetch all offers in parallel
   const fetchPromises = addedOffers.value.map(async (offer) => {
     if (!offer.id) {
-      return;
+      return
     }
 
-    const refetchedOffer = await refetchOffer(offer.id);
+    const refetchedOffer = await refetchOffer(offer.id)
     if (refetchedOffer) {
-      offer.active = refetchedOffer.active;
+      offer.active = refetchedOffer.active
     } else {
       // If the offer is not found, set active to false
-      offer.active = false;
+      offer.active = false
     }
-  });
+  })
 
   // Wait for all fetch promises to complete
-  await Promise.all(fetchPromises);
-  updatingAddedOffers.value = false;
+  await Promise.all(fetchPromises)
+  updatingAddedOffers.value = false
 }
 
 async function refetchOffer(id: number): Promise<Offer | null> {
@@ -309,16 +309,16 @@ async function refetchOffer(id: number): Promise<Offer | null> {
       headers: {
         Authorization: `${token.value}`,
       },
-    });
+    })
 
     if (offerById) {
-      return offerById;
+      return offerById
     } else {
-      console.error('No offer found with ID:', id);
-      return null;
+      console.error('No offer found with ID:', id)
+      return null
     }
   } catch {
-    return null;
+    return null
   }
 }
 </script>
