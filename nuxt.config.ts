@@ -34,6 +34,7 @@ export default defineNuxtConfig({
     },
   },
   security: {
+    enabled: process.env.NODE_ENV !== 'development',
     headers: {
       contentSecurityPolicy: {
         "script-src": [
