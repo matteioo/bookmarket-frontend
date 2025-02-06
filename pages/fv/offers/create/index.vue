@@ -18,19 +18,19 @@
 </template>
 
 <script setup lang="ts">
-import type { Seller } from '~/interfaces/Seller';
-import type { Offer } from '~/interfaces/Offer';
+import type { Seller } from '~/interfaces/Seller'
+import type { Offer } from '~/interfaces/Offer'
 
 useSeoMeta({
   title: 'Angebot anlegen',
-});
+})
 
 definePageMeta({
   layout: 'protected',
-});
+})
 
-const currentStep = ref(1);
-const offers = ref({} as NewOffers);
+const currentStep = ref(1)
+const offers = ref({} as NewOffers)
 
 const steps = [
   { step: 1, title: 'Verkäufer:in zuordnen' },
@@ -40,22 +40,22 @@ const steps = [
 
 const handleStepClicked = (step: number) => {
   if (step < currentStep.value) {
-    currentStep.value = step;
+    currentStep.value = step
   }
-};
+}
 
 const handleSellerSubmit = (submittedSeller: Seller) => {
-  offers.value.seller = submittedSeller;
-  currentStep.value = 2;
+  offers.value.seller = submittedSeller
+  currentStep.value = 2
 }
 
 const handleOfferSubmit = (submittedOffers: Offer[]) => {
-  offers.value.offers = submittedOffers;
-  currentStep.value = 3;
+  offers.value.offers = submittedOffers
+  currentStep.value = 3
 }
 
 interface NewOffers {
-  seller: Seller;
-  offers: Offer[];
+  seller: Seller
+  offers: Offer[]
 }
 </script>

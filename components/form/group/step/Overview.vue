@@ -81,7 +81,7 @@ const submitOffers = async () => {
   if (response.ok) {
     useToast().add({
       title: 'Erfolg',
-      description: 'Verkäufer:in erfolgreich angelegt.',
+      description: 'Angebot erfolgreich angelegt.',
       icon: 'i-heroicons-check-circle',
       color: 'green',
     });

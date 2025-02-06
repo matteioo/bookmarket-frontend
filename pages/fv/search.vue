@@ -1,9 +1,10 @@
 <template>
   <div class="flex-grow w-full flex flex-col items-center gap-y-6">
-    <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950">
-      <div class="max-w-lg mx-auto flex flex-col justify-items-stretch gap-y-2">
+    <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950/30">
+      <div class="max-w-3xl mx-auto flex flex-col justify-items-stretch gap-y-2">
         <UInput
           v-model="searchQuery"
+          size="xl"
           name="q"
           placeholder="Suche nach ISBN, Titel, Autor, ..."
           autocomplete="off"
@@ -32,19 +33,21 @@
         </UInput>
         <div class="inline-flex flex-row justify-start gap-x-2">
           <SearchFilterPrice v-model:price-filter="filter.price" />
-          <SearchFilterMarked v-model:marked-filter="filter.marked" />
+          <SearchFilterMarked v-model="filter.marked.value.marked" />
           <SearchFilterExam v-model:exam-filter="filter.exam" />
+          <SearchFilterOfferActive v-model="filter.active.active" />
         </div>
       </div>
     </section>
-    <section class="w-full max-w-2xl mx-auto">
+    <section class="w-full max-w-3xl mx-auto">
       <div v-if="offerResults?.count !== 0">
         <div class="flex flex-col">
           <SearchResultOffer v-for="offer in offerResults?.results" :key="offer.id" :offer="offer" />
         </div>
       </div>
-      <div v-else>
-        No results found
+      <div v-else class="flex flex-col items-center gap-y-4 my-4 text-gray-600 dark:text-gray-400">
+        <UIcon name="i-heroicons-cube-transparent" class="w-8 h-8" />
+        <span>Kein passendes Angebot gefunden...</span>
       </div>
     </section>
     <section v-if="(offerResults?.count ?? 0) > 0" class="flex justify-center">
@@ -55,66 +58,53 @@
 
 <script setup lang="ts">
 import { refDebounced } from '@vueuse/core'
-import type { Offer } from '~/interfaces/Offer';
-import type { Page } from '~/interfaces/Page';
+import type { Offer } from '~/interfaces/Offer'
+import type { Page } from '~/interfaces/Page'
+import type { Filter, PriceFilter, MarkedFilter, ExamFilter, OfferActiveFilter } from '~/interfaces/SearchFilters'
 
 useSeoMeta({
   title: 'Suche',
-});
+})
 
 definePageMeta({
   layout: 'protected',
-});
+})
 
 const searchQuery = ref(useRoute().query.q as string || '')
 const searchQueryDebounced = refDebounced(searchQuery, 250)
 
 onMounted(() => {
-  console.log('checking route')
+  parseQueryParams()
   search()
-  if (!useRoute().query.q || useRoute().query.q === '') {
-    /* navigateTo({
-      path: '/fv',
-
-    }) */
-  }
 })
 
 const { token } = useAuth()
-const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
 const filter = ref({
   price: {
     active: false,
     value: {
       min: undefined as number | undefined,
       max: undefined as number | undefined,
-    },
-  },
+    }
+  } as Filter<PriceFilter>,
   marked: {
     active: false,
     value: {
       marked: true as boolean,
-      unmarked: true as boolean,
     }
-  },
+  } as Filter<MarkedFilter>,
   exam: {
     active: false,
     value: {
       exam: undefined as string | undefined,
     }
-  }
-});
-
-const markedValue = () => {
-  if (filter.value.marked.value.marked && filter.value.marked.value.unmarked) {
-    return undefined
-  } else if (filter.value.marked.value.marked) {
-    return true
-  } else if (filter.value.marked.value.unmarked) {
-    return false
-  }
-}
+  } as Filter<ExamFilter>,
+  active: {
+    active: true as boolean,
+  } as OfferActiveFilter,
+})
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
@@ -122,8 +112,10 @@ const fetchParams = computed(() => ({
   search: searchQueryDebounced.value,
   price__lte: filter.value.price.value.max,
   price__gte: filter.value.price.value.min,
-  marked: markedValue(),
-}));
+  marked: filter.value.marked.value.marked ? undefined : 'false',
+  book__exam__name__icontains: filter.value.exam.value.exam,
+  active: filter.value.active.active ? undefined : 'true',
+}))
 
 const { data: offerResults, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   params: fetchParams,
@@ -135,25 +127,29 @@ const { data: offerResults, refresh } = useFetch<Page<Offer>>(useRuntimeConfig()
       path: '/fv/search',
       query: {
         q: searchQueryDebounced.value,
-        price_lte: fetchParams.value.price__lte,
-        price_gte: fetchParams.value.price__gte,
-        marked: markedValue()?.toString(),
+        price_gte: filter.value.price.value.min,
+        price_lte: filter.value.price.value.max,
+        marked: filter.value.marked.value.marked?.toString(),
+        exam: filter.value.exam.value.exam,
+        active: filter.value.active.active?.toString(),
       },
     })
   },
-});
+})
 
 async function search() {
-  if (!searchQuery.value || searchQuery.value === '') {
-    return
-  }
-
-  console.log('searching for', searchQuery.value)
   await navigateTo({
     path: '/fv/search',
-    query: { q: searchQuery.value },
+    query: { q: searchQueryDebounced.value },
   })
   await refresh()
-  console.log('searched for', searchQuery.value, 'results:', offerResults.value)
+}
+
+async function parseQueryParams() {
+  const queryParams = useRoute().query
+
+  filter.value.price.value.min = queryParams.price_gte ? Number(queryParams.price_gte) : undefined
+  filter.value.price.value.max = queryParams.price_lte ? Number(queryParams.price_lte) : undefined
+  filter.value.marked.value.marked = queryParams.marked === 'true' || !queryParams.marked
 }
 </script>
