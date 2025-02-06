@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-10-09',
+  compatibilityDate: '2025-02-06',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   modules: [
@@ -29,7 +29,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      appVersion: 'v0.1.0-alpha',
+      appVersion: 'v0.1.0-beta',
       apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
     },
   },
