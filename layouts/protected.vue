@@ -7,11 +7,11 @@
         <UButton color="gray" variant="ghost" size="lg" to="/fv/sellers"><span>Verkäufer:innen</span></UButton>
         <UButton color="gray" variant="ghost" size="lg" to="/fv/search"><span>Suchen</span></UButton>
         <UButton color="gray" variant="ghost" size="lg" to="/fv/sell"><span>Verkaufen</span></UButton>
-        <UButton color="gray" variant="ghost" size="lg" @click="logoutAndRedirect" icon="i-heroicons-arrow-right-start-on-rectangle" trailing>Logout</UButton>
+        <UButton color="gray" variant="ghost" size="lg" icon="i-heroicons-arrow-right-start-on-rectangle" trailing @click="logoutAndRedirect">Logout</UButton>
       </div>
     </header>
     <div class="flex-grow w-full flex flex-col m-2">
-      <slot></slot>
+      <slot />
     </div>
     <div class="flex-grow-0">
       <Footer />

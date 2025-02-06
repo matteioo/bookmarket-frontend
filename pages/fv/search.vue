@@ -58,6 +58,10 @@ import { refDebounced } from '@vueuse/core'
 import type { Offer } from '~/interfaces/Offer';
 import type { Page } from '~/interfaces/Page';
 
+useSeoMeta({
+  title: 'Suche',
+});
+
 definePageMeta({
   layout: 'protected',
 });
@@ -76,7 +80,7 @@ onMounted(() => {
   }
 })
 
-const { data: member, token } = useAuth()
+const { token } = useAuth()
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 const filter = ref({
@@ -121,12 +125,12 @@ const fetchParams = computed(() => ({
   marked: markedValue(),
 }));
 
-const { data: offerResults, pending, error, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
+const { data: offerResults, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   params: fetchParams,
   headers: {
     Authorization: `${token.value}`,
   },
-  onResponse: async (response) => {
+  onResponse: async () => {
     await navigateTo({
       path: '/fv/search',
       query: {

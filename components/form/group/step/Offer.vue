@@ -6,7 +6,7 @@
         <UForm ref="form" :validate="formValidate" :state="formState" class="w-full space-y-4" @submit="onBookCreate">
           <UFormGroup label="ISBN" name="isbn" required>
             <UButtonGroup orientation="horizontal" class="w-full">
-              <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="flex-grow" @keydown.enter.prevent="handleIsbnSearch" autocomplete="off" />
+              <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="flex-grow" autocomplete="off" @keydown.enter.prevent="handleIsbnSearch" />
               <UButton :loading="loadingIsbn" icon="i-heroicons-magnifying-glass" color="gray" @click="handleIsbnSearch" />
             </UButtonGroup>
           </UFormGroup>
@@ -100,6 +100,16 @@ import type { Exam } from '~/interfaces/Exam';
 import type { Page } from '~/interfaces/Page';
 import { formatPrice } from '~/utils/utils';
 
+interface BookFields {
+  isbn: string;
+  title: string;
+  authors: string;
+  publisher: string;
+  edition?: number;
+  maxPrice?: number;
+  exam_id?: number;
+}
+
 const props = defineProps({
   seller: {
     type: Object as () => Seller,
@@ -129,13 +139,13 @@ const formState = reactive({
   isbn: '',
   title: '',
   authors: '',
-  maxPrice: undefined,
-  edition: undefined,
   publisher: '',
+  edition: undefined,
+  maxPrice: undefined,
   exam_id: undefined,
 })
 
-const formValidate = (state: any): FormError[] => {
+const formValidate = (state: BookFields): FormError[] => {
   const errors = []
   
   errors.push(...isbnValidators(state));
@@ -145,12 +155,11 @@ const formValidate = (state: any): FormError[] => {
   if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
   if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
-  if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ path: 'edition', message: 'Auflage darf nur Ziffern enthalten' })
   if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
 }
 
-const isbnValidators = (state: any): FormError[] => {
+const isbnValidators = (state: BookFields): FormError[] => {
   const errors = [];
 
   if (!state.isbn) errors.push({ path: 'isbn', message: 'ISBN ist verpflichtend' })
@@ -198,10 +207,10 @@ const handleIsbnSearch = async () => {
 }
 
 // This anonymous function is called by the UForm component to create a new book
-const onBookCreate = async (event: FormSubmitEvent<any>) => {
+const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
   loading.value = true;
 
-  let body = {...event.data};
+  const body = {...event.data};
 
   if (body.exam_id === undefined) {
     delete body.exam_id;
@@ -263,7 +272,7 @@ function createOffer(book: Book | undefined) {
 
   checkedIsbn.value = false;
 
-  let offer: Offer = {
+  const offer: Offer = {
     book: book,
     price: book.maxPrice,
     seller: props.seller,

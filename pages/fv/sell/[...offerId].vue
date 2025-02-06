@@ -123,12 +123,15 @@
 import type { Offer } from '~/interfaces/Offer';
 import { formatPrice } from '~/utils/utils';
 
+useSeoMeta({
+  title: 'Verkaufen',
+});
+
 definePageMeta({
   layout: 'protected',
 })
 
 const route = useRoute()
-const router = useRouter()
 const { token } = useAuth()
 const loadingOffer = ref(false)
 const selectedOffer = ref<Offer | null>(null)
@@ -196,9 +199,9 @@ async function searchOffer () {
       selectedOffer.value = null;
       console.error('No offer found with ID:', offerId);
     }
-  } catch (error: any) {
+  } catch {
     selectedOffer.value = null;
-    console.error('Failed to fetch offer:', error.data);
+    console.error('Failed to fetch offer');
   }
 
   loadingOffer.value = false;
@@ -246,8 +249,7 @@ async function checkout() {
       path: '/fv',
     })
 
-  } catch (error: any) {
-    console.error('Failed to fetch offer:', error.data.error);
+  } catch {
     confirmModalOpen.value = false;
     await updateOffers();
     useToast().add({
@@ -315,7 +317,7 @@ async function refetchOffer(id: number): Promise<Offer | null> {
       console.error('No offer found with ID:', id);
       return null;
     }
-  } catch (error: any) {
+  } catch {
     return null;
   }
 }

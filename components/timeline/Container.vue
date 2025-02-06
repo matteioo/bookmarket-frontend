@@ -9,11 +9,11 @@
 <script setup lang="ts">
 import type { Member } from '~/interfaces/Member';
 
-const member = ref<Member>({
+const _member = ref<Member>({
   id: 1,
   username: 'max.mustermann',
   email: '',
 });
 
-const dateTime = ref<Date>(new Date('2024-04-17T03:24:12'));
+const _dateTime = ref<Date>(new Date('2024-04-17T03:24:12'));
 </script>

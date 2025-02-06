@@ -5,6 +5,8 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -16,9 +18,12 @@
   },
   "devDependencies": {
     "@iconify-json/heroicons": "^1.2.2",
+    "@nuxt/eslint": "^1.0.0",
     "@sidebase/nuxt-auth": "^0.10.0",
     "dayjs-nuxt": "^2.1.11",
     "nuxt": "^3.15.4",
     "nuxt-security": "^2.1.5"
+    "eslint": "^9.19.0",
+    "typescript": "^5.7.3"
   }
 }

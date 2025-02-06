@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth',
     'dayjs-nuxt',
     'nuxt-security'
+    '@nuxt/eslint',
   ],
   postcss: {
     plugins: {
@@ -35,7 +36,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1/auth',
+      apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
     },
     myProxyUrl: '',
   },
@@ -55,7 +56,11 @@ export default defineNuxtConfig({
         },
       },
       token: {
+        // TODO: implement cookie domain for production, when domains are defined
+        //cookieDomain: process.env.NUXT_PUBLIC_COOKIE_DOMAIN || 'localhost',
         secureCookieAttribute: true,
+        // TODO: remove sameSiteAttribute 'None' for production, when domains are defined
+        sameSiteAttribute: 'none',
       }
     },
     globalAppMiddleware: {

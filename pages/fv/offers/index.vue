@@ -1,7 +1,7 @@
 <template>
   <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-xl mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
-      <UInput placeholder="Suchen..." v-model="searchInput" />
+      <UInput v-model="searchInput" placeholder="Suchen..." />
       <div class="inline-flex gap-x-4">
         <UPopover mode="hover" :popper="{ placement: 'bottom-end' }">
           <UButton color="primary" label="Hinzufügen" trailing-icon="i-heroicons-chevron-down-20-solid" />
@@ -31,7 +31,7 @@
     </div>
     <div class="w-full rounded bg-white dark:bg-gray-900 shadow divide-y divide-gray-200 dark:divide-gray-700">
       <div class="px-4 py-3">
-        <USelectMenu class="w-fit" v-slot="{ open }" v-model="selectedColumns" :options="columns" multiple>
+        <USelectMenu v-slot="{ open }" v-model="selectedColumns" class="w-fit" :options="columns" multiple>
           <UButton color="gray" class="flex-1 justify-between">
             Spalten auswählen
 
@@ -41,7 +41,8 @@
       </div>
       <UTable
         :loading="pending"
-        :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
+        :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Lade Angebote...' }"
+        :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'Kein Angebot gefunden.' }"
         class="w-full"
         :rows="data !== null ? data.results : []"
         :columns="selectedColumns"
@@ -61,7 +62,7 @@
 
         <template #marked-data="{ row }">
           <UIcon v-if="row.marked" name="i-heroicons-paint-brush-20-solid" class="text-lg text-sky-600" />
-          <span v-else></span>
+          <span v-else />
         </template>
 
         <template #createdAt-data="{ row }">
@@ -92,6 +93,10 @@ import type { Page } from '~/interfaces/Page';
 import type { Offer } from '~/interfaces/Offer';
 import { formatDate, formatPrice } from '#imports';
 
+useSeoMeta({
+  title: 'Angebot-Übersicht',
+});
+
 definePageMeta({
   layout: 'protected',
 });
@@ -121,7 +126,7 @@ const fetchParams = computed(() => ({
   search: searchInput.value,
 }));
 
-const { data, pending, error, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
+const { data, pending } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   headers: {
     Authorization: `${token.value}`,
   },

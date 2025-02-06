@@ -49,6 +49,11 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
+interface PriceFields {
+  minPrice?: number;
+  maxPrice?: number;
+}
+
 const props = defineProps({
   priceFilter: {
     type: Object as PropType<{
@@ -71,7 +76,7 @@ const state = reactive({
   maxPrice: props.priceFilter.value.max,
 })
 
-const validate = (state: any): FormError[] => {
+const validate = (state: PriceFields): FormError[] => {
   const errors = []
   if (state.minPrice && state.minPrice < 0) errors.push({ path: 'minPrice', message: 'Preis muss mind. 0 sein!' })
   if (state.maxPrice && state.maxPrice > 999.99) errors.push({ path: 'maxPrice', message: 'Preis darf max. 999,99 sein!' })
@@ -79,7 +84,7 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-async function onSubmit (event: FormSubmitEvent<any>) {
+async function onSubmit (event: FormSubmitEvent<PriceFields>) {
   if (!event.data.minPrice && !event.data.maxPrice) {
     resetModal();
   } else {

@@ -10,7 +10,7 @@
         <UInput v-model="state.password" type="password" />
       </UFormGroup>
 
-      <UButton type="submit" class="float-right">
+      <UButton block :loading="loading" type="submit">
         Anmelden
       </UButton>
     </UForm>
@@ -19,6 +19,16 @@
 
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
+
+interface LoginFields {
+  username: string;
+  password: string;
+}
+
+useSeoMeta({
+  title: 'Login',
+  ogTitle: 'Login',
+})
 
 definePageMeta({
   auth: {
@@ -29,22 +39,25 @@ definePageMeta({
 
 const { signIn } = useAuth()
 
-const state = reactive({
+const state = reactive<LoginFields>({
   username: '',
   password: '',
 })
 
-const validate = (state: any): FormError[] => {
+const loading = ref(false)
+
+const validate = (state: LoginFields): FormError[] => {
   const errors = []
-  if (!state.username) errors.push({ path: 'username', message: 'Username is required' })
-  if (!state.password) errors.push({ path: 'password', message: 'Password is required' })
+  if (!state.username) errors.push({ path: 'username', message: 'Benutzername ist verpflichtend' })
+  if (!state.password) errors.push({ path: 'password', message: 'Passwort ist verpflichtend' })
   return errors
 }
 
-async function login(event: FormSubmitEvent<any>) {
+async function login(event: FormSubmitEvent<LoginFields>) {
   try {
+    loading.value = true;
     await signIn({ username: event.data.username, password: event.data.password }, { callbackUrl: '/fv' })
-  } catch (error) {
+  } catch {
     useToast().add({
       title: 'Fehler',
       description: 'Benutzername oder Passwort ist falsch',
@@ -52,6 +65,7 @@ async function login(event: FormSubmitEvent<any>) {
       color: 'red',
     });
   } finally {
+    loading.value = false;
     state.username = '';
     state.password = '';
   }

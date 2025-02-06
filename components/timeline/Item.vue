@@ -9,10 +9,7 @@
         <div>
           <div class="text-gray-700 dark:text-gray-300 font-medium">
             <time v-if="props.dateTime" class="block text-sm text-gray-500">{{ formatReadableDate(props.dateTime.toString()) }}</time>
-            <ULink v-if="props.member"
-              class="underline hover:text-gray-800 dark:hover:text-gray-200"
-              :to="`/fv/members/${props.member.id}`"
-              >
+            <ULink v-if="props.member" class="underline hover:text-gray-800 dark:hover:text-gray-200" :to="`/fv/members/${props.member.id}`">
               {{ props.member?.username }}
             </ULink>
             <span>&nbsp;{{ props.title }}</span>
@@ -22,7 +19,7 @@
     </div>
 
     <div v-if="hasContent" class="p-2 rounded border bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 ml-14">
-      <slot v-bind:content="true" />
+      <slot :content="true" />
     </div>
   </div>
 </template>
@@ -42,19 +39,22 @@ const props = defineProps({
   },
   member: {
     type: Object as () => Member,
-    required: false
+    required: false,
+    default: undefined
   },
   dateTime: {
     type: Date,
-    required: false
+    required: false,
+    default: undefined
   },
   title: {
     type: String,
-    required: true
+    required: true,
   },
   body: {
     type: String,
-    required: false
+    required: false,
+    default: undefined,
   }
 });
 
