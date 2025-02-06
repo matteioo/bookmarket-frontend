@@ -24,8 +24,9 @@
     "@nuxt/eslint": "^1.0.0",
     "@sidebase/nuxt-auth": "^0.10.0",
     "dayjs-nuxt": "^2.1.11",
-    "eslint": "^9.19.0",
     "nuxt": "^3.15.4",
+    "nuxt-security": "^2.1.5",
+    "eslint": "^9.19.0",
     "typescript": "^5.7.3"
   }
 }
