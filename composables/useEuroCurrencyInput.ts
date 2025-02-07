@@ -2,7 +2,7 @@ import { useCurrencyInput, type CurrencyInputOptions } from 'vue-currency-input'
 
 export function useEuroCurrencyInput(customOptions?: Partial<CurrencyInputOptions>) {
   const defaultOptions: CurrencyInputOptions = {
-    locale: "de-AT",
+    locale: "de-DE",
     currency: "EUR",
     valueRange: {
       min: 0,
@@ -13,7 +13,7 @@ export function useEuroCurrencyInput(customOptions?: Partial<CurrencyInputOption
     hideNegligibleDecimalDigitsOnFocus: true,
     //autoDecimalDigits: true,
     useGrouping: true,
-    accountingSign: false
+    accountingSign: false,
   }
 
   // Merge default options with any custom options provided
