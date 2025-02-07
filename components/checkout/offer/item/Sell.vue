@@ -27,21 +27,20 @@
 </template>
 
 <script setup lang="ts">
-import type { Offer } from '~/interfaces/Offer';
-import { formatPrice } from '~/utils/utils';
+import type { Offer } from '~/interfaces/Offer'
 
 const props = defineProps({
   modelValue: {
     type: Object as () => Offer,
     required: true
   },
-});
+})
 
-const emit = defineEmits(['delete-item']);
+const emit = defineEmits(['delete-item'])
 
-const isActive = computed(() => props.modelValue.active);
+const isActive = computed(() => props.modelValue.active)
 
 const deleteItem = () => {
-  emit('delete-item', props.modelValue);
-};
+  emit('delete-item', props.modelValue)
+}
 </script>
