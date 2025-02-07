@@ -41,25 +41,25 @@
 </template>
 
 <script setup lang="ts">
-import type { Offer } from '~/interfaces/Offer';
-import type { Seller } from '~/interfaces/Seller';
+import type { Offer } from '~/interfaces/Offer'
+import type { Seller } from '~/interfaces/Seller'
 
 const props = defineProps({
   modelValue: {
     type: Object as PropType<NewOffers>,
     required: true,
   },
-});
+})
 
-const router = useRouter();
-const { token } = useAuth();
+const router = useRouter()
+const { token } = useAuth()
 
 const buttonLabel = computed(() => {
-  return props.modelValue.offers.length === 1 ? 'Angebot anlegen' : 'Angebote anlegen';
-});
+  return props.modelValue.offers.length === 1 ? 'Angebot anlegen' : 'Angebote anlegen'
+})
 
 const submitOffers = async () => {
-  const seller_id = props.modelValue.seller.id;
+  const seller_id = props.modelValue.seller.id
   const createOffers: CreateOffer[] = props.modelValue.offers.map(offer => ({
     book_id: offer.book.isbn,
     price: offer.price,
@@ -67,7 +67,7 @@ const submitOffers = async () => {
     member_id: 1,
     marked: offer.marked,
     location: offer.location,
-  }));
+  }))
 
   const response = await fetch(useRuntimeConfig().public.apiUrl + '/offers/bulk', {
     method: 'POST',
@@ -76,7 +76,7 @@ const submitOffers = async () => {
       Authorization: `${token.value}`,
     },
     body: JSON.stringify(createOffers),
-  });
+  })
 
   if (response.ok) {
     useToast().add({
@@ -84,33 +84,33 @@ const submitOffers = async () => {
       description: 'Angebot erfolgreich angelegt.',
       icon: 'i-heroicons-check-circle',
       color: 'green',
-    });
+    })
     
-    router.push('/fv/offers');
+    router.push('/fv/offers')
   } else {
-    const data = await response.json();
-    console.error('No offers created', data);
+    const data = await response.json()
+    console.error('No offers created', data)
     
     useToast().add({
       title: 'Fehler',
       description: data,
       icon: 'i-heroicons-check-circle',
       color: 'red',
-    });
+    })
   }
-};
+}
 
 interface CreateOffer {
-  book_id: string;
-  price: number;
-  seller_id: number;
-  member_id: number;
-  marked: boolean;
-  location: string;
+  book_id: string
+  price: number
+  seller_id: number
+  member_id: number
+  marked: boolean
+  location: string
 }
 
 interface NewOffers {
-  seller: Seller;
-  offers: Offer[];
+  seller: Seller
+  offers: Offer[]
 }
 </script>

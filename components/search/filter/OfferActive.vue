@@ -12,10 +12,10 @@
 </template>
 
 <script setup lang="ts">
-const model = defineModel<boolean>();
-const filterActive = computed(() => !model.value);
+const model = defineModel<boolean>()
+const filterActive = computed(() => !model.value)
 
 const toggleFilter = () => {
-  model.value = !model.value;
+  model.value = !model.value
 }
 </script>

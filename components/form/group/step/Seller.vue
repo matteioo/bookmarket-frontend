@@ -46,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Seller } from '~/interfaces/Seller';
-import type { Page } from '~/interfaces/Page';
+import type { Seller } from '~/interfaces/Seller'
+import type { Page } from '~/interfaces/Page'
 
 const props = defineProps({
   onSubmit: {
@@ -59,33 +59,33 @@ const props = defineProps({
     required: false,
     default: null,
   },
-});
+})
 
-const loading = ref(false);
-const selected = ref(props.currentSeller);
-const { token } = useAuth();
+const loading = ref(false)
+const selected = ref(props.currentSeller)
+const { token } = useAuth()
 
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
 const handleSearchSubmit = () => {
   if (selected.value) {
-    props.onSubmit(selected.value);
+    props.onSubmit(selected.value)
   } else {
-    console.error('No seller selected');
+    console.error('No seller selected')
   }
 }
 
 // This anonymous function is called by the FormGroup component to intercept the submitted data
 const handleSubmit = (userData: Seller) => {
   if (userData) {
-    props.onSubmit(userData);
+    props.onSubmit(userData)
   } else {
-    console.error('No seller selected');
+    console.error('No seller selected')
   }
 }
 
 // This function is called by the selectMenu component to search for sellers
 async function search(query: string) {
-  loading.value = true;
+  loading.value = true
 
   const sellers = await $fetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
     headers: {
@@ -96,9 +96,9 @@ async function search(query: string) {
       offset: 0,
       limit: 20,
     },
-  });
+  })
 
-  loading.value = false;
-  return sellers.results;
+  loading.value = false
+  return sellers.results
 }
 </script>

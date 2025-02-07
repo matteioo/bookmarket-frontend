@@ -54,8 +54,8 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
 interface MarkedFields {
-  marked: boolean;
-  unmarked: boolean;
+  marked: boolean
+  unmarked: boolean
 }
 
 const props = defineProps({
@@ -63,12 +63,12 @@ const props = defineProps({
     type: Object as PropType<MarkedFilter>,
     required: true,
   }
-});
-const emit = defineEmits(['update:markedFilter']);
+})
+const emit = defineEmits(['update:markedFilter'])
 
-const popoverOpen = ref(false);
-const localMarkedFilter = ref<MarkedFilter>(props.markedFilter);
-const filterActive = computed(() => !localMarkedFilter.value.value.marked || !localMarkedFilter.value.value.unmarked);
+const popoverOpen = ref(false)
+const localMarkedFilter = ref<MarkedFilter>(props.markedFilter)
+const filterActive = computed(() => !localMarkedFilter.value.value.marked || !localMarkedFilter.value.value.unmarked)
 
 
 const state = reactive({
@@ -84,32 +84,32 @@ const validate = (state: MarkedFields): FormError[] => {
 
 async function onSubmit (event: FormSubmitEvent<MarkedFields>) {
   if (event.data.marked === true && event.data.unmarked === true) {
-    resetModal();
+    resetModal()
   } else {
-    localMarkedFilter.value = { active: true, value: { marked: event.data.marked, unmarked: event.data.unmarked } };
-    emit('update:markedFilter', localMarkedFilter.value);
+    localMarkedFilter.value = { active: true, value: { marked: event.data.marked, unmarked: event.data.unmarked } }
+    emit('update:markedFilter', localMarkedFilter.value)
   }
 
-  console.log(event.data.marked, event.data.marked, localMarkedFilter.value);
+  console.log(event.data.marked, event.data.marked, localMarkedFilter.value)
   
-  popoverOpen.value = false;
+  popoverOpen.value = false
 }
 
 function resetModal () {
-  state.marked = true;
-  state.unmarked = true;
-  localMarkedFilter.value = { active: false, value: { marked: true, unmarked: true } };
+  state.marked = true
+  state.unmarked = true
+  localMarkedFilter.value = { active: false, value: { marked: true, unmarked: true } }
 
-  emit('update:markedFilter', localMarkedFilter.value);
+  emit('update:markedFilter', localMarkedFilter.value)
 
-  popoverOpen.value = false;
+  popoverOpen.value = false
 }
 
 interface MarkedFilter {
-  active: boolean;
+  active: boolean
   value: {
-    marked: boolean;
-    unmarked: boolean;
-  };
+    marked: boolean
+    unmarked: boolean
+  }
 }
 </script>

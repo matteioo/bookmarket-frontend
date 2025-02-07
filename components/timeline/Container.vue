@@ -7,13 +7,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Member } from '~/interfaces/Member';
+import type { Member } from '~/interfaces/Member'
 
 const _member = ref<Member>({
   id: 1,
   username: 'max.mustermann',
   email: '',
-});
+})
 
-const _dateTime = ref<Date>(new Date('2024-04-17T03:24:12'));
+const _dateTime = ref<Date>(new Date('2024-04-17T03:24:12'))
 </script>

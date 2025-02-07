@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
 interface Step {
-  step: number;
-  title: string;
+  step: number
+  title: string
 }
 
 const _props = defineProps({
@@ -31,18 +31,18 @@ const _props = defineProps({
     type: Number,
     default: 1,
   },
-});
+})
 
-const emit = defineEmits(['step-clicked']);
+const emit = defineEmits(['step-clicked'])
 
 const handleClick = (step: Step) => {
-  emit('step-clicked', step.step);
-};
+  emit('step-clicked', step.step)
+}
 </script>
 
 <style scoped>
 .split-evenly {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr))
   }
 </style>

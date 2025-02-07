@@ -24,13 +24,13 @@
 
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent, ButtonVariant } from '#ui/types'
-import type { Seller } from '~/interfaces/Seller';
+import type { Seller } from '~/interfaces/Seller'
 
 interface SellerFields {
-  fullName: string;
-  matriculationNumber: string;
-  email: string;
-  note: string;
+  fullName: string
+  matriculationNumber: string
+  email: string
+  note: string
 }
 
 const props = defineProps({
@@ -53,13 +53,13 @@ const props = defineProps({
     type: Function as PropType<(userData: Seller) => void>,
     required: true
   }
-});
+})
 
 const { token } = useAuth()
 const router = useRouter()
 const form = ref()
 const loading = ref(false)
-const user = ref(null as Seller | null);
+const user = ref(null as Seller | null)
 
 const state = reactive({
   fullName: '',
@@ -82,18 +82,18 @@ const validate = (state: SellerFields): FormError[] => {
 }
 
 const onSubmit = async (event: FormSubmitEvent<SellerFields>) => {
-  await createSeller(event);
+  await createSeller(event)
 
   if (user.value) {
-    props.onSubmit(user.value);
+    props.onSubmit(user.value)
   } else {
-    console.error('No seller submitted');
+    console.error('No seller submitted')
   }
-};
+}
 
 async function createSeller(event: FormSubmitEvent<SellerFields>) {
-  loading.value = true;
-  form.value.clear();
+  loading.value = true
+  form.value.clear()
 
   const response = await fetch(useRuntimeConfig().public.apiUrl + '/sellers', {
     method: 'POST',
@@ -106,7 +106,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
   loading.value = false
   
   if (response.ok) {
-    user.value = await response.json();
+    user.value = await response.json()
     useToast().add({
       title: 'Erfolg',
       description: 'Verkäufer:in erfolgreich angelegt.',
@@ -115,21 +115,21 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
     })
     
     if (props.to) {
-      router.push(props.to);
+      router.push(props.to)
     }
   } else {
     const data = await response.json()
     
-    const errors = [];
+    const errors = []
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
           path: field,
           message: data[field][0]
-        });
+        })
       }
     }
-    form.value.setErrors(errors);
+    form.value.setErrors(errors)
 
     useToast().add({
       title: 'Fehler',
@@ -138,5 +138,5 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
       color: 'red',
     })
   }
-};
+}
 </script>

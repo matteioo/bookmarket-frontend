@@ -72,11 +72,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Seller } from '~/interfaces/Seller';
-import type { Page } from '~/interfaces/Page';
-import type { Book } from '~/interfaces/Book';
-import type { Offer } from '~/interfaces/Offer';
-import type { Member } from '~/interfaces/Member';
+import type { Seller } from '~/interfaces/Seller'
+import type { Page } from '~/interfaces/Page'
+import type { Book } from '~/interfaces/Book'
+import type { Offer } from '~/interfaces/Offer'
+import type { Member } from '~/interfaces/Member'
 
 const props = defineProps({
   seller: {
@@ -87,28 +87,28 @@ const props = defineProps({
     type: Function as PropType<(userData: Offer[]) => void>,
     required: true,
   },
-});
+})
 
-const loading = ref(false);
-const selected = ref(undefined as Book | undefined);
-const { token } = useAuth();
-const offers = ref([] as Offer[]);
-const currentPrice = ref(0);
+const loading = ref(false)
+const selected = ref(undefined as Book | undefined)
+const { token } = useAuth()
+const offers = ref([] as Offer[])
+const currentPrice = ref(0)
 
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
 const handleSearchSubmit = () => {
   if (selected.value) {
-    console.log('selected seller', selected.value);
-    createOffer(selected.value);
-    //props.onSubmit(offers.value);
+    console.log('selected seller', selected.value)
+    createOffer(selected.value)
+    //props.onSubmit(offers.value)
   } else {
-    console.error('No seller selected');
+    console.error('No seller selected')
   }
 }
 
 // This function is called by the selectMenu component to search for sellers
 async function search(query: string) {
-  loading.value = true;
+  loading.value = true
   
   const sellers = await $fetch<Page<Book>>(useRuntimeConfig().public.apiUrl + '/books', {
     headers: {
@@ -119,16 +119,16 @@ async function search(query: string) {
       offset: 0,
       limit: 20,
     },
-  });
+  })
 
-  loading.value = false;
-  return sellers.results;
+  loading.value = false
+  return sellers.results
 }
 
 const handleDeleteItem = (item: Offer) => {
-  const index = offers.value.indexOf(item);
+  const index = offers.value.indexOf(item)
   if (index !== -1) {
-    offers.value.splice(index, 1);
+    offers.value.splice(index, 1)
   }
 }
 
@@ -136,7 +136,7 @@ const member: Member = {
   id: 0,
   username: 'username',
   email: 'emailAddress', 
-};
+}
 
 function createOffer(book: Book) {
   const offer: Offer = {
@@ -149,17 +149,17 @@ function createOffer(book: Book) {
     modified: new Date(),
     marked: false,
     location: 'location',
-  };
-  offers.value.push(offer);
-  console.log('offers', offers.value);
+  }
+  offers.value.push(offer)
+  console.log('offers', offers.value)
 }
 
 watch(offers, () => {
-  console.log('offers', offers.value);
+  console.log('offers', offers.value)
   const sum = offers.value.reduce((sum: number, offer) => {
-    const priceAsNumber: number = offer.price;
-    return sum + priceAsNumber;
-  }, 0);
-  currentPrice.value = Math.round(sum * 100) / 100;
-}, { deep: true });
+    const priceAsNumber: number = offer.price
+    return sum + priceAsNumber
+  }, 0)
+  currentPrice.value = Math.round(sum * 100) / 100
+}, { deep: true })
 </script>

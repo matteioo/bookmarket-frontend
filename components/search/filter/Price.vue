@@ -74,7 +74,6 @@ const state = reactive<PriceFilter>({
   max: localPriceFilter.value.value.max,
 })
 
-// Add a watcher to update the state when the prop changes
 watch(
   () => props.priceFilter,
   (newFilter) => {

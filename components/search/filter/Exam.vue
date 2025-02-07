@@ -45,40 +45,40 @@
 </template>
 
 <script setup lang="ts">
-import type { FormError, FormSubmitEvent } from '#ui/types';
-import type { Filter, ExamFilter } from '~/interfaces/SearchFilters';
-import type { Exam } from '~/interfaces/Exam';
-import type { Page } from '~/interfaces/Page';
+import type { FormError, FormSubmitEvent } from '#ui/types'
+import type { Filter, ExamFilter } from '~/interfaces/SearchFilters'
+import type { Exam } from '~/interfaces/Exam'
+import type { Page } from '~/interfaces/Page'
 
 const props = defineProps({
   examFilter: {
     type: Object as PropType<Filter<ExamFilter>>,
     required: true,
   }
-});
-const emit = defineEmits(['update:examFilter']);
+})
+const emit = defineEmits(['update:examFilter'])
 
-const { token } = useAuth();
-const popoverOpen = ref(false);
-const localExamFilter = ref<Filter<ExamFilter>>(props.examFilter);
+const { token } = useAuth()
+const popoverOpen = ref(false)
+const localExamFilter = ref<Filter<ExamFilter>>(props.examFilter)
 
-const exams = [] as string[];
+const exams = [] as string[]
 const state = reactive({
   exam: props.examFilter.value.exam,
-});
+})
 
 onMounted(async () => {
   const { data: examsPage } = await useFetch<Page<Exam>>(useRuntimeConfig().public.apiUrl + '/exams', {
     headers: {
       Authorization: `${token.value}`,
     },
-  });
+  })
 
-  exams.push(...(examsPage.value?.results.map((exam) => exam.name) ?? []));
+  exams.push(...(examsPage.value?.results.map((exam) => exam.name) ?? []))
   
   // Set the initial value of state.exam after fetching the exams
-  state.exam = props.examFilter.value.exam;
-});
+  state.exam = props.examFilter.value.exam
+})
 
 const validate = (state: ExamFilter): FormError[] => {
   const errors = []
@@ -88,21 +88,21 @@ const validate = (state: ExamFilter): FormError[] => {
 
 async function onSubmit (event: FormSubmitEvent<ExamFilter>) {
   if (!event.data.exam || !exams.includes(event.data.exam)) {
-    resetModal();
+    resetModal()
   } else {
-    localExamFilter.value = { active: true, value: { exam: event.data.exam } };
-    emit('update:examFilter', localExamFilter.value);
+    localExamFilter.value = { active: true, value: { exam: event.data.exam } }
+    emit('update:examFilter', localExamFilter.value)
   }
   
-  popoverOpen.value = false;
+  popoverOpen.value = false
 }
 
 function resetModal () {
-  state.exam = undefined;
-  localExamFilter.value = { active: false, value: { exam: undefined } };
+  state.exam = undefined
+  localExamFilter.value = { active: false, value: { exam: undefined } }
 
-  emit('update:examFilter', localExamFilter.value);
+  emit('update:examFilter', localExamFilter.value)
 
-  popoverOpen.value = false;
+  popoverOpen.value = false
 }
 </script>

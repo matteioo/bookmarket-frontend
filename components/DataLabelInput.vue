@@ -30,11 +30,11 @@ const _props = defineProps({
     type: String,
     default: undefined,
   },
-});
+})
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue'])
 
 const updateModelValue = (newValue: never) => {
-  emit('update:modelValue', newValue);
-};
+  emit('update:modelValue', newValue)
+}
 </script>

@@ -60,15 +60,15 @@
 </template>
 
 <script setup lang="ts">
-import { formatPrice } from '~/utils/utils';
-import type { Offer } from '~/interfaces/Offer';
+import { formatPrice } from '~/utils/utils'
+import type { Offer } from '~/interfaces/Offer'
 
 const _props = defineProps({
   offer: {
     type: Object as () => Offer,
     required: true,
   },
-});
+})
 
-const modalOpen = ref(false);
+const modalOpen = ref(false)
 </script>
