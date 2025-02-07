@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <UInput ref="inputRef" :required="props.required" :size="(props.size as InputSize)" />
+    <UInput ref="inputRef" :required="props.required" :size="(props.size as InputSize)" :placeholder="props.placeholder" />
   </div>
 </template>
 
@@ -10,6 +10,10 @@ import type { InputSize } from '#ui/types'
 
 const props = defineProps({
   modelValue: {
+    type: Number,
+    default: 0,
+  },
+  minPrice: {
     type: Number,
     default: 0,
   },
@@ -25,9 +29,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  placeholder: {
+    type: String,
+    required: false,
+    default: '',
+  }
 })
 
-const { inputRef, numberValue } = useEuroCurrencyInput({ valueRange: { min: 0, max: props.maxPrice } })
+const { inputRef, numberValue } = useEuroCurrencyInput({ valueRange: { min: props.minPrice, max: props.maxPrice }})
 
 const emit = defineEmits(['update:modelValue'])
 
