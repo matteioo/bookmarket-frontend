@@ -29,11 +29,7 @@
             </UFormGroup>
             
             <UFormGroup label="Max. Preis" name="maxPrice" required>
-              <UInput v-model="formState.maxPrice" type="text" placeholder="14.50">
-                <template #leading>
-                  <span class="text-gray-500 dark:text-gray-400 text-xs">&euro;</span>
-                </template>
-              </UInput>
+              <FormInputPrice v-model="formState.maxPrice" label="maxPrice" size="sm" />
             </UFormGroup>
           </div>
 
@@ -92,22 +88,22 @@
 
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
-import type { Seller } from '~/interfaces/Seller';
-import type { Book } from '~/interfaces/Book';
-import type { Offer } from '~/interfaces/Offer';
-import type { Member } from '~/interfaces/Member';
-import type { Exam } from '~/interfaces/Exam';
-import type { Page } from '~/interfaces/Page';
-import { formatPrice } from '~/utils/utils';
+import type { Seller } from '~/interfaces/Seller'
+import type { Book } from '~/interfaces/Book'
+import type { Offer } from '~/interfaces/Offer'
+import type { Member } from '~/interfaces/Member'
+import type { Exam } from '~/interfaces/Exam'
+import type { Page } from '~/interfaces/Page'
+import { formatPrice } from '~/utils/utils'
 
 interface BookFields {
-  isbn: string;
-  title: string;
-  authors: string;
-  publisher: string;
-  edition?: number;
-  maxPrice?: number;
-  exam_id?: number;
+  isbn: string
+  title: string
+  authors: string
+  publisher: string
+  edition?: number
+  maxPrice?: number
+  exam_id?: number
 }
 
 const props = defineProps({
@@ -123,17 +119,17 @@ const props = defineProps({
     type: Array as PropType<Offer[]>,
     default: () => [],
   }
-});
+})
 
-const { token } = useAuth();
-const loading = ref(false);
-const loadingIsbn = ref(false);
+const { token } = useAuth()
+const loading = ref(false)
+const loadingIsbn = ref(false)
 const form = ref()
-const selected = ref(undefined as Book | undefined);
-const offers = ref(props.currentOffers as Offer[]);
-const checkedIsbn = ref(false);
-const exams = ref([] as Exam[]);
-const offerErrors = ref(false);
+const selected = ref(undefined as Book | undefined)
+const offers = ref(props.currentOffers as Offer[])
+const checkedIsbn = ref(false)
+const exams = ref([] as Exam[])
+const offerErrors = ref(false)
 
 const formState = reactive({
   isbn: '',
@@ -148,40 +144,41 @@ const formState = reactive({
 const formValidate = (state: BookFields): FormError[] => {
   const errors = []
   
-  errors.push(...isbnValidators(state));
+  errors.push(...isbnValidators(state))
   if (!state.title) errors.push({ path: 'title', message: 'Titel ist verpflichtend' })
   if (!state.authors) errors.push({ path: 'authors', message: 'Autor(en) sind verpflichtend' })
   if (!state.publisher) errors.push({ path: 'publisher', message: 'Verlag ist verpflichtend' })
-  if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
-  if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
+  //if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
+  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
+  if (state.edition && typeof state.edition !== 'number') errors.push({ path: 'edition', message: 'Auflage muss eine Zahl sein' })
   if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
 }
 
 const isbnValidators = (state: BookFields): FormError[] => {
-  const errors = [];
+  const errors = []
 
   if (!state.isbn) errors.push({ path: 'isbn', message: 'ISBN ist verpflichtend' })
   if (state.isbn && !/^\d+$/.test(state.isbn)) errors.push({ path: 'isbn', message: 'ISBN darf nur Ziffern enthalten' })
   if (state.isbn && state.isbn.toString().length !== 13) errors.push({ path: 'isbn', message: 'ISBN muss aus genau 13 Ziffern bestehen' })
 
-  return errors;
+  return errors
 }
 
-await fetchExams();
+await fetchExams()
 
 const handleIsbnSearch = async () => {
-  loadingIsbn.value = true;
+  loadingIsbn.value = true
 
   // Check if the isbn is of length 13 and only contains numbers
-  const errors = isbnValidators(formState);
+  const errors = isbnValidators(formState)
 
   
   if (errors.length > 0) {
-    form.value.setErrors(form.value.errors.concat(errors));
-    loadingIsbn.value = false;
-    return;
+    form.value.setErrors(form.value.errors.concat(errors))
+    loadingIsbn.value = false
+    return
   }
 
   try {
@@ -189,31 +186,31 @@ const handleIsbnSearch = async () => {
       headers: {
         Authorization: `${token.value}`,
       },
-    });
+    })
 
     if (singleBook) {
-      selected.value = singleBook;
+      selected.value = singleBook
     } else {
-      selected.value = undefined;
-      console.error('No book found');
+      selected.value = undefined
+      console.error('No book found')
     }
   } catch (error) {
-    selected.value = undefined;
-    console.error('Error while fetching book', error);
+    selected.value = undefined
+    console.error('Error while fetching book', error)
   }
 
-  checkedIsbn.value = true;
-  loadingIsbn.value = false;
+  checkedIsbn.value = true
+  loadingIsbn.value = false
 }
 
 // This anonymous function is called by the UForm component to create a new book
 const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
-  loading.value = true;
+  loading.value = true
 
-  const body = {...event.data};
+  const body = {...event.data}
 
   if (body.exam_id === undefined) {
-    delete body.exam_id;
+    delete body.exam_id
   }
 
   const response = await fetch(useRuntimeConfig().public.apiUrl + '/books', {
@@ -223,54 +220,54 @@ const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
       Authorization: `${token.value}`,
     },
     body: JSON.stringify(body),
-  });
+  })
 
   if (response.ok) {
-    const newBook = await response.json();
-    createOffer(newBook);
-    clearForm();
+    const newBook = await response.json()
+    createOffer(newBook)
+    clearForm()
   } else {
-    selected.value = undefined;
-    console.error('No book created');
+    selected.value = undefined
+    console.error('No book created')
 
-    const data = await response.json();
-    const errors = [];
+    const data = await response.json()
+    const errors = []
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
           path: field,
           message: data[field][0]
-        });
+        })
       }
     }
-    form.value.setErrors(errors);
+    form.value.setErrors(errors)
   }
-  loading.value = false;
+  loading.value = false
 }
 
 const handleDeleteItem = (item: Offer) => {
-  const index = offers.value.indexOf(item);
+  const index = offers.value.indexOf(item)
   if (index !== -1) {
-    offers.value.splice(index, 1);
+    offers.value.splice(index, 1)
   }
 }
 
 const handleSubmitOffers = () => {
-  props.onSubmit(offers.value);
+  props.onSubmit(offers.value)
 }
 
 const member: Member = {
   id: 0,
   username: 'username',
   email: 'emailAddress', 
-};
+}
 
 function createOffer(book: Book | undefined) {
   if (!book) {
-    return;
+    return
   }
 
-  checkedIsbn.value = false;
+  checkedIsbn.value = false
 
   const offer: Offer = {
     book: book,
@@ -282,22 +279,22 @@ function createOffer(book: Book | undefined) {
     modified: new Date(),
     marked: false,
     location: '',
-  };
+  }
 
-  offers.value.push(offer);
-  clearForm();
+  offers.value.push(offer)
+  clearForm()
 }
 
 const clearForm = () => {
-  formState.isbn = '';
-  formState.title = '';
-  formState.authors = '';
-  formState.maxPrice = undefined;
-  formState.edition = undefined;
-  formState.publisher = '';
-  formState.exam_id = undefined;
+  formState.isbn = ''
+  formState.title = ''
+  formState.authors = ''
+  formState.maxPrice = undefined
+  formState.edition = undefined
+  formState.publisher = ''
+  formState.exam_id = undefined
   
-  selected.value = undefined;
+  selected.value = undefined
 }
 
 async function fetchExams() {
@@ -305,9 +302,9 @@ async function fetchExams() {
     headers: {
       Authorization: `${token.value}`,
     },
-  });
+  })
   
-  exams.value.push({id: null, name: ''});
-  exams.value.push(...response.results);
+  exams.value.push({id: null, name: ''})
+  exams.value.push(...response.results)
 }
 </script>
