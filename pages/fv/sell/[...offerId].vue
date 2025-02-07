@@ -208,7 +208,6 @@ async function searchOffer () {
 }
 
 function addOffer() {
-  console.log('adding offer', selectedOffer.value)
   if (selectedOffer.value) {
     addedOffers.value.push(selectedOffer.value)
     selectedOffer.value = null
@@ -221,12 +220,10 @@ function removeOffer(offer: Offer) {
   if (index > -1) {
     addedOffers.value.splice(index, 1)
   }
-  console.log('removed offer - offers:', addedOffers.value)
 }
 
 async function checkout() {
   loadingCheckout.value = true
-  console.log('checkout', addedOffers.value, addedOfferIds())
 
   try {
     await $fetch(useRuntimeConfig().public.apiUrl + '/offers/sell' , {

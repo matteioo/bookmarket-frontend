@@ -98,7 +98,6 @@ const currentPrice = ref(0)
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
 const handleSearchSubmit = () => {
   if (selected.value) {
-    console.log('selected seller', selected.value)
     createOffer(selected.value)
     //props.onSubmit(offers.value)
   } else {
@@ -151,11 +150,9 @@ function createOffer(book: Book) {
     location: 'location',
   }
   offers.value.push(offer)
-  console.log('offers', offers.value)
 }
 
 watch(offers, () => {
-  console.log('offers', offers.value)
   const sum = offers.value.reduce((sum: number, offer) => {
     const priceAsNumber: number = offer.price
     return sum + priceAsNumber

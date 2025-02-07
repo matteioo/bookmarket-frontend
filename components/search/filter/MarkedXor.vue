@@ -89,8 +89,6 @@ async function onSubmit (event: FormSubmitEvent<MarkedFields>) {
     localMarkedFilter.value = { active: true, value: { marked: event.data.marked, unmarked: event.data.unmarked } }
     emit('update:markedFilter', localMarkedFilter.value)
   }
-
-  console.log(event.data.marked, event.data.marked, localMarkedFilter.value)
   
   popoverOpen.value = false
 }

@@ -103,7 +103,6 @@ const priceLabel = computed(() => {
 
 async function onSubmit (event: FormSubmitEvent<PriceFilter>) {
   validate(event.data)
-  console.log('event.data', event.data)
 
   if (!event.data.min && !event.data.max) {
     resetModal()
@@ -115,7 +114,6 @@ async function onSubmit (event: FormSubmitEvent<PriceFilter>) {
     state.min = originalMax
     state.max = originalMin
     localPriceFilter.value = { active: true, value: { min: originalMax, max: originalMin } }
-    console.log('min > max')
 
     emit('update:priceFilter', localPriceFilter.value)
   } else if (errors.value.length) {

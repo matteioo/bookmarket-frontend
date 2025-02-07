@@ -167,7 +167,6 @@ const { data: seller, refresh: refreshSellerData } = useFetch<Seller>(useRuntime
     Authorization: `${token.value}`,
   },
   onResponseError: () => {
-    console.log('Seller not found')
     router.push('/fv/sellers')
   },
 })
