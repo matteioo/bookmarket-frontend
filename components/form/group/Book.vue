@@ -22,11 +22,7 @@
       </UFormGroup>
       
       <UFormGroup label="Max. Preis" name="maxPrice" required>
-        <UInput v-model="state.maxPrice" type="text" placeholder="14.50">
-          <template #leading>
-            <span class="text-gray-500 dark:text-gray-400 text-xs">&euro;</span>
-          </template>
-        </UInput>
+        <FormInputPrice v-model="state.maxPrice" label="maxPrice" size="sm" />
       </UFormGroup>
     </div>
 
@@ -98,8 +94,8 @@ const validate = (state: BookFields): FormError[] => {
   if (!state.title) errors.push({ path: 'title', message: 'Titel ist verpflichtend' })
   if (!state.authors) errors.push({ path: 'authors', message: 'Autor(en) sind verpflichtend' })
   if (!state.publisher) errors.push({ path: 'publisher', message: 'Verlag ist verpflichtend' })
-  if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
-  if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
+  //if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
+  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
   if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
