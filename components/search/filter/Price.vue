@@ -14,11 +14,11 @@
           <div class="p-4 flex flex-col gap-y-4">
             <div class="inline-flex flex-row gap-x-2 items-center">
               <UFormGroup class="w-24" name="minPrice">
-                <FormInputPrice v-model="state.min" label="maxPrice" size="md" placeholder="Min." :min-price="0" :max-price="state.max ?? 999.99" />
+                <FormInputPrice v-model="state.min" label="maxPrice" size="md" placeholder="Min." :min-price="0" :max-price="999.99" />
               </UFormGroup>
               <span>bis</span>
               <UFormGroup class="w-24" name="maxPrice">
-                <FormInputPrice v-model="state.max" label="maxPrice" size="md" placeholder="Max." :min-price="state.min ?? 0" :max-price="999.99" />
+                <FormInputPrice v-model="state.max" label="maxPrice" size="md" placeholder="Max." :min-price="0" :max-price="999.99" />
               </UFormGroup>
             </div>
             <div class="inline-flex flex-row-reverse gap-x-2 justify-stretch flex-wrap">
@@ -87,7 +87,6 @@ watch(
 const validate = (state: PriceFilter) => {
   if (state.min && state.min < 0) errors.value.push('Min. Preis muss mindestens 0 € sein!')
   if (state.max && state.max > 999.99) errors.value.push('Max. Preis muss kleiner 1.000 € sein!')
-  if (state.max && state.max && state.max > state.max) errors.value.push('Max. Preis muss größer als Min. Preis sein!')
 }
 
 const priceLabel = computed(() => {
@@ -104,9 +103,21 @@ const priceLabel = computed(() => {
 
 async function onSubmit (event: FormSubmitEvent<PriceFilter>) {
   validate(event.data)
+  console.log('event.data', event.data)
 
   if (!event.data.min && !event.data.max) {
     resetModal()
+  } else if (event.data.min && event.data.max && event.data.min > event.data.max) {
+    // Save original values before modifying state
+    const originalMin = event.data.min
+    const originalMax = event.data.max
+
+    state.min = originalMax
+    state.max = originalMin
+    localPriceFilter.value = { active: true, value: { min: originalMax, max: originalMin } }
+    console.log('min > max')
+
+    emit('update:priceFilter', localPriceFilter.value)
   } else if (errors.value.length) {
     return
   } else {
