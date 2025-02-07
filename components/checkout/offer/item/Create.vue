@@ -7,7 +7,7 @@
       <DataLabel label="Auflage" :data="String(props.modelValue.book.edition)" class="col-span-1" />
       <DataLabel label="Prüfung" :data="props.modelValue.book.exam?.name ?? '-'" class="col-span-4" />
       <DataLabelInput label="Markiert" :model-value="props.modelValue.marked" class="col-span-1" @update:model-value="value => emit('update:modelValue', { ...props.modelValue, marked: value })" />
-      <DataLabelInput label="Preis" :model-value="props.modelValue.price" :hint="'Max. ' + props.modelValue.book.maxPrice" :errors="errors?.price" class="col-span-2" @update:model-value="value => emit('update:modelValue', { ...props.modelValue, price: value })" />
+      <DataLabelInput label="Preis" :model-value="formatPrice(props.modelValue.price)" :hint="'Max. ' + props.modelValue.book.maxPrice" :errors="errors?.price" class="col-span-2" @update:model-value="value => emit('update:modelValue', { ...props.modelValue, price: value })" />
       <DataLabelInput label="Lagerort" :model-value="props.modelValue.location" :errors="errors?.location" class="col-span-2" @update:model-value="value => emit('update:modelValue', { ...props.modelValue, location: value })" />
     </div>
     <UButton

@@ -21,7 +21,7 @@
             <DataLabel label="Markiert" :data="String(offer.marked)" class="col-span-1" />
             <DataLabel label="Prüfung" :data="offer.book.exam?.name" class="col-span-6" />
             <DataLabel label="Lagerort" :data="offer.location !== '' ? offer.location : undefined" class="col-span-2" />
-            <DataLabel label="Wunschpreis" :data="String(offer.price)" class="col-span-2" />
+            <DataLabel label="Wunschpreis" :data="formatPrice(offer.price)" class="col-span-2" />
           </div>
         </div>
       </div>
