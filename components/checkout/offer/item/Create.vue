@@ -21,7 +21,7 @@
       <DataLabelInput
         v-model="localOffer.location"
         label="Lagerort"
-        :errors="errors?.location"
+        :errors="errors"
         class="col-span-2"
       />
     </div>
@@ -49,12 +49,12 @@ const props = defineProps({
 const emit = defineEmits(['delete-item', 'update:modelValue', 'update:hasErrors'])
 
 const localOffer = shallowReactive<Offer>({ ...props.modelValue })
-const errors = ref<Errors>({location: [] })
+const errors = ref<string[]>([])
 
-const formValidate = (): Errors => {
-  const errors: Errors = {location: []}
+const formValidate = () => {
+  const errors = []
   
-  if (props.modelValue.location && props.modelValue.location.length > 5) errors.location.push('Max. 5 Zeichen')
+  if (props.modelValue.location && props.modelValue.location.length > 5) errors.push('Max. 5 Zeichen')
 
   return errors
 }
@@ -65,16 +65,12 @@ watch(
     errors.value = formValidate()
     
     emit('update:modelValue', { ...newVal })
-    emit('update:hasErrors', errors.value.location.length > 0)
+    emit('update:hasErrors', errors.value.length > 0)
   },
   { deep: true, immediate: true }
 )
 
 const deleteItem = () => {
   emit('delete-item', props.modelValue)
-}
-
-interface Errors {
-  location: string[]
 }
 </script>
