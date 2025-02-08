@@ -101,7 +101,7 @@ interface BookFields {
   title: string
   authors: string
   publisher: string
-  edition?: number
+  edition?: string
   maxPrice?: number
   exam_id?: number
 }
@@ -151,8 +151,8 @@ const formValidate = (state: BookFields): FormError[] => {
   //if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
   //if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
-  if (state.edition && typeof state.edition !== 'number') errors.push({ path: 'edition', message: 'Auflage muss eine Zahl sein' })
-  if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
+  //if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ path: 'edition', message: 'Auflage muss eine Zahl sein' })
+  //if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
 }
 
