@@ -19,7 +19,6 @@
 </template>
 
 <style lang="css" scoped>
-/*linear gradients */
 .gradient-border {
   background: linear-gradient(var(--gradient-angle), theme('colors.yellow.400'), theme('colors.yellow.400/0.6'), theme('colors.white/0.8'), theme('colors.yellow.400'));
 }
@@ -30,12 +29,11 @@
 }
 
 .gradient-container:hover > .gradient-border {
-  opacity: 1;
   animation: gradient-rotate 10s cubic-bezier(0,0,1,1) 0s infinite reverse;
-  transition: all 0.3s linear;
+  @apply opacity-100 transition-all duration-300 ease-linear;
 }
 .gradient-container:hover > .gradient-right {
-  opacity: 0.2;
+  @apply opacity-20;
 }
 
 @property --gradient-angle {
