@@ -6,6 +6,7 @@
       <WidgetsStatisticsRevenue />
       <WidgetsStatisticsRevenue class="col-span-2 row-span-2" />
       <WidgetsStatisticsRevenue />
+      <WidgetsStatisticsSoldBooks />
       <!-- Widgets: Meistgesucht, Meistverkauft -->
     </div>
     <div class="flex-grow w-full flex items-center justify-center">
