@@ -42,6 +42,10 @@ const links = [{
   to: '/fv/sellers',
   icon: 'i-heroicons-user-group',
 }, {
+  label: 'Charts',
+  to: '/fv/charts',
+  icon: 'i-heroicons-chart-bar',
+}, {
   label: 'Logout',
   click: logoutAndRedirect
 }]

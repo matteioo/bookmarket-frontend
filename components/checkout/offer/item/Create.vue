@@ -26,6 +26,14 @@
       />
     </div>
     <UButton
+      icon="i-heroicons-currency-euro"
+      size="sm"
+      color="blue"
+      variant="ghost"
+      class="flex-grow-0 rounded-none"
+      @click="fetchOfferPrices"
+    />
+    <UButton
       icon="i-heroicons-trash"
       size="sm"
       color="red"
@@ -46,7 +54,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['delete-item', 'update:modelValue', 'update:hasErrors'])
+const emit = defineEmits(['delete-item', 'fetch-price-bins', 'update:modelValue', 'update:hasErrors'])
 
 const localOffer = shallowReactive<Offer>({ ...props.modelValue })
 const errors = ref<string[]>([])
@@ -69,6 +77,10 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+const fetchOfferPrices = () => {
+  emit('fetch-price-bins', localOffer.book.isbn)
+}
 
 const deleteItem = () => {
   emit('delete-item', props.modelValue)
