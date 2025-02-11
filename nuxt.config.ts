@@ -53,7 +53,8 @@ export default defineNuxtConfig({
     defaultTimezone: 'Europe/Vienna',
   },
   auth: {
-    originEnvKey: 'AUTH_ORIGIN', 
+    originEnvKey: 'AUTH_ORIGIN',
+    baseURL: '/api/v1/auth',
     provider: {
       type: 'local',
       endpoints: {
