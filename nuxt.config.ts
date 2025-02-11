@@ -31,7 +31,6 @@ export default defineNuxtConfig({
     public: {
       appVersion: 'v0.1.0-beta',
       apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
-      authUrl: process.env.AUTH_ORIGIN,
     },
   },
   security: {

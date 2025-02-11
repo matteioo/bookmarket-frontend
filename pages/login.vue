@@ -46,8 +46,6 @@ const state = reactive<LoginFields>({
   password: '',
 })
 
-console.log(useRuntimeConfig().public.authUrl)
-
 const loading = ref(false)
 
 const validate = (state: LoginFields): FormError[] => {
