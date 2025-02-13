@@ -14,6 +14,4 @@
 useHead({
   titleTemplate: title => title ? `${title} · Bücherbörse der FVJus` : 'Bücherbörse der FVJus',
 })
-
-console.log('App.vue', useRuntimeConfig().public.apiUrl)
 </script>
