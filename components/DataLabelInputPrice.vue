@@ -46,11 +46,17 @@ const props = defineProps({
   },
 })
 
-const { inputRef, numberValue } = useEuroCurrencyInput({ valueRange: { max: props.maxPrice } })
+const { inputRef, numberValue, setValue } = useEuroCurrencyInput({ valueRange: { max: props.maxPrice } })
 
 const emit = defineEmits(['update:modelValue'])
 
 watch (numberValue, (newValue) => {
-  emit('update:modelValue', newValue)
+  if (newValue === null) {
+    setValue(0)
+    emit('update:modelValue', 0)
+  } else {
+    emit('update:modelValue', newValue)
+  }
+
 })
 </script>

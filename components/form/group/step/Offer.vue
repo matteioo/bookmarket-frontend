@@ -64,13 +64,29 @@
             />
           </div>
         </div>
+        <div v-if="bookPriceBins" class="flex flex-col gap-y-4 mt-4 p-2 rounded bg-white dark:bg-gray-900">
+          <div class="w-full text-center text-gray-600 dark:text-gray-300">ISBN: {{ bookPriceBins.book.isbn }}</div>
+          <div class="h-32">
+            <ChartPriceBars :bins="bookPriceBins.priceBins" />
+          </div>
+          <div class="flex flex-col gap-y-1">
+            <div class="flex flex-row justify-between text-gray-600 dark:text-gray-400">
+              <span>Offene Angebote: {{ bookPriceBins.offerStats.totalCount.active }}</span>
+              <span>Verkaufte Bücher: {{ bookPriceBins.offerStats.totalCount.inactive }}</span>
+            </div>
+            <div class="flex flex-row justify-between text-gray-600 dark:text-gray-400">
+              <span>Durchschnittlicher Preis: {{ formatPrice(bookPriceBins.offerStats.averagePrice) }}</span>
+              <span>Median: {{ formatPrice(bookPriceBins.offerStats.medianPrice) }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- right side -->
     <div class="flex-grow">
       <div v-if="offers.length !== 0" class="flex flex-grow flex-col gap-y-4">
         <div v-for="(offer, index) in offers" :key="offer.id">
-          <CheckoutOfferItemCreate v-model="offers[index]" @delete-item="handleDeleteItem" @update:has-errors="(newValue) => offerErrors = newValue" />
+          <CheckoutOfferItemCreate v-model="offers[index]" @fetch-price-bins="fetchPriceBins" @delete-item="handleDeleteItem" @update:has-errors="(newValue) => offerErrors = newValue" />
         </div>
         <div class="w-full py-4 inline-flex flex-row justify-end backdrop-blur-md">
           <UButton label="Weiter" :disabled="offerErrors" @click="handleSubmitOffers" />
@@ -88,13 +104,14 @@
 
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
+import { formatPrice } from '~/utils/utils'
 import type { Seller } from '~/interfaces/Seller'
 import type { Book } from '~/interfaces/Book'
 import type { Offer } from '~/interfaces/Offer'
 import type { Member } from '~/interfaces/Member'
 import type { Exam } from '~/interfaces/Exam'
 import type { Page } from '~/interfaces/Page'
-import { formatPrice } from '~/utils/utils'
+import type { BookPriceBins } from '~/interfaces/PriceBin'
 
 interface BookFields {
   isbn: string
@@ -130,6 +147,7 @@ const offers = ref(props.currentOffers as Offer[])
 const checkedIsbn = ref(false)
 const exams = ref([] as Exam[])
 const offerErrors = ref(false)
+const bookPriceBins = ref(undefined as BookPriceBins | undefined)
 
 const formState = reactive({
   isbn: '',
@@ -143,7 +161,7 @@ const formState = reactive({
 
 const formValidate = (state: BookFields): FormError[] => {
   const errors = []
-  
+
   errors.push(...isbnValidators(state))
   if (!state.title) errors.push({ path: 'title', message: 'Titel ist verpflichtend' })
   if (!state.authors) errors.push({ path: 'authors', message: 'Autor(en) sind verpflichtend' })
@@ -174,7 +192,6 @@ const handleIsbnSearch = async () => {
   // Check if the isbn is of length 13 and only contains numbers
   const errors = isbnValidators(formState)
 
-  
   if (errors.length > 0) {
     form.value.setErrors(form.value.errors.concat(errors))
     loadingIsbn.value = false
@@ -190,6 +207,7 @@ const handleIsbnSearch = async () => {
 
     if (singleBook) {
       selected.value = singleBook
+      fetchPriceBins(singleBook.isbn)
     } else {
       selected.value = undefined
       console.error('No book found')
@@ -306,5 +324,20 @@ async function fetchExams() {
   
   exams.value.push({id: null, name: ''})
   exams.value.push(...response.results)
+}
+
+async function fetchPriceBins(isbn: string) {
+  await $fetch(useRuntimeConfig().public.apiUrl + `/books/${isbn}/price-bins`, {
+    headers: {
+      Authorization: `${token.value}`,
+    },
+  })
+  .then((res) => {
+    bookPriceBins.value = res as BookPriceBins
+  })
+  .catch((error) => {
+    console.error('Error while fetching price bins', error)
+    bookPriceBins.value = undefined
+  })
 }
 </script>
