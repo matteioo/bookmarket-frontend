@@ -12,18 +12,12 @@
     <div class="flex-grow-0">
       <Footer />
     </div>
-    <div>
-      apiUrl: {{ useRuntimeConfig().public.apiUrl }} {{ env }}
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 const { signOut } = useAuth()
 const router = useRouter()
-
-const env = process.env.NUXT_PUBLIC_API_BASE
-console.log('App.vue', useRuntimeConfig().public.apiUrl, process.env.NUXT_PUBLIC_API_BASE)
 
 const logoutAndRedirect = async () => {
   // TODO: Error fetching signOut endpoint (default /logout because not set), even though we simply want to remove the token as logout action
