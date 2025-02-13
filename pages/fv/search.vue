@@ -1,6 +1,6 @@
 <template>
   <div class="flex-grow w-full flex flex-col items-center gap-y-6">
-    <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950/30">
+    <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950">
       <div class="max-w-3xl mx-auto flex flex-col justify-items-stretch gap-y-2">
         <UInput
           v-model="searchQuery"
