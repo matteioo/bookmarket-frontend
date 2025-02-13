@@ -16,12 +16,14 @@
         label="Preis"
         :hint="'Max. ' + formatPrice(localOffer.book.maxPrice)"
         :max-price="localOffer.book.maxPrice"
+        :required="true"
+        :errors="errors.price"
         class="col-span-2"
-      />
-      <DataLabelInput
+        />
+        <DataLabelInput
         v-model="localOffer.location"
         label="Lagerort"
-        :errors="errors"
+        :errors="errors.location"
         class="col-span-2"
       />
     </div>
@@ -47,6 +49,11 @@
 <script setup lang="ts">
 import type { Offer } from '~/interfaces/Offer'
 
+interface Errors {
+  location: string[]
+  price: string[]
+}
+
 const props = defineProps({
   modelValue: {
     type: Object as () => Offer,
@@ -57,14 +64,15 @@ const props = defineProps({
 const emit = defineEmits(['delete-item', 'fetch-price-bins', 'update:modelValue', 'update:hasErrors'])
 
 const localOffer = shallowReactive<Offer>({ ...props.modelValue })
-const errors = ref<string[]>([])
+const errors = ref<Errors>({ location: [], price: [] })
 
 const formValidate = () => {
-  const errors = []
-  
-  if (props.modelValue.location && props.modelValue.location.length > 5) errors.push('Max. 5 Zeichen')
+  const localErrors: Errors = { location: [], price: [] }
 
-  return errors
+  if (localOffer.location && localOffer.location.length > 5) localErrors.location.push('Max. 5 Zeichen')
+  if (localOffer.price == null) localErrors.price.push('Preis erforderlich')
+
+  return localErrors
 }
 
 watch(
@@ -72,8 +80,12 @@ watch(
   (newVal) => {
     errors.value = formValidate()
     
-    emit('update:modelValue', { ...newVal })
-    emit('update:hasErrors', errors.value.length > 0)
+    if (errors.value.location.length > 0 || errors.value.price.length > 0) {
+      emit('update:hasErrors', true)
+    } else {
+      emit('update:hasErrors', false)
+      emit('update:modelValue', { ...newVal })
+    }
   },
   { deep: true, immediate: true }
 )
