@@ -4,7 +4,7 @@
       <div class="max-w-3xl mx-auto flex flex-col justify-items-stretch gap-y-2">
         <UInput
           v-model="searchQuery"
-          size="xl"
+          size="lg"
           name="q"
           placeholder="Suche nach ISBN, Titel, Autor, ..."
           autocomplete="off"
@@ -31,7 +31,7 @@
             />
           </template>
         </UInput>
-        <div class="inline-flex flex-row justify-start gap-x-2">
+        <div class="inline-flex flex-row flex-wrap justify-start gap-2">
           <SearchFilterPrice v-model:price-filter="filter.price" />
           <SearchFilterMarked v-model="filter.marked.value.marked" />
           <SearchFilterExam v-model:exam-filter="filter.exam" />
