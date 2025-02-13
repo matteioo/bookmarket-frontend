@@ -13,8 +13,7 @@
       <Footer />
     </div>
     <div>
-      apiUrl: 
-      {{ useRuntimeConfig().public.apiUrl }}
+      apiUrl: {{ useRuntimeConfig().public.apiUrl }} {{ env }}
     </div>
   </div>
 </template>
@@ -23,6 +22,7 @@
 const { signOut } = useAuth()
 const router = useRouter()
 
+const env = process.env.NUXT_PUBLIC_API_BASE
 console.log('App.vue', useRuntimeConfig().public.apiUrl, process.env.NUXT_PUBLIC_API_BASE)
 
 const logoutAndRedirect = async () => {
