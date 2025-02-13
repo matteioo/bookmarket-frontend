@@ -22,7 +22,10 @@ const props = defineProps({
 })
 
 const x = (d: PriceBin) => d.binRange.min
-const y = (d: PriceBin) => d.count
+const y = [
+  (d: PriceBin) => d.count.active,
+  (d: PriceBin) => d.count.inactive,
+]
 
 const tickValues = computed(() => props.bins?.map(bin => bin.binRange.max))
 
@@ -31,7 +34,11 @@ const tickFormat = (value: number, index: number) => {
 }
 
 const triggers = {
-    [StackedBar.selectors.bar]: (d: PriceBin) =>  `${d.count} Angebote für ${d.binRange.min}€ bis ${d.binRange.max}€`
+    [StackedBar.selectors.bar]: (d: PriceBin) =>  `Angebote für ${d.binRange.min} € bis ${d.binRange.max} €:<br>
+      <ul class="list-disc pl-4">
+        <li>Aktiv: ${d.count.active}</li>
+        <li>Inaktiv: ${d.count.inactive}</li>
+      </ul>`
   }
 </script>
 

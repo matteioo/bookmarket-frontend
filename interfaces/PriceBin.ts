@@ -5,10 +5,21 @@ export interface PriceBin {
     min: number,
     max: number,
   },
-  count: number,
+  count: {
+    active: number,
+    inactive: number,
+  },
 }
 
 export interface BookPriceBins {
   book: Book,
+  offerStats: {
+    totalCount: {
+      active: number,
+      inactive: number,
+    },
+    averagePrice: number,
+    medianPrice: number,
+  }
   priceBins: PriceBin[],
 }

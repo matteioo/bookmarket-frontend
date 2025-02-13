@@ -64,10 +64,20 @@
             />
           </div>
         </div>
-        <div v-if="bookPriceBins" class="mt-4 p-2 rounded bg-white dark:bg-gray-900">
-          <div class="w-full text-center mb-2 text-gray-600 dark:text-gray-400">ISBN: {{ bookPriceBins.book.isbn }}</div>
+        <div v-if="bookPriceBins" class="flex flex-col gap-y-4 mt-4 p-2 rounded bg-white dark:bg-gray-900">
+          <div class="w-full text-center text-gray-600 dark:text-gray-300">ISBN: {{ bookPriceBins.book.isbn }}</div>
           <div class="h-32">
             <ChartPriceBars :bins="bookPriceBins.priceBins" />
+          </div>
+          <div class="flex flex-col gap-y-1">
+            <div class="flex flex-row justify-between text-gray-600 dark:text-gray-400">
+              <span>Offene Angebote: {{ bookPriceBins.offerStats.totalCount.active }}</span>
+              <span>Verkaufte Bücher: {{ bookPriceBins.offerStats.totalCount.inactive }}</span>
+            </div>
+            <div class="flex flex-row justify-between text-gray-600 dark:text-gray-400">
+              <span>Durchschnittlicher Preis: {{ formatPrice(bookPriceBins.offerStats.averagePrice) }}</span>
+              <span>Median: {{ formatPrice(bookPriceBins.offerStats.medianPrice) }}</span>
+            </div>
           </div>
         </div>
       </div>
