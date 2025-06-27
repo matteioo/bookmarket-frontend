@@ -7,12 +7,26 @@
       </UFormGroup>
 
       <UFormGroup label="Passwort" name="password">
-        <UInput v-model="state.password" type="password" />
+        <template #hint>
+          <ULink
+            to="/fv"
+            class="text-primary-500 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-200"
+          >
+            Passwort vergessen?
+          </ULink>
+        </template>
+        <template #default>
+          <UInput v-model="state.password" type="password" />
+        </template>
       </UFormGroup>
 
       <UButton block :loading="loading" type="submit">
         Anmelden
       </UButton>
+
+      <div>
+        Noch kein Konto? <ULink to="/register" class="inline-flex items-center text-primary-500 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-200">Hier anfordern <UIcon name="i-heroicons-arrow-right" /></ULink>
+      </div>
     </UForm>
   </div>
 </template>
@@ -81,7 +95,7 @@ async function login(event: FormSubmitEvent<LoginFields>) {
   } catch {
     useToast().add({
       title: 'Fehler',
-      description: 'Benutzername oder Passwort ist falsch',
+      description: 'Benutzername und/oder Passwort ist falsch',
       icon: 'i-heroicons-exclamation-triangle',
       color: 'red',
     })
