@@ -34,8 +34,8 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1(@typescript-eslint/utils@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(@vue/compiler-sfc@3.5.17)(eslint-import-resolver-node@0.3.9)(eslint@9.29.0(jiti@2.4.2))(magicast@0.3.5)(typescript@5.8.3)(vite@6.3.5(@types/node@24.0.5)(jiti@2.4.2)(terser@5.43.1)(yaml@2.8.0))
       '@sidebase/nuxt-auth':
-        specifier: ^0.10.1
-        version: 0.10.1(magicast@0.3.5)(next-auth@4.21.1(next@13.5.8(@babel/core@7.27.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: ^1.0.0
+        version: 1.0.0(magicast@0.3.5)(next-auth@4.21.1(next@13.5.8(@babel/core@7.27.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       dayjs-nuxt:
         specifier: ^2.1.11
         version: 2.1.11(magicast@0.3.5)
@@ -1214,8 +1214,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@sidebase/nuxt-auth@0.10.1':
-    resolution: {integrity: sha512-fCSDfGl6npVIWrb//NbeKA16ATk1CpjzfRrNAdJ2PRr0BF5aJz6KCvDI8dSzs5VLMJBIRLR39G2rWYq5q+v5iA==}
+  '@sidebase/nuxt-auth@1.0.0':
+    resolution: {integrity: sha512-QZ4A31BCc62z/4SzBf01SaDQhQkLBxMDUG06Uvq9hMPp8iYtfZpRGfYuQ1IrcawHuzacz+o+sabm+1UQADNShw==}
     engines: {node: '>=20', pnpm: '>=9.4.0'}
     peerDependencies:
       next-auth: ~4.21.1
@@ -6876,7 +6876,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.44.1':
     optional: true
 
-  '@sidebase/nuxt-auth@0.10.1(magicast@0.3.5)(next-auth@4.21.1(next@13.5.8(@babel/core@7.27.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@sidebase/nuxt-auth@1.0.0(magicast@0.3.5)(next-auth@4.21.1(next@13.5.8(@babel/core@7.27.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@nuxt/kit': 3.17.5(magicast@0.3.5)
       defu: 6.1.4
