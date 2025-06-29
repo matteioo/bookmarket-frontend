@@ -2,13 +2,13 @@
   <div class="w-full max-w-80">
     <h1 class="font-semibold text-xl text-center text-primary-900 dark:text-primary-100 p-4">Login für FV-Mitglieder</h1>
     <UForm :validate="validate" :state="state" class="space-y-4" @submit="login">
-      <UFormGroup label="Benutzername" name="username">
-        <UInput v-model="state.username" type="text" />
-      </UFormGroup>
+      <UFormField label="Benutzername" name="username">
+        <UInput v-model="state.username" type="text" class="w-full" />
+      </UFormField>
 
-      <UFormGroup label="Passwort" name="password">
-        <UInput v-model="state.password" type="password" />
-      </UFormGroup>
+      <UFormField label="Passwort" name="password">
+        <UInput v-model="state.password" type="password" class="w-full" />
+      </UFormField>
 
       <UButton block :loading="loading" type="submit">
         Anmelden
@@ -83,7 +83,7 @@ async function login(event: FormSubmitEvent<LoginFields>) {
       title: 'Fehler',
       description: 'Benutzername oder Passwort ist falsch',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
     })
   } finally {
     loading.value = false

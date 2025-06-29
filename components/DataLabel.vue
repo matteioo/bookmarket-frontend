@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
-    <span class="block text-sm text-gray-600 dark:text-gray-400">{{ props.label }}</span>
-    <span class="block truncate text-gray-700 dark:text-gray-300" :class="{ 'whitespace-pre-line': props.multiLine }">{{ props.data || '-' }}</span>
+    <span class="block text-sm text-neutral-600 dark:text-neutral-400">{{ props.label }}</span>
+    <span class="block truncate text-neutral-700 dark:text-neutral-300" :class="{ 'whitespace-pre-line': props.multiLine }">{{ props.data || '-' }}</span>
   </div>
 </template>
 

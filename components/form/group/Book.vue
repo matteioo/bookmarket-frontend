@@ -1,34 +1,34 @@
 <template>
   <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="submitBook">
-    <UFormGroup label="ISBN" name="isbn" required>
-      <UInput v-model="state.isbn" type="text" placeholder="9876543210987" class="flex-grow" autocomplete="off" />
-    </UFormGroup>
+    <UFormField label="ISBN" name="isbn" required>
+      <UInput v-model="state.isbn" type="text" placeholder="9876543210987" class="grow" autocomplete="off" />
+    </UFormField>
 
-    <UFormGroup label="Titel" name="title" required>
+    <UFormField label="Titel" name="title" required>
       <UInput v-model="state.title" type="text" placeholder="Beispielbuch" />
-    </UFormGroup>
+    </UFormField>
 
-    <UFormGroup label="Autoren" name="authors" required>
+    <UFormField label="Autoren" name="authors" required>
       <UInput v-model="state.authors" type="text" placeholder="Vorname Nachname, Vorname Nachname, ..." />
-    </UFormGroup>
+    </UFormField>
 
-    <UFormGroup label="Verlag" name="publisher" required>
+    <UFormField label="Verlag" name="publisher" required>
       <UInput v-model="state.publisher" type="text" placeholder="FVJus Verlag" />
-    </UFormGroup>
+    </UFormField>
 
     <div class="inline-flex flex-row gap-x-2">
-      <UFormGroup label="Auflage" name="edition" required>
+      <UFormField label="Auflage" name="edition" required>
         <UInput v-model="state.edition" type="number" placeholder="14" />
-      </UFormGroup>
+      </UFormField>
       
-      <UFormGroup label="Max. Preis" name="maxPrice" required>
-        <FormInputPrice v-model="state.maxPrice" label="maxPrice" size="sm" />
-      </UFormGroup>
+      <UFormField label="Max. Preis" name="maxPrice" required>
+        <FormInputPrice v-model="state.maxPrice" label="maxPrice" />
+      </UFormField>
     </div>
 
-    <UFormGroup label="Prüfung" name="exam_id">
-      <USelect v-model="state.exam_id" :options="exams" option-attribute="name" value-attribute="id" />
-    </UFormGroup>
+    <UFormField label="Prüfung" name="exam_id">
+      <USelect v-model="state.exam_id" :items="exams" option-attribute="name" value-attribute="id" />
+    </UFormField>
 
     <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
       <UButton color="primary" variant="link" label="Zurücksetzen" @click="clearForm" />
@@ -135,7 +135,7 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
       title: 'Erfolg',
       description: 'Buch erfolgreich angelegt.',
       icon: 'i-heroicons-check-circle',
-      color: 'green',
+      color: 'success',
     })
 
     props.onSubmit(book);
@@ -157,7 +157,7 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
       title: 'Fehler',
       description: 'Buch konnte nicht angelegt werden!',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
     })
   }
 };

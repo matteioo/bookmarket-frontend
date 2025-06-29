@@ -1,6 +1,6 @@
 <template>
-  <div class="animate-flyIn flex flex-row group hover:bg-white dark:hover:bg-gray-900 rounded overflow-hidden">
-    <div class="flex-grow grid grid-cols-12 p-2 gap-x-2 gap-y-1">
+  <div class="animate-fly-in flex flex-row group hover:bg-white dark:hover:bg-neutral-900 rounded-sm overflow-hidden">
+    <div class="grow grid grid-cols-12 p-2 gap-x-2 gap-y-1">
       <DataLabel label="Titel" :data="localOffer.book.title" class="col-span-7" />
       <DataLabel label="Autoren" :data="localOffer.book.authors" class="col-span-5" />
       <DataLabel label="ISBN" :data="localOffer.book.isbn" class="col-span-2" />
@@ -29,18 +29,16 @@
     </div>
     <UButton
       icon="i-heroicons-currency-euro"
-      size="sm"
-      color="blue"
+      color="info"
       variant="ghost"
-      class="flex-grow-0 rounded-none"
+      class="grow-0 rounded-none"
       @click="fetchOfferPrices"
     />
     <UButton
       icon="i-heroicons-trash"
-      size="sm"
-      color="red"
+      color="error"
       variant="ghost"
-      class="flex-grow-0 rounded-none"
+      class="grow-0 rounded-none"
       @click="deleteItem"
     />
   </div>
@@ -61,7 +59,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['delete-item', 'fetch-price-bins', 'update:modelValue', 'update:hasErrors'])
+const emit = defineEmits<{
+  'delete-item': [item: Offer]
+  'fetch-price-bins': [isbn: string]
+  'update:modelValue': [value: Offer]
+  'update:hasErrors': [value: boolean]
+}>()
 
 const localOffer = shallowReactive<Offer>({ ...props.modelValue })
 const errors = ref<Errors>({ location: [], price: [] })

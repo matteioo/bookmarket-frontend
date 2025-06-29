@@ -1,33 +1,35 @@
 <template>
-  <UModal v-model="showModal">
-    <UCard>
-      <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
-        <UFormGroup label="Name" name="fullName" hint="vollständiger Name" required>
-          <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" />
-        </UFormGroup>
+  <UModal v-model:open="showModal">
+    <template #content>
+      <UCard>
+        <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
+          <UFormField label="Name" name="fullName" hint="vollständiger Name" required>
+            <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" />
+          </UFormField>
 
-        <UFormGroup label="Matrikelnummer" name="matriculationNumber" required>
-          <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" :disabled="true" />
-        </UFormGroup>
+          <UFormField label="Matrikelnummer" name="matriculationNumber" required>
+            <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" :disabled="true" />
+          </UFormField>
 
-        <UFormGroup label="Email" name="email" required>
-          <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
-        </UFormGroup>
+          <UFormField label="Email" name="email" required>
+            <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
+          </UFormField>
 
-        <UFormGroup label="Anmerkung" name="note">
-          <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" />
-        </UFormGroup>
+          <UFormField label="Anmerkung" name="note">
+            <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" />
+          </UFormField>
 
-        <div class="inline-flex flex-row-reverse gap-x-2 w-full">
-          <UButton type="submit" :loading="loading" variant="solid">
-            Verkäufer:in bearbeiten
-          </UButton>
-          <UButton :loading="loading" variant="soft" @click="clearForm">
-            Abbrechen
-          </UButton>
-        </div>
-      </UForm>
-    </UCard>
+          <div class="inline-flex flex-row-reverse gap-x-2 w-full">
+            <UButton type="submit" :loading="loading" variant="solid">
+              Verkäufer:in bearbeiten
+            </UButton>
+            <UButton :loading="loading" variant="soft" @click="clearForm">
+              Abbrechen
+            </UButton>
+          </div>
+        </UForm>
+      </UCard>
+    </template>
   </UModal>
 </template>
 
@@ -118,7 +120,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
       title: 'Erfolg',
       description: 'Verkäufer:in erfolgreich bearbeitet.',
       icon: 'i-heroicons-check-circle',
-      color: 'green',
+      color: 'success',
     })
     showModal.value = false
   } else {
@@ -139,7 +141,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
       title: 'Fehler',
       description: 'Verkäufer:in konnte nicht bearbeitet werden!',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
     })
   }
 }

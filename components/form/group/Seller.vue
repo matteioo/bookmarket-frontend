@@ -1,20 +1,20 @@
 <template>
   <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
-    <UFormGroup label="Name" name="fullName" hint="vollständiger Name" required>
+    <UFormField label="Name" name="fullName" hint="vollständiger Name" required>
       <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" />
-    </UFormGroup>
+    </UFormField>
 
-    <UFormGroup label="Matrikelnummer" name="matriculationNumber" required>
+    <UFormField label="Matrikelnummer" name="matriculationNumber" required>
       <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" />
-    </UFormGroup>
+    </UFormField>
 
-    <UFormGroup label="Email" name="email" required>
+    <UFormField label="Email" name="email" required>
       <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
-    </UFormGroup>
+    </UFormField>
 
-    <UFormGroup label="Anmerkung" name="note">
+    <UFormField label="Anmerkung" name="note">
       <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" />
-    </UFormGroup>
+    </UFormField>
 
     <UButton type="submit" class="float-right" :loading="loading" :variant="(props.buttonVariant as ButtonVariant)">
       {{ props.buttonContent }}
@@ -111,7 +111,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
       title: 'Erfolg',
       description: 'Verkäufer:in erfolgreich angelegt.',
       icon: 'i-heroicons-check-circle',
-      color: 'green',
+      color: 'success',
     })
     
     if (props.to) {
@@ -135,7 +135,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
       title: 'Fehler',
       description: 'Verkäufer:in konnte nicht angelegt werden!',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
     })
   }
 }

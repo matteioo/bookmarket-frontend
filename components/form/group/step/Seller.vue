@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-y-4">
     <div class="flex flex-col gap-y-2">
       <USelectMenu
-        v-model="selected"
+        v-model:open="selected"
         :loading="loading"
         :searchable="search"
         placeholder="Suche nach Verkäufer:in..."
@@ -28,7 +28,6 @@
         </div>
         <div class="float-right">
           <UButton
-            size="sm"
             color="primary"
             variant="outline"
             label="Weiter"
@@ -39,7 +38,7 @@
       </div>
     </div>
   
-    <UDivider label="ODER ANLEGEN" />
+    <USeparator label="ODER ANLEGEN" />
   
     <FormGroupSeller :on-submit="handleSubmit" button-variant="outline" />
   </div>

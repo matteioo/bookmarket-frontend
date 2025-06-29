@@ -5,19 +5,20 @@
         :label="localExamFilter.value.exam ? `Prüfung: ${localExamFilter.value.exam}` : 'Prüfung'"
         icon="i-heroicons-academic-cap-16-solid"
         size="xs"
-        :variant="localExamFilter.value.exam ? 'outline' : 'solid'"
-        :color="localExamFilter.value.exam ? 'primary' : 'gray'"
+        :variant="localExamFilter.value.exam ? 'subtle' : 'outline'"
+        :color="localExamFilter.value.exam ? 'primary' : 'neutral'"
       />
 
-      <template #panel>
+      <template #content>
         <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
           <div class="p-4 flex flex-col gap-y-4">
-            <UFormGroup name="examPicker" class="w-72">
+            <UFormField name="examPicker" class="w-72">
               <USelect
                 v-model="state.exam"
-                :options="exams"
+                class="w-full"
+                :items="exams"
               />
-            </UFormGroup>
+            </UFormField>
           
             <div class="inline-flex flex-row-reverse gap-x-2 justify-stretch flex-wrap">
               <UButton
@@ -31,7 +32,8 @@
 
               <UButton
                 label="Löschen"
-                color="gray"
+                color="neutral"
+                variant="subtle"
                 block
                 class="flex-1"
                 @click="resetModal"

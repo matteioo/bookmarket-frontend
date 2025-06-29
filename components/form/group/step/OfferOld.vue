@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row gap-x-8">
     <!-- left side -->
-    <div class="flex-shrink-0 w-80">
+    <div class="shrink-0 w-80">
       <div class="sticky h-fit top-4">
         <USelectMenu
           v-model="selected"
@@ -20,7 +20,7 @@
           <template #option="{ option: person }">
             <div class="flex flex-col w-full">
               <div>{{ person.isbn }}</div>
-              <div class="truncate text-sm dark:text-gray-300">{{ person.title }}</div>
+              <div class="truncate text-sm dark:text-neutral-300">{{ person.title }}</div>
             </div>
           </template>
         </USelectMenu>
@@ -37,7 +37,6 @@
           </div>
           <div class="float-right">
             <UButton
-              size="sm"
               color="primary"
               variant="outline"
               label="Hinzufügen"
@@ -47,13 +46,13 @@
           </div>
         </div>
   
-        <UDivider label="ODER ANLEGEN" />
+        <USeparator label="ODER ANLEGEN" />
       </div>
     </div>
     <!-- right side -->
-    <div class="flex flex-grow flex-col gap-y-2">
+    <div class="flex grow flex-col gap-y-2">
       <div v-if="offers.length !== 0">
-        <div v-for="(offer, index) in offers" :key="offer.id" class="p-2 hover:bg-white dark:hover:bg-gray-900 rounded">
+        <div v-for="(offer, index) in offers" :key="offer.id" class="p-2 hover:bg-white dark:hover:bg-neutral-900 rounded-sm">
           <CheckoutOfferItemCreate v-model="offers[index]" @delete-item="handleDeleteItem" />
         </div>
         <div class="sticky bottom-0 w-full p-4 inline-flex flex-row justify-between backdrop-blur-md">
@@ -62,8 +61,8 @@
         </div>
       </div>
       <div v-else class="py-16 text-center">
-        <UIcon name="i-heroicons-folder-open-20-solid" class="text-5xl text-gray-300" />
-        <p class="text-gray-600">
+        <UIcon name="i-heroicons-folder-open-20-solid" class="text-5xl text-neutral-300" />
+        <p class="text-neutral-600">
           Noch keine Bücher hinzugefügt...
         </p>
       </div>
