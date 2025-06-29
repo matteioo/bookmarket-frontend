@@ -32,13 +32,13 @@
 
     <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
       <UButton color="primary" variant="link" label="Zurücksetzen" @click="clearForm" />
-      <UButton type="submit" class="float-right" :loading="loading" :variant="(buttonVariant as ButtonVariant)" :label="buttonContent" />
+      <UButton type="submit" class="float-right" :loading="loading" variant="solid" label="Anlegen" />
     </div>
   </UForm>
 </template>
 
 <script setup lang="ts">
-import type { FormError, FormSubmitEvent, ButtonVariant } from '#ui/types'
+import type { FormError, FormSubmitEvent } from '#ui/types'
 import type { Book } from '~/interfaces/Book';
 import type { Exam } from '~/interfaces/Exam';
 import type { Page } from '~/interfaces/Page';
@@ -54,16 +54,6 @@ interface BookFields {
 }
 
 const props = defineProps({
-  buttonVariant: {
-    type: String,
-    required: false,
-    default: 'solid',
-  },
-  buttonContent: {
-    type: String,
-    required: false,
-    default: 'Anlegen',
-  },
   onSubmit: {
     type: Function as PropType<(userData: Book) => void>,
     required: true

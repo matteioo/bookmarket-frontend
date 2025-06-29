@@ -29,7 +29,7 @@
             </UFormField>
             
             <UFormField label="Max. Preis" name="maxPrice" required>
-              <FormInputPrice v-model="formState.maxPrice" label="maxPrice" />
+              <FormInputPrice v-model="formState.maxPrice" label="maxPrice" size="xs" />
             </UFormField>
           </div>
 

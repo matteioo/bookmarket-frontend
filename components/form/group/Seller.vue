@@ -23,8 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import type { FormError, FormSubmitEvent, ButtonVariant } from '#ui/types'
+import type { FormError, FormSubmitEvent } from '#ui/types'
 import type { Seller } from '~/interfaces/Seller'
+
+type ButtonVariant = 'solid' | 'outline'
 
 interface SellerFields {
   fullName: string
@@ -40,7 +42,7 @@ const props = defineProps({
     default: undefined,
   },
   buttonVariant: {
-    type: String,
+    type: String as PropType<ButtonVariant>,
     required: false,
     default: 'solid',
   },

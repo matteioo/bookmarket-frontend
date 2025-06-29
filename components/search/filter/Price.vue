@@ -14,11 +14,11 @@
           <div class="p-4 flex flex-col gap-y-4">
             <div class="inline-flex flex-row gap-x-2 items-center">
               <UFormField class="w-24" name="minPrice">
-                <FormInputPrice v-model="state.min" label="maxPrice" size="md" placeholder="Min." :min-price="0" :max-price="999.99" />
+                <FormInputPrice v-model="state.min" label="maxPrice" placeholder="Min." :min-price="0" :max-price="999.99" />
               </UFormField>
               <span>bis</span>
               <UFormField class="w-24" name="maxPrice">
-                <FormInputPrice v-model="state.max" label="maxPrice" size="md" placeholder="Max." :min-price="0" :max-price="999.99" />
+                <FormInputPrice v-model="state.max" label="maxPrice" placeholder="Max." :min-price="0" :max-price="999.99" />
               </UFormField>
             </div>
             <div class="inline-flex flex-row-reverse gap-x-2 justify-stretch flex-wrap">

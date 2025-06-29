@@ -19,8 +19,8 @@
         :required="true"
         :errors="errors.price"
         class="col-span-2"
-        />
-        <DataLabelInput
+      />
+      <DataLabelInput
         v-model="localOffer.location"
         label="Lagerort"
         :errors="errors.location"
