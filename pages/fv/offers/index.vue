@@ -3,10 +3,10 @@
     <div class="w-full inline-flex flex-row justify-between">
       <UInput v-model="searchInput" placeholder="Suchen..." />
       <div class="inline-flex gap-x-4">
-        <UPopover mode="hover" :popper="{ placement: 'bottom-end' }">
+        <UPopover mode="hover" :content="{ align: 'end', side: 'bottom' }">
           <UButton color="primary" label="Hinzufügen" trailing-icon="i-heroicons-chevron-down-20-solid" />
 
-          <template #panel>
+          <template #content>
             <div class="p-4 flex flex-col gap-y-2">
               <UButton
                 icon="i-heroicons-plus"

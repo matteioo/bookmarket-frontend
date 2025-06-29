@@ -7,7 +7,7 @@
           <UFormField label="ISBN" name="isbn" required>
             <UButtonGroup orientation="horizontal" class="w-full">
               <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="grow" autocomplete="off" @keydown.enter.prevent="handleIsbnSearch" />
-              <UButton :loading="loadingIsbn" icon="i-heroicons-magnifying-glass" color="neutral" @click="handleIsbnSearch" />
+              <UButton :loading="loadingIsbn" icon="i-heroicons-magnifying-glass" color="neutral" variant="subtle" @click="handleIsbnSearch" />
             </UButtonGroup>
           </UFormField>
 

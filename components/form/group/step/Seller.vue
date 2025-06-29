@@ -2,21 +2,24 @@
   <div class="flex flex-col gap-y-4">
     <div class="flex flex-col gap-y-2">
       <USelectMenu
-        v-model:open="selected"
-        :loading="loading"
-        :searchable="search"
-        placeholder="Suche nach Verkäufer:in..."
-        option-attribute="fullName"
-        trailing
-        by="id"
+        v-model="selected"
+        v-model:search-term="searchTerm"
+        :items="sellers || []"
+        :search-input="{
+          placeholder: 'Suche nach Verkäufer:in...',
+          icon: 'i-lucide-search',
+        }"
+        ignore-filter
         class="w-full"
+        placeholder="Verkäufer:in auswählen"
+        :loading="status === 'pending'"
       >
-        <template #label>
-          <span v-if="selected" class="truncate">{{ selected?.matriculationNumber }} &middot; {{ selected?.fullName }}</span>
+        <template #item-label="{ item }">
+          {{ item.matriculationNumber }} &middot; {{ item.fullName }}
         </template>
-    
-        <template #option="{ option: person }">
-          <span class="truncate">{{ person.matriculationNumber }} &middot; {{ person.fullName }}</span>
+
+        <template #default="{ modelValue: selectedItem }">
+          <span v-if="selectedItem">{{ selectedItem.matriculationNumber }} &middot; {{ selectedItem.fullName }}</span>
         </template>
       </USelectMenu>
     
@@ -60,7 +63,6 @@ const props = defineProps({
   },
 })
 
-const loading = ref(false)
 const selected = ref(props.currentSeller)
 const { token } = useAuth()
 
@@ -73,6 +75,27 @@ const handleSearchSubmit = () => {
   }
 }
 
+const searchTerm = ref('')
+const searchTermDebounced = useDebounce(searchTerm, 500)
+
+const fetchParams = computed(() => ({
+  search: searchTermDebounced.value,
+  offset: 0,
+  limit: 20,
+}))
+
+const { data: sellers, status } = await useFetch(useRuntimeConfig().public.apiUrl + '/sellers', {
+  headers: {
+    Authorization: `${token.value}`,
+  },
+  params: fetchParams,
+  transform: (data: Page<Seller>) => {
+    return data.results as Seller[]
+  },
+  lazy: true,
+  watch: [searchTermDebounced],
+})
+
 // This anonymous function is called by the FormGroup component to intercept the submitted data
 const handleSubmit = (userData: Seller) => {
   if (userData) {
@@ -80,24 +103,5 @@ const handleSubmit = (userData: Seller) => {
   } else {
     console.error('No seller selected')
   }
-}
-
-// This function is called by the selectMenu component to search for sellers
-async function search(query: string) {
-  loading.value = true
-
-  const sellers = await $fetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
-    headers: {
-      Authorization: `${token.value}`,
-    },
-    params: {
-      search: query,
-      offset: 0,
-      limit: 20,
-    },
-  })
-
-  loading.value = false
-  return sellers.results
 }
 </script>

@@ -4,19 +4,19 @@
       <UCard>
         <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
           <UFormField label="Name" name="fullName" hint="vollständiger Name" required>
-            <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" />
+            <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" class="w-full" />
           </UFormField>
 
           <UFormField label="Matrikelnummer" name="matriculationNumber" required>
-            <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" :disabled="true" />
+            <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" :disabled="true" class="w-full" />
           </UFormField>
 
           <UFormField label="Email" name="email" required>
-            <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
+            <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" class="w-full" />
           </UFormField>
 
           <UFormField label="Anmerkung" name="note">
-            <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" />
+            <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" class="w-full" />
           </UFormField>
 
           <div class="inline-flex flex-row-reverse gap-x-2 w-full">
