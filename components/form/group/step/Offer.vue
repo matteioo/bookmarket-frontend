@@ -162,23 +162,23 @@ const formValidate = (state: BookFields): FormError[] => {
   const errors = []
 
   errors.push(...isbnValidators(state))
-  if (!state.title) errors.push({ path: 'title', message: 'Titel ist verpflichtend' })
-  if (!state.authors) errors.push({ path: 'authors', message: 'Autor(en) sind verpflichtend' })
-  if (!state.publisher) errors.push({ path: 'publisher', message: 'Verlag ist verpflichtend' })
-  //if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
-  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
-  if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
-  //if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ path: 'edition', message: 'Auflage muss eine Zahl sein' })
-  //if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
+  if (!state.title) errors.push({ name: 'title', message: 'Titel ist verpflichtend' })
+  if (!state.authors) errors.push({ name: 'authors', message: 'Autor(en) sind verpflichtend' })
+  if (!state.publisher) errors.push({ name: 'publisher', message: 'Verlag ist verpflichtend' })
+  //if (!state.maxPrice) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
+  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
+  if (!state.edition) errors.push({ name: 'edition', message: 'Auflage ist verpflichtend' })
+  //if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ name: 'edition', message: 'Auflage muss eine Zahl sein' })
+  //if (state.edition && state.edition <= 0) errors.push({ name: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
 }
 
 const isbnValidators = (state: BookFields): FormError[] => {
   const errors = []
 
-  if (!state.isbn) errors.push({ path: 'isbn', message: 'ISBN ist verpflichtend' })
-  if (state.isbn && !/^\d+$/.test(state.isbn)) errors.push({ path: 'isbn', message: 'ISBN darf nur Ziffern enthalten' })
-  if (state.isbn && state.isbn.toString().length !== 13) errors.push({ path: 'isbn', message: 'ISBN muss aus genau 13 Ziffern bestehen' })
+  if (!state.isbn) errors.push({ name: 'isbn', message: 'ISBN ist verpflichtend' })
+  if (state.isbn && !/^\d+$/.test(state.isbn)) errors.push({ name: 'isbn', message: 'ISBN darf nur Ziffern enthalten' })
+  if (state.isbn && state.isbn.toString().length !== 13) errors.push({ name: 'isbn', message: 'ISBN muss aus genau 13 Ziffern bestehen' })
 
   return errors
 }

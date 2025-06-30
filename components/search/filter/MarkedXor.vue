@@ -78,7 +78,7 @@ const state = reactive({
 
 const validate = (state: MarkedFields): FormError[] => {
   const errors = []
-  if (!state.marked && !state.unmarked) errors.push({ path: 'unmarked', message: 'Mindestens ein Feld muss aktiv sein!' })
+  if (!state.marked && !state.unmarked) errors.push({ name: 'unmarked', message: 'Mindestens ein Feld muss aktiv sein!' })
   return errors
 }
 

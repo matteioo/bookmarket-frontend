@@ -84,7 +84,7 @@ onMounted(async () => {
 
 const validate = (state: ExamFilter): FormError[] => {
   const errors = []
-  if (state.exam && !exams.includes(state.exam)) errors.push({ path: 'examPicker', message: 'Prüfung ist nicht im System hinterlegt!' })
+  if (state.exam && !exams.includes(state.exam)) errors.push({ name: 'examPicker', message: 'Prüfung ist nicht im System hinterlegt!' })
   return errors
 }
 

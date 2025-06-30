@@ -50,8 +50,8 @@ const loading = ref(false)
 
 const validate = (state: LoginFields): FormError[] => {
   const errors = []
-  if (!state.username) errors.push({ path: 'username', message: 'Benutzername ist verpflichtend' })
-  if (!state.password) errors.push({ path: 'password', message: 'Passwort ist verpflichtend' })
+  if (!state.username) errors.push({ name: 'username', message: 'Benutzername ist verpflichtend' })
+  if (!state.password) errors.push({ name: 'password', message: 'Passwort ist verpflichtend' })
   return errors
 }
 

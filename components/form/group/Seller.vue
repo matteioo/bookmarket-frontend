@@ -72,14 +72,14 @@ const state = reactive({
 
 const validate = (state: SellerFields): FormError[] => {
   const errors = []
-  if (!state.fullName) errors.push({ path: 'fullName', message: 'Name ist verpflichtend' })
-  if (!state.matriculationNumber) errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer ist verpflichtend' })
+  if (!state.fullName) errors.push({ name: 'fullName', message: 'Name ist verpflichtend' })
+  if (!state.matriculationNumber) errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer ist verpflichtend' })
   if (state.matriculationNumber && !/^\d+$/.test(state.matriculationNumber))
-    errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer darf nur Ziffern enthalten' })
+    errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer darf nur Ziffern enthalten' })
   if (state.matriculationNumber && state.matriculationNumber.toString().length !== 8)
-    errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
-  if (!state.email) errors.push({ path: 'email', message: 'Email ist verpflichtend' })
-  if (state.note && state.note.length > 255) errors.push({ path: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
+    errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
+  if (!state.email) errors.push({ name: 'email', message: 'Email ist verpflichtend' })
+  if (state.note && state.note.length > 255) errors.push({ name: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
   return errors
 }
 
