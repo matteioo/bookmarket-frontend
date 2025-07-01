@@ -1,20 +1,18 @@
 <template>
   <div class="w-full">
-    <UFormGroup :hint="hint && String(hint)" :error="errors.length > 0 ? errors[0] : undefined">
+    <UFormField :hint="hint && String(hint)" :error="errors.length > 0 ? errors[0] : undefined">
       <template #label>
-        <span class="block text-sm text-gray-600 dark:text-gray-400">{{ label }}</span>
+        <span class="block text-sm text-neutral-600 dark:text-neutral-400">{{ label }}</span>
       </template>
       <template #default>
-        <UInput ref="inputRef" :required="props.required" :size="(props.size as InputSize)" />
+        <UInput ref="inputRef" :required="props.required" size="xs" />
       </template>
-    </UFormGroup>
+    </UFormField>
   </div>
 </template>
 
 
 <script setup lang="ts">
-import type { InputSize } from '#ui/types'
-
 const props = defineProps({
   label: {
     type: String,
@@ -35,10 +33,6 @@ const props = defineProps({
   maxPrice: {
     type: Number,
     default: 999.99,
-  },
-  size: {
-    type: String as PropType<InputSize>,
-    default: 'xs',
   },
   required: {
     type: Boolean,

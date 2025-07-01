@@ -6,7 +6,7 @@
 
 
 <script setup lang="ts">
-import type { InputSize } from '#ui/types'
+type InputSize = 'xs' | 'md'
 
 const props = defineProps({
   modelValue: {
@@ -23,7 +23,7 @@ const props = defineProps({
   },
   size: {
     type: String as PropType<InputSize>,
-    default: 'xs',
+    default: 'md',
   },
   required: {
     type: Boolean,

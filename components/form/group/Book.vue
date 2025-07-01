@@ -1,44 +1,44 @@
 <template>
   <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="submitBook">
-    <UFormGroup label="ISBN" name="isbn" required>
-      <UInput v-model="state.isbn" type="text" placeholder="9876543210987" class="flex-grow" autocomplete="off" />
-    </UFormGroup>
+    <UFormField label="ISBN" name="isbn" required>
+      <UInput v-model="state.isbn" type="text" placeholder="9876543210987" autocomplete="off" class="w-full" />
+    </UFormField>
 
-    <UFormGroup label="Titel" name="title" required>
-      <UInput v-model="state.title" type="text" placeholder="Beispielbuch" />
-    </UFormGroup>
+    <UFormField label="Titel" name="title" required>
+      <UInput v-model="state.title" type="text" placeholder="Beispielbuch" class="w-full" />
+    </UFormField>
 
-    <UFormGroup label="Autoren" name="authors" required>
-      <UInput v-model="state.authors" type="text" placeholder="Vorname Nachname, Vorname Nachname, ..." />
-    </UFormGroup>
+    <UFormField label="Autoren" name="authors" required>
+      <UInput v-model="state.authors" type="text" placeholder="Vorname Nachname, Vorname Nachname, ..." class="w-full" />
+    </UFormField>
 
-    <UFormGroup label="Verlag" name="publisher" required>
-      <UInput v-model="state.publisher" type="text" placeholder="FVJus Verlag" />
-    </UFormGroup>
+    <UFormField label="Verlag" name="publisher" required>
+      <UInput v-model="state.publisher" type="text" placeholder="FVJus Verlag" class="w-full" />
+    </UFormField>
 
     <div class="inline-flex flex-row gap-x-2">
-      <UFormGroup label="Auflage" name="edition" required>
-        <UInput v-model="state.edition" type="number" placeholder="14" />
-      </UFormGroup>
+      <UFormField label="Auflage" name="edition" required>
+        <UInput v-model="state.edition" type="number" placeholder="14" class="w-full" />
+      </UFormField>
       
-      <UFormGroup label="Max. Preis" name="maxPrice" required>
-        <FormInputPrice v-model="state.maxPrice" label="maxPrice" size="sm" />
-      </UFormGroup>
+      <UFormField label="Max. Preis" name="maxPrice" required>
+        <FormInputPrice v-model="state.maxPrice" label="maxPrice" class="w-full" />
+      </UFormField>
     </div>
 
-    <UFormGroup label="Prüfung" name="exam_id">
-      <USelect v-model="state.exam_id" :options="exams" option-attribute="name" value-attribute="id" />
-    </UFormGroup>
+    <UFormField label="Prüfung" name="exam_id">
+      <USelect v-model="state.exam_id" :items="exams" label-key="name" value-key="id" class="w-full" placeholder="Prüfung auswählen" />
+    </UFormField>
 
     <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
-      <UButton color="primary" variant="link" label="Zurücksetzen" @click="clearForm" />
-      <UButton type="submit" class="float-right" :loading="loading" :variant="(buttonVariant as ButtonVariant)" :label="buttonContent" />
+      <UButton color="primary" variant="outline" label="Zurücksetzen" @click="clearForm" />
+      <UButton type="submit" class="float-right" :loading="loading" variant="solid" label="Anlegen" />
     </div>
   </UForm>
 </template>
 
 <script setup lang="ts">
-import type { FormError, FormSubmitEvent, ButtonVariant } from '#ui/types'
+import type { FormError, FormSubmitEvent } from '#ui/types'
 import type { Book } from '~/interfaces/Book';
 import type { Exam } from '~/interfaces/Exam';
 import type { Page } from '~/interfaces/Page';
@@ -54,16 +54,6 @@ interface BookFields {
 }
 
 const props = defineProps({
-  buttonVariant: {
-    type: String,
-    required: false,
-    default: 'solid',
-  },
-  buttonContent: {
-    type: String,
-    required: false,
-    default: 'Anlegen',
-  },
   onSubmit: {
     type: Function as PropType<(userData: Book) => void>,
     required: true
@@ -91,22 +81,22 @@ const validate = (state: BookFields): FormError[] => {
   const errors = []
   
   errors.push(...isbnValidators(state));
-  if (!state.title) errors.push({ path: 'title', message: 'Titel ist verpflichtend' })
-  if (!state.authors) errors.push({ path: 'authors', message: 'Autor(en) sind verpflichtend' })
-  if (!state.publisher) errors.push({ path: 'publisher', message: 'Verlag ist verpflichtend' })
-  //if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
-  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
-  if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
-  if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
+  if (!state.title) errors.push({ name: 'title', message: 'Titel ist verpflichtend' })
+  if (!state.authors) errors.push({ name: 'authors', message: 'Autor(en) sind verpflichtend' })
+  if (!state.publisher) errors.push({ name: 'publisher', message: 'Verlag ist verpflichtend' })
+  //if (!state.maxPrice) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
+  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
+  if (!state.edition) errors.push({ name: 'edition', message: 'Auflage ist verpflichtend' })
+  if (state.edition && state.edition <= 0) errors.push({ name: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
 }
 
 const isbnValidators = (state: BookFields): FormError[] => {
   const errors = [];
 
-  if (!state.isbn) errors.push({ path: 'isbn', message: 'ISBN ist verpflichtend' })
-  if (state.isbn && !/^\d+$/.test(state.isbn)) errors.push({ path: 'isbn', message: 'ISBN darf nur Ziffern enthalten' })
-  if (state.isbn && state.isbn.toString().length !== 13) errors.push({ path: 'isbn', message: 'ISBN muss aus genau 13 Ziffern bestehen' })
+  if (!state.isbn) errors.push({ name: 'isbn', message: 'ISBN ist verpflichtend' })
+  if (state.isbn && !/^\d+$/.test(state.isbn)) errors.push({ name: 'isbn', message: 'ISBN darf nur Ziffern enthalten' })
+  if (state.isbn && state.isbn.toString().length !== 13) errors.push({ name: 'isbn', message: 'ISBN muss aus genau 13 Ziffern bestehen' })
 
   return errors;
 }
@@ -135,7 +125,7 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
       title: 'Erfolg',
       description: 'Buch erfolgreich angelegt.',
       icon: 'i-heroicons-check-circle',
-      color: 'green',
+      color: 'success',
     })
 
     props.onSubmit(book);
@@ -146,7 +136,7 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
-          path: field,
+          name: field,
           message: data[field][0]
         });
       }
@@ -157,7 +147,7 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
       title: 'Fehler',
       description: 'Buch konnte nicht angelegt werden!',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
     })
   }
 };
@@ -179,7 +169,7 @@ async function fetchExams() {
     },
   });
   
-  exams.value.push({id: null, name: ''});
+  exams.value.push({id: null, name: '-Keine Prüfung-'});
   exams.value.push(...response.results);
 }
 </script>

@@ -5,21 +5,21 @@
         :label="priceLabel"
         icon="i-heroicons-banknotes-16-solid"
         size="xs"
-        :variant="filterActive ? 'outline' : 'solid'"
-        :color="filterActive ? 'primary' : 'gray'"
+        :variant="filterActive ? 'subtle' : 'outline'"
+        :color="filterActive ? 'primary' : 'neutral'"
       />
 
-      <template #panel>
+      <template #content>
         <UForm :state="state" class="space-y-4" @submit="onSubmit">
           <div class="p-4 flex flex-col gap-y-4">
             <div class="inline-flex flex-row gap-x-2 items-center">
-              <UFormGroup class="w-24" name="minPrice">
-                <FormInputPrice v-model="state.min" label="maxPrice" size="md" placeholder="Min." :min-price="0" :max-price="999.99" />
-              </UFormGroup>
+              <UFormField class="w-24" name="minPrice">
+                <FormInputPrice v-model="state.min" label="maxPrice" placeholder="Min." :min-price="0" :max-price="999.99" />
+              </UFormField>
               <span>bis</span>
-              <UFormGroup class="w-24" name="maxPrice">
-                <FormInputPrice v-model="state.max" label="maxPrice" size="md" placeholder="Max." :min-price="0" :max-price="999.99" />
-              </UFormGroup>
+              <UFormField class="w-24" name="maxPrice">
+                <FormInputPrice v-model="state.max" label="maxPrice" placeholder="Max." :min-price="0" :max-price="999.99" />
+              </UFormField>
             </div>
             <div class="inline-flex flex-row-reverse gap-x-2 justify-stretch flex-wrap">
               <UButton
@@ -33,7 +33,8 @@
 
               <UButton
                 label="Löschen"
-                color="gray"
+                color="neutral"
+                variant="subtle"
                 block
                 class="flex-1"
                 @click="resetModal"

@@ -4,8 +4,8 @@
       :label="`Zustand: ${filterActive ? 'unbeschriftet' : 'egal'}`"
       :icon="filterActive ? 'i-heroicons-sparkles-16-solid' : 'i-heroicons-paint-brush-16-solid'"
       size="xs"
-      :variant="filterActive ? 'outline' : 'solid'"
-      :color="filterActive ? 'primary' : 'gray'"
+      :variant="filterActive ? 'subtle' : 'outline'"
+      :color="filterActive ? 'primary' : 'neutral'"
       @click="toggleFilter"
     />
   </div>
