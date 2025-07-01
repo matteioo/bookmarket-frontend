@@ -31,8 +31,8 @@
     "@sidebase/nuxt-auth": "^1.0.0",
     "@vueuse/nuxt": "13.4.0",
     "dayjs-nuxt": "^2.1.11",
-    "eslint": "^9.29.0",
-    "nuxt": "^3.17.5",
+    "eslint": "^9.30.1",
+    "nuxt": "^3.17.6",
     "nuxt-security": "^2.2.0",
     "typescript": "^5.8.3"
   }
