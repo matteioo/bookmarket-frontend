@@ -1,21 +1,26 @@
 <template>
   <div class="min-h-dvh container mx-auto flex flex-col items-center px-4">
-    <header class="flex-grow-0 w-full flex justify-between py-2">
-      <NuxtLink to="/fv" class="text-primary-900 dark:text-primary-100 text-xl flex items-center gap-x-2"><UIcon name="i-heroicons-circle-stack" /><span>Bücherbörse @ FVJus</span></NuxtLink>
-      <div class="font-medium">
-        <UHorizontalNavigation :links="links" />
+    <header class="grow-0 w-full flex justify-between py-2">
+      <NuxtLink to="/fv" class="flex items-center gap-x-2 text-xl text-primary-900 dark:text-primary-100">
+        <UIcon class="hidden lg:block" name="i-heroicons-circle-stack" />
+        <div class="inline-flex">Bücherbörse<span class="hidden lg:block">&nbsp;@ FVJus</span></div>
+      </NuxtLink>
+      <div class="font-medium hidden md:block">
+        <UNavigationMenu orientation="horizontal" :items="links" />
       </div>
     </header>
-    <div class="flex-grow w-full flex flex-col m-2">
+    <div class="grow w-full flex flex-col m-2">
       <slot />
     </div>
-    <div class="flex-grow-0">
+    <div class="grow-0">
       <Footer />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { NavigationMenuItem } from '#ui/types'
+
 const { signOut } = useAuth()
 const router = useRouter()
 
@@ -25,7 +30,7 @@ const logoutAndRedirect = async () => {
   router.push('/login')
 };
 
-const links = [{
+const links = ref<NavigationMenuItem[]>([{
   label: 'Suchen',
   to: '/fv/search',
   icon: 'i-heroicons-magnifying-glass',
@@ -43,6 +48,7 @@ const links = [{
   icon: 'i-heroicons-user-group',
 }, {
   label: 'Logout',
-  click: logoutAndRedirect
-}]
+  class: 'cursor-pointer',
+  onSelect: logoutAndRedirect
+}])
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <div class="animate-flyIn group rounded overflow-hidden" :class="{ 'hover:bg-white dark:hover:bg-gray-900': isActive, 'border border-orange-300 dark:border-orange-600 bg-orange-50/50 hover:bg-orange-50/25 dark:bg-orange-950/25 dark:hover:bg-orange-950/50': !isActive }">
+  <div class="animate-fly-in group rounded-sm overflow-hidden" :class="{ 'hover:bg-white dark:hover:bg-neutral-900': isActive, 'border border-orange-300 dark:border-orange-600 bg-orange-50/50 hover:bg-orange-50/25 dark:bg-orange-950/25 dark:hover:bg-orange-950/50': !isActive }">
     <div class="flex flex-row">
-      <div class="flex-grow grid grid-cols-12 p-2 gap-x-2 gap-y-1">
+      <div class="grow grid grid-cols-12 p-2 gap-x-2 gap-y-1">
         <DataLabel label="Titel" :data="props.modelValue.book.title" class="col-span-7" />
         <DataLabel label="Autoren" :data="props.modelValue.book.authors" class="col-span-5" />
         <DataLabel label="ISBN" :data="props.modelValue.book.isbn" class="col-span-3" />
@@ -12,36 +12,34 @@
       </div>
       <UButton
         icon="i-heroicons-trash"
-        size="sm"
-        color="red"
+        color="error"
         variant="ghost"
-        class="flex-grow-0 rounded-none"
+        class="grow-0 rounded-none"
         @click="deleteItem"
       />
     </div>
     <div v-if="!isActive" class="p-2 flex flex-row items-center gap-x-2 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-100">
-      <UIcon name="i-heroicons-exclamation-triangle" class="flex-shrink-0 w-5 h-5" />
+      <UIcon name="i-heroicons-exclamation-triangle" class="shrink-0 w-5 h-5" />
       <span class="text-sm">Dieses Buch ist nicht mehr verfügbar!</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Offer } from '~/interfaces/Offer';
-import { formatPrice } from '~/utils/utils';
+import type { Offer } from '~/interfaces/Offer'
 
 const props = defineProps({
   modelValue: {
     type: Object as () => Offer,
     required: true
   },
-});
+})
 
-const emit = defineEmits(['delete-item']);
+const emit = defineEmits(['delete-item'])
 
-const isActive = computed(() => props.modelValue.active);
+const isActive = computed(() => props.modelValue.active)
 
 const deleteItem = () => {
-  emit('delete-item', props.modelValue);
-};
+  emit('delete-item', props.modelValue)
+}
 </script>

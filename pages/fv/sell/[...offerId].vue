@@ -1,15 +1,15 @@
 <template>
-  <div class="w-full max-w-screen-lg mx-auto">
+  <div class="w-full max-w-(--breakpoint-lg) mx-auto">
     <h1 class="text-center text-xl uppercase text-primary-600 dark:text-primary-400 tracking-wider">Bücher verkaufen</h1>
 
     <section class="mt-8 flex flex-row gap-x-8">
       <!-- left side -->
-      <aside class="flex-shrink-0 w-80">
+      <aside class="shrink-0 w-80">
         <div class="sticky w-full h-fit top-4">
           <div>
             <UButtonGroup orientation="horizontal" class="w-full">
-              <UInput v-model="state.offerId" name="offerId" placeholder="1234" step="1" min="0" class="flex-grow" @keydown.enter="searchOffer" />
-              <UButton type="submit" icon="i-heroicons-plus" color="gray" :disabled="errorMsg != null" :loading="loadingOffer" @click="searchOffer"/>
+              <UInput v-model="state.offerId" name="offerId" placeholder="1234" step="1" min="0" class="grow" @keydown.enter="searchOffer" />
+              <UButton type="submit" icon="i-heroicons-plus" color="neutral" variant="outline" :disabled="errorMsg != null" :loading="loadingOffer" @click="searchOffer"/>
             </UButtonGroup>
             <div v-if="isIdInvalid" class="text-red-500 dark:text-red-400 text-sm mt-1">
               {{ errorMsg }}
@@ -24,7 +24,7 @@
               <DataLabel label="Autoren" :data="selectedOffer.book.authors" class="col-span-6" />
               <DataLabel label="Verlag" :data="selectedOffer.book.publisher" class="col-span-6" />
               <DataLabel label="Zugehörige Prüfung" :data="selectedOffer.book.exam?.name" class="col-span-6" />
-              <UDivider class="col-span-6" label="Angebotdetails" />
+              <USeparator class="col-span-6" label="Angebotdetails" />
               <DataLabel label="Verkäufer" :data="`${selectedOffer.seller.fullName}`" class="col-span-6" />
               <DataLabel label="Markiert" :data="selectedOffer.marked ? 'Ja' : 'Nein'" class="col-span-2" />
               <DataLabel label="Ort" :data="selectedOffer.location" class="col-span-2" />
@@ -32,10 +32,10 @@
             </div>
             <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
               <UButton
-                size="sm"
                 color="primary"
                 variant="outline"
                 label="Hinzufügen"
+                :block="true"
                 :disabled="!selectedOffer || isIdInvalid"
                 @click="addOffer"
               />
@@ -44,16 +44,15 @@
         </div>
       </aside>
       <!-- right side -->
-      <div class="flex-grow">
-        <div v-if="addedOffers.length !== 0" class="flex flex-grow flex-col gap-y-4">
+      <div class="grow">
+        <div v-if="addedOffers.length !== 0" class="flex grow flex-col gap-y-4">
           <div v-for="(offer, index) in addedOffers" :key="offer.id">
             <CheckoutOfferItemSell v-model="addedOffers[index]" @delete-item="removeOffer" />
           </div>
           <div class="w-full inline-flex justify-between items-center">
             <div>
               <UButton
-                size="sm"
-                color="white"
+                color="neutral"
                 icon="i-heroicons-arrow-path"
                 variant="ghost"
                 label="Neu laden"
@@ -67,7 +66,6 @@
               </div>
               <div>
                 <UButton
-                  size="sm"
                   color="primary"
                   variant="solid"
                   label="Verkaufen"
@@ -77,40 +75,40 @@
               </div>
             </div>
           </div>
-          <UModal v-model="confirmModalOpen">
-            <UCard>
-              <template #header>
-                Kauf bestätigen
-              </template>
-
-              Ich habe vom Käufer <b>{{ selectedOfferPrice }}</b> erhalten und <b>{{ offerCount }}</b> übergeben!
-
-              <template #footer>
-                <div class="flex flex-row justify-end gap-x-2">
-                  <UButton
-                    size="sm"
-                    color="primary"
-                    variant="outline"
-                    label="Abbrechen"
-                    :disabled="loadingCheckout"
-                    @click="confirmModalOpen = false"
-                  />
-                  <UButton
-                    size="sm"
-                    color="primary"
-                    variant="solid"
-                    label="Bestätigen"
-                    :loading="loadingCheckout"
-                    @click="checkout"
-                  />
-                </div>
-              </template>
-            </UCard>
+          <UModal v-model:open="confirmModalOpen">
+            <template #content>
+              <UCard>
+                <template #header>
+                  Kauf bestätigen
+                </template>
+  
+                Ich habe vom Käufer <b>{{ selectedOfferPrice }}</b> erhalten und <b>{{ offerCount }}</b> übergeben!
+  
+                <template #footer>
+                  <div class="flex flex-row justify-end gap-x-2">
+                    <UButton
+                      color="primary"
+                      variant="outline"
+                      label="Abbrechen"
+                      :disabled="loadingCheckout"
+                      @click="confirmModalOpen = false"
+                    />
+                    <UButton
+                      color="primary"
+                      variant="solid"
+                      label="Bestätigen"
+                      :loading="loadingCheckout"
+                      @click="checkout"
+                    />
+                  </div>
+                </template>
+              </UCard>
+            </template>
           </UModal>
         </div>
         <div v-else class="py-16 text-center">
-          <UIcon name="i-heroicons-inbox-arrow-down-20-solid" class="text-5xl text-gray-300 dark:text-gray-700" />
-          <p class="text-gray-600 dark:text-gray-400">
+          <UIcon name="i-heroicons-inbox-arrow-down-20-solid" class="text-5xl text-neutral-300 dark:text-neutral-700" />
+          <p class="text-neutral-600 dark:text-neutral-400">
             Noch keine Angebote hinzugefügt...
           </p>
         </div>
@@ -208,7 +206,6 @@ async function searchOffer () {
 }
 
 function addOffer() {
-  console.log('adding offer', selectedOffer.value)
   if (selectedOffer.value) {
     addedOffers.value.push(selectedOffer.value)
     selectedOffer.value = null
@@ -221,12 +218,10 @@ function removeOffer(offer: Offer) {
   if (index > -1) {
     addedOffers.value.splice(index, 1)
   }
-  console.log('removed offer - offers:', addedOffers.value)
 }
 
 async function checkout() {
   loadingCheckout.value = true
-  console.log('checkout', addedOffers.value, addedOfferIds())
 
   try {
     await $fetch(useRuntimeConfig().public.apiUrl + '/offers/sell' , {
@@ -242,7 +237,7 @@ async function checkout() {
     useToast().add({
       title: 'Bücher wurden erfolgreich verkauft!',
       icon: 'i-heroicons-check-circle',
-      color: 'green',
+      color: 'success',
     })
 
     await navigateTo({
@@ -256,12 +251,12 @@ async function checkout() {
       title: 'Fehler',
       description: 'Bücher konnten nicht verkauft werden!',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
       actions: [{
         label: 'Zurücksetzen',
         variant: 'outline',
-        color: 'red',
-        click: () => {
+        color: 'error',
+        onClick: () => {
           addedOffers.value = []
         },
       }]

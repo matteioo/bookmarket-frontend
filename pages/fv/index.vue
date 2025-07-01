@@ -1,14 +1,15 @@
 <template>
-  <div class="flex-grow flex flex-col">
+  <div class="grow flex flex-col">
     <h1 class="block text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Willkommen zurück, {{ member?.username }}!</h1>
-    <div class="my-10 grid grid-cols-4 gap-4">
+    <div class="my-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <WidgetsStatisticsSoldBooks />
       <WidgetsStatisticsRevenue />
-      <WidgetsStatisticsRevenue class="col-span-2 row-span-2" />
+      <WidgetsStatisticsRevenue class="sm:col-span-2 sm:row-span-2" />
       <WidgetsStatisticsRevenue />
+      <WidgetsStatisticsSoldBooks />
       <!-- Widgets: Meistgesucht, Meistverkauft -->
     </div>
-    <div class="flex-grow w-full flex items-center justify-center">
+    <div class="grow w-full flex items-center justify-center">
       <div>
         <UInput
           v-model="searchQuery"
@@ -16,24 +17,27 @@
           name="q"
           placeholder="Suche nach ISBN, Titel, Autor, ..."
           autocomplete="off"
-          :ui="{ icon: { leading: { pointer: '' }, trailing: { pointer: '' } } }"
           @keydown.enter="search"
         >
           <template #leading>
             <UButton
-              color="gray"
+              color="neutral"
               variant="link"
+              size="sm"
               icon="i-heroicons-magnifying-glass-20-solid"
+              class="cursor-pointer"
               :padded="false"
               @click="search"
             />
           </template>
           <template #trailing>
             <UButton
-              v-show="searchQuery !== ''"
-              color="gray"
+              v-if="searchQuery !== ''"
+              color="neutral"
               variant="link"
+              size="sm"
               icon="i-heroicons-x-mark-20-solid"
+              class="cursor-pointer"
               :padded="false"
               @click="searchQuery = ''"
             />

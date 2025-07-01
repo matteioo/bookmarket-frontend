@@ -1,3 +1,46 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+@theme {
+  --animate-fly-in: flyIn 0.5s ease-out forwards;
+  --animate-fly-out: flyOut 0.5s ease-in forwards;
+
+  @keyframes flyIn {
+    0% {
+      transform: translateX(-25px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  @keyframes flyOut {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-25px);
+      opacity: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}

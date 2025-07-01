@@ -5,22 +5,22 @@
         <span class="block text-sm text-neutral-600 dark:text-neutral-400">{{ label }}</span>
       </template>
       <template #default>
-        <UInput v-if="(typeof modelValue !== 'boolean')" size="xs" :model-value="modelValue" @update:model-value="updateModelValue" />
-        <USwitch v-else class="mt-1" :model-value="modelValue" @update:model-value="updateModelValue" />
+        <UInput ref="inputRef" :required="props.required" size="xs" />
       </template>
     </UFormField>
   </div>
 </template>
 
+
 <script setup lang="ts">
-const _props = defineProps({
+const props = defineProps({
   label: {
     type: String,
     required: true,
   },
   modelValue: {
-    type: [String, Number, Boolean],
-    default: '-',
+    type: Number,
+    default: 0,
   },
   errors: {
     type: Array as PropType<string[]>,
@@ -30,11 +30,27 @@ const _props = defineProps({
     type: String,
     default: undefined,
   },
+  maxPrice: {
+    type: Number,
+    default: 999.99,
+  },
+  required: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const { inputRef, numberValue, setValue } = useEuroCurrencyInput({ valueRange: { max: props.maxPrice } })
 
 const emit = defineEmits(['update:modelValue'])
 
-const updateModelValue = (newValue: string | number | boolean) => {
-  emit('update:modelValue', newValue)
-}
+watch (numberValue, (newValue) => {
+  if (newValue === null) {
+    setValue(0)
+    emit('update:modelValue', 0)
+  } else {
+    emit('update:modelValue', newValue)
+  }
+
+})
 </script>

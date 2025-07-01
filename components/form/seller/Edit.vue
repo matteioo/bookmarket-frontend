@@ -1,33 +1,35 @@
 <template>
-  <UModal v-model="showModal">
-    <UCard>
-      <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
-        <UFormGroup label="Name" name="fullName" hint="vollständiger Name" required>
-          <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" />
-        </UFormGroup>
+  <UModal v-model:open="showModal">
+    <template #content>
+      <UCard>
+        <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
+          <UFormField label="Name" name="fullName" hint="vollständiger Name" required>
+            <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" class="w-full" />
+          </UFormField>
 
-        <UFormGroup label="Matrikelnummer" name="matriculationNumber" required>
-          <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" :disabled="true" />
-        </UFormGroup>
+          <UFormField label="Matrikelnummer" name="matriculationNumber" required>
+            <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" :disabled="true" class="w-full" />
+          </UFormField>
 
-        <UFormGroup label="Email" name="email" required>
-          <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
-        </UFormGroup>
+          <UFormField label="Email" name="email" required>
+            <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" class="w-full" />
+          </UFormField>
 
-        <UFormGroup label="Anmerkung" name="note">
-          <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" />
-        </UFormGroup>
+          <UFormField label="Anmerkung" name="note">
+            <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" class="w-full" />
+          </UFormField>
 
-        <div class="inline-flex flex-row-reverse gap-x-2 w-full">
-          <UButton type="submit" :loading="loading" variant="solid">
-            Verkäufer:in bearbeiten
-          </UButton>
-          <UButton :loading="loading" variant="soft" @click="clearForm">
-            Abbrechen
-          </UButton>
-        </div>
-      </UForm>
-    </UCard>
+          <div class="inline-flex flex-row-reverse gap-x-2 w-full">
+            <UButton type="submit" :loading="loading" variant="solid">
+              Verkäufer:in bearbeiten
+            </UButton>
+            <UButton :loading="loading" variant="soft" @click="clearForm">
+              Abbrechen
+            </UButton>
+          </div>
+        </UForm>
+      </UCard>
+    </template>
   </UModal>
 </template>
 
@@ -75,14 +77,14 @@ watch(() => props.initialSeller, (newSeller) => {
 
 const validate = (state: SellerFields): FormError[] => {
   const errors = []
-  if (!state.fullName) errors.push({ path: 'fullName', message: 'Name ist verpflichtend' })
-  if (!state.matriculationNumber) errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer ist verpflichtend' })
+  if (!state.fullName) errors.push({ name: 'fullName', message: 'Name ist verpflichtend' })
+  if (!state.matriculationNumber) errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer ist verpflichtend' })
   if (state.matriculationNumber && !/^\d+$/.test(state.matriculationNumber))
-    errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer darf nur Ziffern enthalten' })
+    errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer darf nur Ziffern enthalten' })
   if (state.matriculationNumber && state.matriculationNumber.toString().length !== 8)
-    errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
-  if (!state.email) errors.push({ path: 'email', message: 'Email ist verpflichtend' })
-  if (state.note && state.note.length > 255) errors.push({ path: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
+    errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
+  if (!state.email) errors.push({ name: 'email', message: 'Email ist verpflichtend' })
+  if (state.note && state.note.length > 255) errors.push({ name: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
   return errors
 }
 
@@ -118,7 +120,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
       title: 'Erfolg',
       description: 'Verkäufer:in erfolgreich bearbeitet.',
       icon: 'i-heroicons-check-circle',
-      color: 'green',
+      color: 'success',
     })
     showModal.value = false
   } else {
@@ -128,7 +130,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
-          path: field,
+          name: field,
           message: data[field][0]
         })
       }
@@ -139,7 +141,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
       title: 'Fehler',
       description: 'Verkäufer:in konnte nicht bearbeitet werden!',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
     })
   }
 }
