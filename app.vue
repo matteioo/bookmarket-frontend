@@ -1,16 +1,16 @@
 <template>
-  <UApp :locale="de">
-    <Body class="bg-neutral-50 dark:bg-neutral-950" />
-  
+  <Body class="bg-gray-50 dark:bg-gray-950" />
+
+  <div>
     <NuxtLayout>
-        <NuxtPage />
+       <NuxtPage />
     </NuxtLayout>
-  </UApp>
+  </div>
+
+  <UNotifications />
 </template>
 
 <script setup lang="ts">
-import { de } from '@nuxt/ui/locale'
-
 useHead({
   titleTemplate: title => title ? `${title} · Bücherbörse der FVJus` : 'Bücherbörse der FVJus',
 })

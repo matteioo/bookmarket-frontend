@@ -1,20 +1,20 @@
 <template>
   <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit">
-    <UFormField label="Name" name="fullName" hint="vollständiger Name" required>
-      <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" class="w-full" />
-    </UFormField>
+    <UFormGroup label="Name" name="fullName" hint="vollständiger Name" required>
+      <UInput v-model="state.fullName" type="text" placeholder="Vorname Nachname" />
+    </UFormGroup>
 
-    <UFormField label="Matrikelnummer" name="matriculationNumber" required>
-      <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" class="w-full" />
-    </UFormField>
+    <UFormGroup label="Matrikelnummer" name="matriculationNumber" required>
+      <UInput v-model="state.matriculationNumber" type="text" placeholder="01234567" />
+    </UFormGroup>
 
-    <UFormField label="Email" name="email" required>
-      <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" class="w-full" />
-    </UFormField>
+    <UFormGroup label="Email" name="email" required>
+      <UInput v-model="state.email" type="email" placeholder="email@fvjus.at" />
+    </UFormGroup>
 
-    <UFormField label="Anmerkung" name="note">
-      <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" class="w-full" />
-    </UFormField>
+    <UFormGroup label="Anmerkung" name="note">
+      <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" />
+    </UFormGroup>
 
     <UButton type="submit" class="float-right" :loading="loading" :variant="(props.buttonVariant as ButtonVariant)">
       {{ props.buttonContent }}
@@ -23,16 +23,14 @@
 </template>
 
 <script setup lang="ts">
-import type { FormError, FormSubmitEvent } from '#ui/types'
-import type { Seller } from '~/interfaces/Seller'
-
-type ButtonVariant = 'solid' | 'outline'
+import type { FormError, FormSubmitEvent, ButtonVariant } from '#ui/types'
+import type { Seller } from '~/interfaces/Seller';
 
 interface SellerFields {
-  fullName: string
-  matriculationNumber: string
-  email: string
-  note: string
+  fullName: string;
+  matriculationNumber: string;
+  email: string;
+  note: string;
 }
 
 const props = defineProps({
@@ -42,7 +40,7 @@ const props = defineProps({
     default: undefined,
   },
   buttonVariant: {
-    type: String as PropType<ButtonVariant>,
+    type: String,
     required: false,
     default: 'solid',
   },
@@ -55,13 +53,13 @@ const props = defineProps({
     type: Function as PropType<(userData: Seller) => void>,
     required: true
   }
-})
+});
 
 const { token } = useAuth()
 const router = useRouter()
 const form = ref()
 const loading = ref(false)
-const user = ref(null as Seller | null)
+const user = ref(null as Seller | null);
 
 const state = reactive({
   fullName: '',
@@ -72,30 +70,30 @@ const state = reactive({
 
 const validate = (state: SellerFields): FormError[] => {
   const errors = []
-  if (!state.fullName) errors.push({ name: 'fullName', message: 'Name ist verpflichtend' })
-  if (!state.matriculationNumber) errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer ist verpflichtend' })
+  if (!state.fullName) errors.push({ path: 'fullName', message: 'Name ist verpflichtend' })
+  if (!state.matriculationNumber) errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer ist verpflichtend' })
   if (state.matriculationNumber && !/^\d+$/.test(state.matriculationNumber))
-    errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer darf nur Ziffern enthalten' })
+    errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer darf nur Ziffern enthalten' })
   if (state.matriculationNumber && state.matriculationNumber.toString().length !== 8)
-    errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
-  if (!state.email) errors.push({ name: 'email', message: 'Email ist verpflichtend' })
-  if (state.note && state.note.length > 255) errors.push({ name: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
+    errors.push({ path: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
+  if (!state.email) errors.push({ path: 'email', message: 'Email ist verpflichtend' })
+  if (state.note && state.note.length > 255) errors.push({ path: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
   return errors
 }
 
 const onSubmit = async (event: FormSubmitEvent<SellerFields>) => {
-  await createSeller(event)
+  await createSeller(event);
 
   if (user.value) {
-    props.onSubmit(user.value)
+    props.onSubmit(user.value);
   } else {
-    console.error('No seller submitted')
+    console.error('No seller submitted');
   }
-}
+};
 
 async function createSeller(event: FormSubmitEvent<SellerFields>) {
-  loading.value = true
-  form.value.clear()
+  loading.value = true;
+  form.value.clear();
 
   const response = await fetch(useRuntimeConfig().public.apiUrl + '/sellers', {
     method: 'POST',
@@ -108,37 +106,37 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
   loading.value = false
   
   if (response.ok) {
-    user.value = await response.json()
+    user.value = await response.json();
     useToast().add({
       title: 'Erfolg',
       description: 'Verkäufer:in erfolgreich angelegt.',
       icon: 'i-heroicons-check-circle',
-      color: 'success',
+      color: 'green',
     })
     
     if (props.to) {
-      router.push(props.to)
+      router.push(props.to);
     }
   } else {
     const data = await response.json()
     
-    const errors = []
+    const errors = [];
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
-          name: field,
+          path: field,
           message: data[field][0]
-        })
+        });
       }
     }
-    form.value.setErrors(errors)
+    form.value.setErrors(errors);
 
     useToast().add({
       title: 'Fehler',
       description: 'Verkäufer:in konnte nicht angelegt werden!',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'error',
+      color: 'red',
     })
   }
-}
+};
 </script>

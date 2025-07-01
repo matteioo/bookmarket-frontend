@@ -3,23 +3,20 @@
     <div class="flex flex-col gap-y-2">
       <USelectMenu
         v-model="selected"
-        v-model:search-term="searchTerm"
-        :items="sellers || []"
-        :search-input="{
-          placeholder: 'Suche nach Verkäufer:in...',
-          icon: 'i-lucide-search',
-        }"
-        ignore-filter
+        :loading="loading"
+        :searchable="search"
+        placeholder="Suche nach Verkäufer:in..."
+        option-attribute="fullName"
+        trailing
+        by="id"
         class="w-full"
-        placeholder="Verkäufer:in auswählen"
-        :loading="status === 'pending'"
       >
-        <template #item-label="{ item }">
-          {{ item.matriculationNumber }} &middot; {{ item.fullName }}
+        <template #label>
+          <span v-if="selected" class="truncate">{{ selected?.matriculationNumber }} &middot; {{ selected?.fullName }}</span>
         </template>
-
-        <template #default="{ modelValue: selectedItem }">
-          <span v-if="selectedItem">{{ selectedItem.matriculationNumber }} &middot; {{ selectedItem.fullName }}</span>
+    
+        <template #option="{ option: person }">
+          <span class="truncate">{{ person.matriculationNumber }} &middot; {{ person.fullName }}</span>
         </template>
       </USelectMenu>
     
@@ -31,6 +28,7 @@
         </div>
         <div class="float-right">
           <UButton
+            size="sm"
             color="primary"
             variant="outline"
             label="Weiter"
@@ -41,15 +39,15 @@
       </div>
     </div>
   
-    <USeparator label="ODER ANLEGEN" />
+    <UDivider label="ODER ANLEGEN" />
   
     <FormGroupSeller :on-submit="handleSubmit" button-variant="outline" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Seller } from '~/interfaces/Seller'
-import type { Page } from '~/interfaces/Page'
+import type { Seller } from '~/interfaces/Seller';
+import type { Page } from '~/interfaces/Page';
 
 const props = defineProps({
   onSubmit: {
@@ -61,47 +59,46 @@ const props = defineProps({
     required: false,
     default: null,
   },
-})
+});
 
-const selected = ref(props.currentSeller)
-const { token } = useAuth()
+const loading = ref(false);
+const selected = ref(props.currentSeller);
+const { token } = useAuth();
 
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
 const handleSearchSubmit = () => {
   if (selected.value) {
-    props.onSubmit(selected.value)
+    props.onSubmit(selected.value);
   } else {
-    console.error('No seller selected')
+    console.error('No seller selected');
   }
 }
-
-const searchTerm = ref('')
-const searchTermDebounced = useDebounce(searchTerm, 500)
-
-const fetchParams = computed(() => ({
-  search: searchTermDebounced.value,
-  offset: 0,
-  limit: 20,
-}))
-
-const { data: sellers, status } = await useFetch(useRuntimeConfig().public.apiUrl + '/sellers', {
-  headers: {
-    Authorization: `${token.value}`,
-  },
-  params: fetchParams,
-  transform: (data: Page<Seller>) => {
-    return data.results as Seller[]
-  },
-  lazy: true,
-  watch: [searchTermDebounced],
-})
 
 // This anonymous function is called by the FormGroup component to intercept the submitted data
 const handleSubmit = (userData: Seller) => {
   if (userData) {
-    props.onSubmit(userData)
+    props.onSubmit(userData);
   } else {
-    console.error('No seller selected')
+    console.error('No seller selected');
   }
+}
+
+// This function is called by the selectMenu component to search for sellers
+async function search(query: string) {
+  loading.value = true;
+
+  const sellers = await $fetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
+    headers: {
+      Authorization: `${token.value}`,
+    },
+    params: {
+      search: query,
+      offset: 0,
+      limit: 20,
+    },
+  });
+
+  loading.value = false;
+  return sellers.results;
 }
 </script>

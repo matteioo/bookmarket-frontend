@@ -3,13 +3,13 @@
     <div class="items-center mb-3">
       <div class="flex space-x-4">
         <!-- Icon -->
-        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-neutral-800 shadow-sm">
+        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow">
           <UIcon :name="props.icon" class="w-6 h-6" :class="computedColor" />
         </div>
         <div>
-          <div class="text-neutral-700 dark:text-neutral-300 font-medium">
-            <time v-if="props.dateTime" class="block text-sm text-neutral-500">{{ formatReadableDate(props.dateTime.toString()) }}</time>
-            <ULink v-if="props.member" class="underline hover:text-neutral-800 dark:hover:text-neutral-200" :to="`/fv/members/${props.member.id}`">
+          <div class="text-gray-700 dark:text-gray-300 font-medium">
+            <time v-if="props.dateTime" class="block text-sm text-gray-500">{{ formatReadableDate(props.dateTime.toString()) }}</time>
+            <ULink v-if="props.member" class="underline hover:text-gray-800 dark:hover:text-gray-200" :to="`/fv/members/${props.member.id}`">
               {{ props.member?.username }}
             </ULink>
             <span>&nbsp;{{ props.title }}</span>
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div v-if="hasContent" class="p-2 rounded-sm border bg-neutral-50 dark:bg-neutral-950 border-neutral-200 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 ml-14">
+    <div v-if="hasContent" class="p-2 rounded border bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 ml-14">
       <slot :content="true" />
     </div>
   </div>
