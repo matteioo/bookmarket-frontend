@@ -1,37 +1,37 @@
 <template>
   <UForm ref="form" :validate="validate" :state="state" class="w-full space-y-4" @submit="submitBook">
     <UFormField label="ISBN" name="isbn" required>
-      <UInput v-model="state.isbn" type="text" placeholder="9876543210987" class="grow" autocomplete="off" />
+      <UInput v-model="state.isbn" type="text" placeholder="9876543210987" autocomplete="off" class="w-full" />
     </UFormField>
 
     <UFormField label="Titel" name="title" required>
-      <UInput v-model="state.title" type="text" placeholder="Beispielbuch" />
+      <UInput v-model="state.title" type="text" placeholder="Beispielbuch" class="w-full" />
     </UFormField>
 
     <UFormField label="Autoren" name="authors" required>
-      <UInput v-model="state.authors" type="text" placeholder="Vorname Nachname, Vorname Nachname, ..." />
+      <UInput v-model="state.authors" type="text" placeholder="Vorname Nachname, Vorname Nachname, ..." class="w-full" />
     </UFormField>
 
     <UFormField label="Verlag" name="publisher" required>
-      <UInput v-model="state.publisher" type="text" placeholder="FVJus Verlag" />
+      <UInput v-model="state.publisher" type="text" placeholder="FVJus Verlag" class="w-full" />
     </UFormField>
 
     <div class="inline-flex flex-row gap-x-2">
       <UFormField label="Auflage" name="edition" required>
-        <UInput v-model="state.edition" type="number" placeholder="14" />
+        <UInput v-model="state.edition" type="number" placeholder="14" class="w-full" />
       </UFormField>
       
       <UFormField label="Max. Preis" name="maxPrice" required>
-        <FormInputPrice v-model="state.maxPrice" label="maxPrice" />
+        <FormInputPrice v-model="state.maxPrice" label="maxPrice" class="w-full" />
       </UFormField>
     </div>
 
     <UFormField label="Prüfung" name="exam_id">
-      <USelect v-model="state.exam_id" :items="exams" option-attribute="name" value-attribute="id" />
+      <USelect v-model="state.exam_id" :items="exams" label-key="name" value-key="id" class="w-full" placeholder="Prüfung auswählen" />
     </UFormField>
 
     <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
-      <UButton color="primary" variant="link" label="Zurücksetzen" @click="clearForm" />
+      <UButton color="primary" variant="outline" label="Zurücksetzen" @click="clearForm" />
       <UButton type="submit" class="float-right" :loading="loading" variant="solid" label="Anlegen" />
     </div>
   </UForm>
@@ -136,7 +136,7 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
-          path: field,
+          name: field,
           message: data[field][0]
         });
       }
@@ -169,7 +169,7 @@ async function fetchExams() {
     },
   });
   
-  exams.value.push({id: null, name: ''});
+  exams.value.push({id: null, name: '-Keine Prüfung-'});
   exams.value.push(...response.results);
 }
 </script>
