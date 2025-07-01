@@ -1,41 +1,41 @@
 <template>
   <div class="flex flex-row gap-x-8">
     <!-- left side -->
-    <div class="flex-shrink-0 w-96">
+    <div class="shrink-0 w-96">
       <div class="sticky h-fit top-4">
         <UForm ref="form" :validate="formValidate" :state="formState" class="w-full space-y-4" @submit="onBookCreate">
-          <UFormGroup label="ISBN" name="isbn" required>
+          <UFormField label="ISBN" name="isbn" required>
             <UButtonGroup orientation="horizontal" class="w-full">
-              <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="flex-grow" autocomplete="off" @keydown.enter.prevent="handleIsbnSearch" />
-              <UButton :loading="loadingIsbn" icon="i-heroicons-magnifying-glass" color="gray" @click="handleIsbnSearch" />
+              <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="w-full" autocomplete="off" @keydown.enter.prevent="handleIsbnSearch" />
+              <UButton :loading="loadingIsbn" icon="i-heroicons-magnifying-glass" color="neutral" variant="subtle" @click="handleIsbnSearch" />
             </UButtonGroup>
-          </UFormGroup>
+          </UFormField>
 
-          <UFormGroup v-if="!selected && checkedIsbn" label="Titel" name="title" required>
-            <UInput v-model="formState.title" type="text" placeholder="Beispielbuch" />
-          </UFormGroup>
+          <UFormField v-if="!selected && checkedIsbn" label="Titel" name="title" required>
+            <UInput v-model="formState.title" type="text" class="w-full" placeholder="Beispielbuch" />
+          </UFormField>
 
-          <UFormGroup v-if="!selected && checkedIsbn" label="Autoren" name="authors" required>
-            <UInput v-model="formState.authors" type="text" placeholder="Vorname Nachname, Vorname Nachname, ..." />
-          </UFormGroup>
+          <UFormField v-if="!selected && checkedIsbn" label="Autoren" name="authors" required>
+            <UInput v-model="formState.authors" type="text" class="w-full" placeholder="Vorname Nachname, Vorname Nachname, ..." />
+          </UFormField>
 
-          <UFormGroup v-if="!selected && checkedIsbn" label="Verlag" name="publisher" required>
-            <UInput v-model="formState.publisher" type="text" placeholder="FVJus Verlag" />
-          </UFormGroup>
+          <UFormField v-if="!selected && checkedIsbn" label="Verlag" name="publisher" class="w-full" required>
+            <UInput v-model="formState.publisher" type="text" class="w-full" placeholder="FVJus Verlag" />
+          </UFormField>
 
           <div v-if="!selected && checkedIsbn" class="inline-flex flex-row gap-x-2">
-            <UFormGroup label="Auflage" name="edition" required>
-              <UInput v-model="formState.edition" type="text" placeholder="14" />
-            </UFormGroup>
+            <UFormField label="Auflage" name="edition" required>
+              <UInput v-model="formState.edition" type="text" class="w-full" placeholder="14" />
+            </UFormField>
             
-            <UFormGroup label="Max. Preis" name="maxPrice" required>
-              <FormInputPrice v-model="formState.maxPrice" label="maxPrice" size="sm" />
-            </UFormGroup>
+            <UFormField label="Max. Preis" name="maxPrice" required>
+              <FormInputPrice v-model="formState.maxPrice" class="w-full" label="maxPrice" />
+            </UFormField>
           </div>
 
-          <UFormGroup v-if="!selected && checkedIsbn" label="Prüfung" name="exam_id">
-            <USelect v-model="formState.exam_id" :options="exams" option-attribute="name" value-attribute="id" />
-          </UFormGroup>
+          <UFormField v-if="!selected && checkedIsbn" label="Prüfung" name="exam_id">
+            <USelect v-model:open="formState.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
+          </UFormField>
 
           <div v-if="!selected && checkedIsbn" class="w-full mt-2 flex flex-row justify-end gap-x-2">
             <UButton color="primary" variant="link" label="Zurücksetzen" @click="clearForm" />
@@ -55,7 +55,6 @@
           </div>
           <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
             <UButton
-              size="sm"
               color="primary"
               variant="outline"
               label="Hinzufügen"
@@ -64,17 +63,17 @@
             />
           </div>
         </div>
-        <div v-if="bookPriceBins" class="flex flex-col gap-y-4 mt-4 p-2 rounded bg-white dark:bg-gray-900">
-          <div class="w-full text-center text-gray-600 dark:text-gray-300">ISBN: {{ bookPriceBins.book.isbn }}</div>
+        <div v-if="bookPriceBins" class="flex flex-col gap-y-4 mt-4 p-2 rounded-sm bg-white dark:bg-neutral-900">
+          <div class="w-full text-center text-neutral-600 dark:text-neutral-300">ISBN: {{ bookPriceBins.book.isbn }}</div>
           <div class="h-32">
             <ChartPriceBars :bins="bookPriceBins.priceBins" />
           </div>
           <div class="flex flex-col gap-y-1">
-            <div class="flex flex-row justify-between text-gray-600 dark:text-gray-400">
+            <div class="flex flex-row justify-between text-neutral-600 dark:text-neutral-400">
               <span>Offene Angebote: {{ bookPriceBins.offerStats.totalCount.active }}</span>
               <span>Verkaufte Bücher: {{ bookPriceBins.offerStats.totalCount.inactive }}</span>
             </div>
-            <div class="flex flex-row justify-between text-gray-600 dark:text-gray-400">
+            <div class="flex flex-row justify-between text-neutral-600 dark:text-neutral-400">
               <span>Durchschnittlicher Preis: {{ formatPrice(bookPriceBins.offerStats.averagePrice) }}</span>
               <span>Median: {{ formatPrice(bookPriceBins.offerStats.medianPrice) }}</span>
             </div>
@@ -83,18 +82,18 @@
       </div>
     </div>
     <!-- right side -->
-    <div class="flex-grow">
-      <div v-if="offers.length !== 0" class="flex flex-grow flex-col gap-y-4">
+    <div class="grow">
+      <div v-if="offers.length !== 0" class="flex grow flex-col gap-y-4">
         <div v-for="(offer, index) in offers" :key="offer.id">
-          <CheckoutOfferItemCreate v-model="offers[index]" @fetch-price-bins="fetchPriceBins" @delete-item="handleDeleteItem" @update:has-errors="(newValue) => offerErrors = newValue" />
+          <CheckoutOfferItemCreate v-model="offers[index]" @fetch-price-bins="fetchPriceBins" @delete-item="handleDeleteItem" @update:has-errors="(newValue: boolean) => offerErrors = newValue" />
         </div>
         <div class="w-full py-4 inline-flex flex-row justify-end backdrop-blur-md">
           <UButton label="Weiter" :disabled="offerErrors" @click="handleSubmitOffers" />
         </div>
       </div>
       <div v-else class="py-16 text-center">
-        <UIcon name="i-heroicons-folder-open-20-solid" class="text-5xl text-gray-300 dark:text-gray-700" />
-        <p class="text-gray-600 dark:text-gray-400">
+        <UIcon name="i-heroicons-folder-open-20-solid" class="text-5xl text-neutral-300 dark:text-neutral-700" />
+        <p class="text-neutral-600 dark:text-neutral-400">
           Noch keine Bücher hinzugefügt...
         </p>
       </div>
@@ -163,23 +162,23 @@ const formValidate = (state: BookFields): FormError[] => {
   const errors = []
 
   errors.push(...isbnValidators(state))
-  if (!state.title) errors.push({ path: 'title', message: 'Titel ist verpflichtend' })
-  if (!state.authors) errors.push({ path: 'authors', message: 'Autor(en) sind verpflichtend' })
-  if (!state.publisher) errors.push({ path: 'publisher', message: 'Verlag ist verpflichtend' })
-  //if (!state.maxPrice) errors.push({ path: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
-  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ path: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
-  if (!state.edition) errors.push({ path: 'edition', message: 'Auflage ist verpflichtend' })
-  //if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ path: 'edition', message: 'Auflage muss eine Zahl sein' })
-  //if (state.edition && state.edition <= 0) errors.push({ path: 'edition', message: 'Auflage muss größer als 0 sein' })
+  if (!state.title) errors.push({ name: 'title', message: 'Titel ist verpflichtend' })
+  if (!state.authors) errors.push({ name: 'authors', message: 'Autor(en) sind verpflichtend' })
+  if (!state.publisher) errors.push({ name: 'publisher', message: 'Verlag ist verpflichtend' })
+  //if (!state.maxPrice) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
+  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
+  if (!state.edition) errors.push({ name: 'edition', message: 'Auflage ist verpflichtend' })
+  //if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ name: 'edition', message: 'Auflage muss eine Zahl sein' })
+  //if (state.edition && state.edition <= 0) errors.push({ name: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
 }
 
 const isbnValidators = (state: BookFields): FormError[] => {
   const errors = []
 
-  if (!state.isbn) errors.push({ path: 'isbn', message: 'ISBN ist verpflichtend' })
-  if (state.isbn && !/^\d+$/.test(state.isbn)) errors.push({ path: 'isbn', message: 'ISBN darf nur Ziffern enthalten' })
-  if (state.isbn && state.isbn.toString().length !== 13) errors.push({ path: 'isbn', message: 'ISBN muss aus genau 13 Ziffern bestehen' })
+  if (!state.isbn) errors.push({ name: 'isbn', message: 'ISBN ist verpflichtend' })
+  if (state.isbn && !/^\d+$/.test(state.isbn)) errors.push({ name: 'isbn', message: 'ISBN darf nur Ziffern enthalten' })
+  if (state.isbn && state.isbn.toString().length !== 13) errors.push({ name: 'isbn', message: 'ISBN muss aus genau 13 Ziffern bestehen' })
 
   return errors
 }
@@ -215,6 +214,8 @@ const handleIsbnSearch = async () => {
   } catch (error) {
     selected.value = undefined
     console.error('Error while fetching book', error)
+
+    bookPriceBins.value = undefined
   }
 
   checkedIsbn.value = true
@@ -253,7 +254,7 @@ const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
-          path: field,
+          name: field,
           message: data[field][0]
         })
       }
@@ -322,7 +323,7 @@ async function fetchExams() {
     },
   })
   
-  exams.value.push({id: null, name: ''})
+  exams.value.push({id: null, name: '-Keine Prüfung-'})
   exams.value.push(...response.results)
 }
 

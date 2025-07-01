@@ -1,48 +1,59 @@
 <template>
-  <div class="flex-grow flex flex-col items-center gap-y-4 w-full max-w-screen-lg mx-auto">
+  <div class="grow flex flex-col items-center gap-y-4 w-full max-w-(--breakpoint-lg) mx-auto">
     <div class="w-full inline-flex flex-row justify-between">
       <UInput v-model="searchInput" placeholder="Suchen..." />
       <UButton
         icon="i-heroicons-plus"
-        size="sm"
         color="primary"
         variant="outline"
         label="Hinzufügen"
         to="/fv/sellers/create"
       />
     </div>
-    <div class="w-full rounded bg-white dark:bg-gray-900 shadow">
+    <div class="w-full rounded-sm bg-white dark:bg-neutral-900 shadow-sm">
       <UTable
         :loading="pending"
-        :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Lade Verkäufer:innen...' }"
-        :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'Keine Verkäufer:in gefunden.' }"
-        class="w-full"
-        :rows="data !== null ? data.results : []"
+        :data="data?.results ?? []"
         :columns="columns"
-        :ui="{ tr: { base: 'group' } }">
-        <template #actions-data="{ row }">
+        :ui="{ tr: 'group' }">
+        <template #actions-cell="{ row }">
           <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <UButtonGroup size="sm" orientation="horizontal" class="shadow-none">
-              <UButton icon="i-heroicons-information-circle" color="sky" variant="ghost" :to="`/fv/sellers/${row.id}`" />
-              <UButton icon="i-heroicons-pencil-square" color="primary" variant="ghost" @click="openModal(row)" />
-              <UButton icon="i-heroicons-trash" color="red" variant="ghost" />
+            <UButtonGroup orientation="horizontal" class="shadow-none">
+              <UButton icon="i-heroicons-information-circle" color="info" variant="ghost" :to="`/fv/sellers/${row.id}`" />
+              <UButton icon="i-heroicons-pencil-square" color="primary" variant="ghost" @click="openModal(row.original)" />
+              <UButton icon="i-heroicons-trash" color="error" variant="ghost" />
             </UButtonGroup>
+          </div>
+        </template>
+
+
+        <template #empty>
+          <div class="flex flex-col items-center gap-y-2">
+            <UIcon name="i-heroicons-circle-stack-20-solid" class="w-8 h-8 text-neutral-500 dark:text-neutral-400" />
+            <span class="text-neutral-500 dark:text-neutral-400">Keine Verkäufer:in gefunden.</span>
+          </div>
+        </template>
+        <template #loading>
+          <div class="flex flex-col items-center gap-y-2">
+            <UIcon name="i-heroicons-arrow-path-20-solid" class="w-8 h-8 text-neutral-500 dark:text-neutral-400 animate-spin" />
+            <span class="text-neutral-500 dark:text-neutral-400">Lade Verkäufer:innen...</span>
           </div>
         </template>
       </UTable>
       <FormSellerEdit v-model="editSellerModal" :initial-seller="editSellerData" :on-submit="onEditSeller" />
     </div>
-    <div class="w-full flex flex-row justify-between text-gray-700 dark:text-gray-300">
+    <div class="w-full flex flex-row justify-between text-neutral-700 dark:text-neutral-300">
       <div class="inline-flex items-center gap-x-2">
         <div>Seitengröße</div>
-        <USelect v-model="itemsPerPage" :options="pageSizes" />
+        <USelect v-model="itemsPerPage" :items="pageSizes" />
       </div>
-      <UPagination v-model="currentPage" :page-count="Number(itemsPerPage)" :total="data !== null ? data.count : 0" />
+      <UPagination v-model:page="currentPage" :page-count="Number(itemsPerPage)" :total="data !== null ? data.count : 0" variant="outline" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { TableColumn } from '@nuxt/ui'
 import type { Page } from '~/interfaces/Page'
 import type { Seller } from '~/interfaces/Seller'
 
@@ -81,11 +92,22 @@ const { data, pending, refresh } = useFetch<Page<Seller>>(useRuntimeConfig().pub
   params: fetchParams,
 })
 
-const columns = [
-  { key: 'matriculationNumber', label: 'Matr-Nr.' },
-  { key: 'fullName', label: 'Name' },
-  { key: 'email', label: 'Email' },
-  { key: 'actions', label: '' },
+const columns: TableColumn<Seller>[] = [
+  {
+    accessorKey: 'matriculationNumber',
+    header: 'Matr-Nr.',
+  },
+  {
+    accessorKey: 'fullName',
+    header: 'Name',
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+  },
+  {
+    id: 'actions'
+  }
 ]
 
 const openModal = (seller: Seller) => {

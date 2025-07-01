@@ -2,11 +2,11 @@
   <div class="w-full max-w-80">
     <h1 class="font-semibold text-xl text-center text-primary-900 dark:text-primary-100 p-4">Login für FV-Mitglieder</h1>
     <UForm :validate="validate" :state="state" class="space-y-4" @submit="login">
-      <UFormGroup label="Benutzername" name="username">
-        <UInput v-model="state.username" type="text" />
-      </UFormGroup>
+      <UFormField label="Benutzername" name="username">
+        <UInput v-model="state.username" type="text" class="w-full" />
+      </UFormField>
 
-      <UFormGroup label="Passwort" name="password">
+      <UFormField label="Passwort" name="password">
         <template #hint>
           <ULink
             to="/fv"
@@ -16,22 +16,23 @@
           </ULink>
         </template>
         <template #default>
-          <UInput v-model="state.password" type="password" />
+          <UInput v-model="state.password" type="password" class="w-full" />
         </template>
-      </UFormGroup>
+      </UFormField>
 
       <UButton block :loading="loading" type="submit">
         Anmelden
       </UButton>
 
       <div>
-        Noch kein Konto? <ULink to="/register" class="inline-flex items-center text-primary-500 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-200">Hier anfordern <UIcon name="i-heroicons-arrow-right" /></ULink>
+        Noch kein Konto? <ULink to="/register" class="inline-flex items-center text-primary-500 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-200">Hier anfordern&nbsp;&nbsp;<UIcon name="i-heroicons-arrow-right" /></ULink>
       </div>
     </UForm>
   </div>
 </template>
 
 <script setup lang="ts">
+import { UFormField } from '#components'
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
 interface LoginFields {
@@ -64,8 +65,8 @@ const loading = ref(false)
 
 const validate = (state: LoginFields): FormError[] => {
   const errors = []
-  if (!state.username) errors.push({ path: 'username', message: 'Benutzername ist verpflichtend' })
-  if (!state.password) errors.push({ path: 'password', message: 'Passwort ist verpflichtend' })
+  if (!state.username) errors.push({ name: 'username', message: 'Benutzername ist verpflichtend' })
+  if (!state.password) errors.push({ name: 'password', message: 'Passwort ist verpflichtend' })
   return errors
 }
 
@@ -97,7 +98,7 @@ async function login(event: FormSubmitEvent<LoginFields>) {
       title: 'Fehler',
       description: 'Benutzername und/oder Passwort ist falsch',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
     })
   } finally {
     loading.value = false

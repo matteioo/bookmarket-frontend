@@ -5,20 +5,20 @@
         label="Markiert"
         icon="i-heroicons-paint-brush-16-solid"
         size="xs"
-        :variant="filterActive ? 'outline' : 'solid'"
-        :color="filterActive ? 'primary' : 'gray'"
+        :variant="filterActive ? 'subtle' : 'outline'"
+        :color="filterActive ? 'primary' : 'neutral'"
       />
 
       <template #panel>
         <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
           <div class="p-4 flex flex-col gap-y-4">
-            <UFormGroup name="marked">
+            <UFormField name="marked">
               <UCheckbox v-model="state.marked" label="Markierte Angebote anzeigen" />
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup name="marked">
+            <UFormField name="marked">
               <UCheckbox v-model="state.unmarked" label="Nicht markierte Angebote anzeigen" />
-            </UFormGroup>
+            </UFormField>
 
             <div v-if="!state.marked && !state.unmarked" class="text-red-500 dark:text-red-400 text-sm">
               Mindestens ein Feld muss aktiv sein!
@@ -37,7 +37,7 @@
 
               <UButton
                 label="Löschen"
-                color="gray"
+                color="neutral"
                 block
                 class="flex-1"
                 @click="resetModal"
@@ -78,7 +78,7 @@ const state = reactive({
 
 const validate = (state: MarkedFields): FormError[] => {
   const errors = []
-  if (!state.marked && !state.unmarked) errors.push({ path: 'unmarked', message: 'Mindestens ein Feld muss aktiv sein!' })
+  if (!state.marked && !state.unmarked) errors.push({ name: 'unmarked', message: 'Mindestens ein Feld muss aktiv sein!' })
   return errors
 }
 

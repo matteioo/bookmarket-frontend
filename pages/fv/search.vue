@@ -1,6 +1,6 @@
 <template>
-  <div class="flex-grow w-full flex flex-col items-center gap-y-6">
-    <section class="z-10 sticky top-0 py-2 w-full bg-gray-50 dark:bg-gray-950">
+  <div class="grow w-full flex flex-col items-center gap-y-6">
+    <section class="z-10 sticky top-0 py-2 w-full bg-neutral-50 dark:bg-neutral-950">
       <div class="max-w-3xl mx-auto flex flex-col justify-items-stretch gap-y-2">
         <UInput
           v-model="searchQuery"
@@ -8,24 +8,25 @@
           name="q"
           placeholder="Suche nach ISBN, Titel, Autor, ..."
           autocomplete="off"
-          :ui="{ icon: { leading: { pointer: '' }, trailing: { pointer: '' } } }"
           @keydown.enter="search"
         >
           <template #leading>
             <UButton
-              color="gray"
+              color="neutral"
               variant="link"
               icon="i-heroicons-magnifying-glass-20-solid"
+              class="cursor-pointer"
               :padded="false"
               @click="search"
             />
           </template>
           <template #trailing>
             <UButton
-              v-show="searchQuery !== ''"
-              color="gray"
+              v-if="searchQuery !== ''"
+              color="neutral"
               variant="link"
               icon="i-heroicons-x-mark-20-solid"
+              class="cursor-pointer"
               :padded="false"
               @click="searchQuery = ''"
             />
@@ -45,7 +46,7 @@
           <SearchResultOffer v-for="offer in offerResults?.results" :key="offer.id" :offer="offer" />
         </div>
       </div>
-      <div v-else class="flex flex-col items-center gap-y-4 my-4 text-gray-600 dark:text-gray-400">
+      <div v-else class="flex flex-col items-center gap-y-4 my-4 text-neutral-600 dark:text-neutral-400">
         <UIcon name="i-heroicons-cube-transparent" class="w-8 h-8" />
         <span>Kein passendes Angebot gefunden...</span>
       </div>
@@ -57,7 +58,6 @@
 </template>
 
 <script setup lang="ts">
-import { refDebounced } from '@vueuse/core'
 import type { Offer } from '~/interfaces/Offer'
 import type { Page } from '~/interfaces/Page'
 import type { Filter, PriceFilter, MarkedFilter, ExamFilter, OfferActiveFilter } from '~/interfaces/SearchFilters'
