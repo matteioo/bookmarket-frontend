@@ -130,7 +130,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
-          path: field,
+          name: field,
           message: data[field][0]
         })
       }

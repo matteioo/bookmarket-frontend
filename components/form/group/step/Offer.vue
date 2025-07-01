@@ -6,35 +6,35 @@
         <UForm ref="form" :validate="formValidate" :state="formState" class="w-full space-y-4" @submit="onBookCreate">
           <UFormField label="ISBN" name="isbn" required>
             <UButtonGroup orientation="horizontal" class="w-full">
-              <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="grow" autocomplete="off" @keydown.enter.prevent="handleIsbnSearch" />
+              <UInput v-model="formState.isbn" type="text" placeholder="9876543210987" class="w-full" autocomplete="off" @keydown.enter.prevent="handleIsbnSearch" />
               <UButton :loading="loadingIsbn" icon="i-heroicons-magnifying-glass" color="neutral" variant="subtle" @click="handleIsbnSearch" />
             </UButtonGroup>
           </UFormField>
 
           <UFormField v-if="!selected && checkedIsbn" label="Titel" name="title" required>
-            <UInput v-model="formState.title" type="text" placeholder="Beispielbuch" />
+            <UInput v-model="formState.title" type="text" class="w-full" placeholder="Beispielbuch" />
           </UFormField>
 
           <UFormField v-if="!selected && checkedIsbn" label="Autoren" name="authors" required>
-            <UInput v-model="formState.authors" type="text" placeholder="Vorname Nachname, Vorname Nachname, ..." />
+            <UInput v-model="formState.authors" type="text" class="w-full" placeholder="Vorname Nachname, Vorname Nachname, ..." />
           </UFormField>
 
-          <UFormField v-if="!selected && checkedIsbn" label="Verlag" name="publisher" required>
-            <UInput v-model="formState.publisher" type="text" placeholder="FVJus Verlag" />
+          <UFormField v-if="!selected && checkedIsbn" label="Verlag" name="publisher" class="w-full" required>
+            <UInput v-model="formState.publisher" type="text" class="w-full" placeholder="FVJus Verlag" />
           </UFormField>
 
           <div v-if="!selected && checkedIsbn" class="inline-flex flex-row gap-x-2">
             <UFormField label="Auflage" name="edition" required>
-              <UInput v-model="formState.edition" type="text" placeholder="14" />
+              <UInput v-model="formState.edition" type="text" class="w-full" placeholder="14" />
             </UFormField>
             
             <UFormField label="Max. Preis" name="maxPrice" required>
-              <FormInputPrice v-model="formState.maxPrice" label="maxPrice" size="xs" />
+              <FormInputPrice v-model="formState.maxPrice" class="w-full" label="maxPrice" />
             </UFormField>
           </div>
 
           <UFormField v-if="!selected && checkedIsbn" label="Prüfung" name="exam_id">
-            <USelect v-model:open="formState.exam_id" :items="exams" option-attribute="name" value-attribute="id" />
+            <USelect v-model:open="formState.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
           </UFormField>
 
           <div v-if="!selected && checkedIsbn" class="w-full mt-2 flex flex-row justify-end gap-x-2">
@@ -214,6 +214,8 @@ const handleIsbnSearch = async () => {
   } catch (error) {
     selected.value = undefined
     console.error('Error while fetching book', error)
+
+    bookPriceBins.value = undefined
   }
 
   checkedIsbn.value = true
@@ -252,7 +254,7 @@ const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
-          path: field,
+          name: field,
           message: data[field][0]
         })
       }
@@ -321,7 +323,7 @@ async function fetchExams() {
     },
   })
   
-  exams.value.push({id: null, name: ''})
+  exams.value.push({id: null, name: '-Keine Prüfung-'})
   exams.value.push(...response.results)
 }
 
