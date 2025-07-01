@@ -1,11 +1,11 @@
 name: Lint Files
 "on": push
 jobs:
-  unit_test-lint:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: |
-              npm ci
-              npm run build
-              npm run lint
+              pnpm install --frozen-lockfile
+              pnpm build
+              pnpm lint
