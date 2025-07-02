@@ -2,21 +2,21 @@
   <div class="w-full max-w-80">
     <h1 class="font-semibold text-xl text-center text-primary-900 dark:text-primary-100 p-4">Konto anfordern</h1>
     <UForm :validate="validate" :state="state" class="space-y-4" @submit="register">
-      <UFormGroup label="Benutzername" name="username">
-        <UInput v-model="state.username" type="text" />
-      </UFormGroup>
+      <UFormField label="Benutzername" name="username">
+        <UInput v-model="state.username" type="text" class="w-full" />
+      </UFormField>
 
-      <UFormGroup label="Email" name="email">
-        <UInput v-model="state.email" type="email" />
-      </UFormGroup>
+      <UFormField label="Email" name="email">
+        <UInput v-model="state.email" type="email" class="w-full" />
+      </UFormField>
 
-      <UFormGroup label="Passwort" name="password">
-        <UInput v-model="state.password" type="password" />
-      </UFormGroup>
+      <UFormField label="Passwort" name="password">
+        <UInput v-model="state.password" type="password" class="w-full" />
+      </UFormField>
 
-      <UFormGroup label="Passwort wiederholen" name="repeatPassword">
-        <UInput v-model="state.repeatPassword" type="password" />
-      </UFormGroup>
+      <UFormField label="Passwort wiederholen" name="repeatPassword">
+        <UInput v-model="state.repeatPassword" type="password" class="w-full" />
+      </UFormField>
 
       <UButton block :loading="loading" type="submit">
         Konto anfordern
@@ -82,7 +82,7 @@ async function register(event: FormSubmitEvent<LoginFields>) {
       title: 'Konto angefordert',
       description: 'Dein Konto muss jetzt noch freigeschaltet werden.',
       icon: 'i-heroicons-check-circle',
-      color: 'green',
+      color: 'success',
     })
 
     await signUp({
@@ -90,13 +90,13 @@ async function register(event: FormSubmitEvent<LoginFields>) {
       email: event.data.email,
       password: event.data.password,
       repeatPassword: event.data.repeatPassword,
-    }, { callbackUrl: '/login', redirect: true }, { preventLoginFlow: true })
+    }, { callbackUrl: '/login', redirect: true, preventLoginFlow: true })
   } catch {
     useToast().add({
       title: 'Fehler',
       description: 'Konto anlegen fehlgeschlagen.',
       icon: 'i-heroicons-exclamation-triangle',
-      color: 'red',
+      color: 'error',
     })
 
     state.password = ''
