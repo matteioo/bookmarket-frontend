@@ -138,7 +138,7 @@
             <div>Seitengröße</div>
             <USelect v-model="itemsPerPage" :items="pageSizes" />
           </div>
-          <UPagination v-model:page="currentPage" :page-count="Number(itemsPerPage)" :total="sellerOffers !== null ? sellerOffers.count : 0" />
+          <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="sellerOffers !== null ? sellerOffers.count : 0" />
         </div>
       </section>
     </div>
