@@ -15,15 +15,24 @@
             <UInput v-model="state.publisher" type="text" placeholder="FVJus Verlag" class="w-full" />
           </UFormField>
 
-          <UFormField label="Auflage" name="edition" required>
-            <UInput v-model="state.edition" type="text" placeholder="14" class="w-full" />
-          </UFormField>
+          <div class="grid grid-cols-2 gap-x-4">
+            <UFormField label="Prüfung" name="exam_id">
+              <USelect v-model="state.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
+            </UFormField>
+  
+            <UFormField label="Auflage" name="edition" required>
+              <UInput v-model="state.edition" type="text" placeholder="14" class="w-full" />
+            </UFormField>
+          </div>
 
-          <UFormField label="Prüfung" name="exam_id">
-            <USelect v-model="state.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
-          </UFormField>
-
-          <!-- TODO: Add price field -->
+          <DataLabelInputPrice
+            v-model="state.maxPrice"
+            label="Preis"
+            :max-price="999.99"
+            :required="true"
+            size="md"
+            class="col-span-2"
+          />
 
           <div class="inline-flex flex-row-reverse gap-x-2 w-full">
             <UButton type="submit" :loading="loading" variant="solid">

@@ -19,6 +19,7 @@
         :required="true"
         :errors="errors.price"
         class="col-span-2"
+        size="xs"
       />
       <DataLabelInput
         v-model="localOffer.location"

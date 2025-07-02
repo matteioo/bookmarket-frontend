@@ -5,7 +5,7 @@
         <span class="block text-sm text-neutral-600 dark:text-neutral-400">{{ label }}</span>
       </template>
       <template #default>
-        <UInput ref="inputRef" :required="props.required" size="xs" />
+        <UInput ref="inputRef" :required="props.required" :size="size" class="w-full" />
       </template>
     </UFormField>
   </div>
@@ -37,6 +37,10 @@ const props = defineProps({
   required: {
     type: Boolean,
     default: false,
+  },
+  size: {
+    type: String as PropType<'xs' | 'sm' | 'md' | 'lg'>,
+    default: 'md',
   },
 })
 
