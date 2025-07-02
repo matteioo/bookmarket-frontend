@@ -84,33 +84,52 @@ const columns: TableColumn<Book>[] = [
   {
     accessorKey: 'isbn',
     header: 'ISBN',
-  },
-  {
+  }, {
     accessorKey: 'title',
     header: 'Titel',
-  },
-  {
+    meta: {
+      class: {
+        td: 'max-w-50 break-words whitespace-normal',
+      },
+    }
+  }, {
     accessorKey: 'authors',
     header: 'Autoren',
-  },
-  {
-    accessorKey: 'maxPrice',
-    header: () => h('div', { class: 'text-right' }, 'Max. Preis'),
-    cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.getValue('maxPrice'))),
-  },
-  {
-    accessorKey: 'edition',
-    header: () => h('div', { class: 'text-right' }, 'Auflage'),
-    cell: ({ row}) => h('div', { class: 'text-right' }, row.getValue('edition')),
-  },
-  {
+    meta: {
+      class: {
+        td: 'max-w-50 break-words whitespace-normal',
+      },
+    }
+  }, {
     accessorKey: 'publisher',
     header: 'Verlag',
-  },
-  {
+    meta: {
+      class: {
+        td: 'max-w-50 break-words whitespace-normal',
+      },
+    }
+  }, {
+    accessorKey: 'edition',
+    meta: {
+      class: {
+        th: 'text-center',
+      },
+    },
+    header: 'Auflage',
+    cell: ({ row}) => h('div', { class: 'text-center' }, row.getValue('edition')),
+  }, {
     accessorKey: 'exam',
     header: 'Prüfung',
     cell: ({ row }) => row.original.exam ? h('span', {}, row.original.exam.name) : h('span', { class: 'italic' }, 'Keine Prüfung'),
+  }, {
+    accessorKey: 'maxPrice',
+    meta: {
+      class: {
+        th: 'text-right',
+      },
+    },
+    header: 'Max. Preis',
+    cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.getValue('maxPrice'))),
   },
 ]
 const { token } = useAuth()

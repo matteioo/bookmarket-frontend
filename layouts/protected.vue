@@ -44,6 +44,10 @@ const links = ref<NavigationMenuItem[]>([{
   to: '/fv/sellers',
   icon: 'i-heroicons-user-group',
 }, {
+  label: 'Bücher',
+  to: '/fv/books',
+  icon: 'i-heroicons-rectangle-stack',
+}, {
   label: 'Logout',
   class: 'cursor-pointer',
   onSelect: logoutAndRedirect
