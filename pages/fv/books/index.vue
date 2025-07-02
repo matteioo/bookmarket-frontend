@@ -23,7 +23,7 @@
                 }
               }))
           "
-          :content="{ align: 'end' }"
+          :content="{ align: 'start' }"
         >
           <UButton
             label="Spalten"

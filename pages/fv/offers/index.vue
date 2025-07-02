@@ -46,7 +46,7 @@
                 }
               }))
           "
-          :content="{ align: 'end' }"
+          :content="{ align: 'start' }"
         >
           <UButton
             label="Spalten"
@@ -189,7 +189,12 @@ const columns: TableColumn<Offer>[] = [
   },
   {
     accessorKey: 'price',
-    header: () => h('div', { class: 'text-right' }, 'Preis'),
+    meta: {
+      class: {
+        th: 'text-right',
+      },
+    },
+    header: 'Preis',
     cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.original.price)),
   },
 ]
