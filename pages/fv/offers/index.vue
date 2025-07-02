@@ -13,7 +13,7 @@
                 color="primary"
                 variant="outline"
                 label="Buch hinzufügen"
-                to="/fv/offers/create/book"
+                to="/fv/books/create"
               />
               <UButton
                 icon="i-heroicons-tag-solid"
@@ -115,7 +115,7 @@
         <div>Seitengröße</div>
         <USelect v-model="itemsPerPage" :items="pageSizes" />
       </div>
-      <UPagination v-model:page="currentPage" :page-count="Number(itemsPerPage)" :total="data !== null ? data.count : 0" />
+      <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="data !== null ? data.count : 0" />
     </div>
   </div>
 </template>
