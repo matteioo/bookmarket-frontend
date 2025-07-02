@@ -62,6 +62,7 @@
         :data="offers?.results ?? []"
         :columns="columns"
         :column-visibility="columnVisibility"
+        :ui="{ tr: 'group' }"
       >
         <template #seller-cell="{ row }">
           <UButton color="neutral" variant="ghost" class="-my-1.5 text-inherit!" :to="`/fv/sellers/${row.original.seller.id}`">{{ row.original.seller.matriculationNumber }} &middot; {{ row.original.seller.fullName }}</UButton>
@@ -93,6 +94,15 @@
               </div>
             </template>
           </UPopover>
+        </template>
+
+        <template #actions-cell="{ row }">
+          <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <UButtonGroup orientation="horizontal" class="shadow-none">
+              <UButton icon="i-heroicons-banknotes" variant="ghost" :color="row.getValue('active') ? 'primary' : 'neutral'"  :to="`/fv/sell/${row.getValue('id')}`" :disabled="!row.getValue('active')" />
+              <UButton icon="i-lucide-book" variant="ghost" color="secondary"  :to="`/fv/books/${row.original.book.isbn}`" />
+            </UButtonGroup>
+          </div>
         </template>
 
 
@@ -196,7 +206,10 @@ const columns: TableColumn<Offer>[] = [
     },
     header: 'Preis',
     cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.original.price)),
-  },
+  }, {
+    id: 'actions',
+    enableHiding: false,
+  }
 ]
 const { token } = useAuth()
 const currentPage = ref(1)

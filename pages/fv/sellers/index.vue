@@ -106,7 +106,8 @@ const columns: TableColumn<Seller>[] = [
     header: 'Email',
   },
   {
-    id: 'actions'
+    id: 'actions',
+    enableHiding: false,
   }
 ]
 

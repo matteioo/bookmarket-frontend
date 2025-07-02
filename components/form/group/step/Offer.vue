@@ -34,7 +34,7 @@
           </div>
 
           <UFormField v-if="!selected && checkedIsbn" label="Prüfung" name="exam_id">
-            <USelect v-model:open="formState.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
+            <USelect v-model="formState.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
           </UFormField>
 
           <div v-if="!selected && checkedIsbn" class="w-full mt-2 flex flex-row justify-end gap-x-2">

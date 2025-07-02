@@ -90,7 +90,7 @@ const validate = (state: SellerFields): FormError[] => {
 
 const onSubmit = async (event: FormSubmitEvent<SellerFields>) => {
   loading.value = true
-  await createSeller(event)
+  await editSeller(event)
   loading.value = false
 
   if (user.value) {
@@ -100,7 +100,7 @@ const onSubmit = async (event: FormSubmitEvent<SellerFields>) => {
   }
 }
 
-async function createSeller(event: FormSubmitEvent<SellerFields>) {
+async function editSeller(event: FormSubmitEvent<SellerFields>) {
   loading.value = true
   form.value.clear()
 
