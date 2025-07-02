@@ -1,4 +1,5 @@
-import { useCurrencyInput, type CurrencyInputOptions } from 'vue-currency-input'
+import type { CurrencyInputOptions } from 'vue-currency-input'
+import { useCurrencyInput } from 'vue-currency-input'
 
 export function useEuroCurrencyInput(customOptions?: Partial<CurrencyInputOptions>) {
   const defaultOptions: CurrencyInputOptions = {
