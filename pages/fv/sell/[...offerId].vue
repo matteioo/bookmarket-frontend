@@ -169,7 +169,7 @@ function isOfferIdValid() {
 }
 
 async function searchOffer () {
-  if (state.offerId === '') {
+  if (!state.offerId.trim()) {
     return
   }
 
