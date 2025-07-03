@@ -169,6 +169,10 @@ function isOfferIdValid() {
 }
 
 async function searchOffer () {
+  if (!state.offerId.trim()) {
+    return
+  }
+
   isOfferIdValid()
   if (errorMsg.value) {
     selectedOffer.value = null
