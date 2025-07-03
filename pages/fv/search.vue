@@ -52,7 +52,7 @@
       </div>
     </section>
     <section v-if="(offerResults?.count ?? 0) > 0" class="flex justify-center">
-      <UPagination v-model="currentPage" :page-count="Number(itemsPerPage)" :total="offerResults !== null ? offerResults.count : 0" />
+      <UPagination v-model="currentPage" :items-per-page="Number(itemsPerPage)" :total="offerResults !== null ? offerResults.count : 0" />
     </section>
   </div>
 </template>

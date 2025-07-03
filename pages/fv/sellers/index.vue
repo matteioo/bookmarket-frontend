@@ -47,7 +47,7 @@
         <div>Seitengröße</div>
         <USelect v-model="itemsPerPage" :items="pageSizes" />
       </div>
-      <UPagination v-model:page="currentPage" :page-count="Number(itemsPerPage)" :total="data !== null ? data.count : 0" variant="outline" />
+      <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="data !== null ? data.count : 0" variant="outline" />
     </div>
   </div>
 </template>
@@ -106,7 +106,8 @@ const columns: TableColumn<Seller>[] = [
     header: 'Email',
   },
   {
-    id: 'actions'
+    id: 'actions',
+    enableHiding: false,
   }
 ]
 

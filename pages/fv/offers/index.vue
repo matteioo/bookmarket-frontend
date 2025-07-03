@@ -13,7 +13,7 @@
                 color="primary"
                 variant="outline"
                 label="Buch hinzufügen"
-                to="/fv/offers/create/book"
+                to="/fv/books/create"
               />
               <UButton
                 icon="i-heroicons-tag-solid"
@@ -46,7 +46,7 @@
                 }
               }))
           "
-          :content="{ align: 'end' }"
+          :content="{ align: 'start' }"
         >
           <UButton
             label="Spalten"
@@ -62,6 +62,7 @@
         :data="offers?.results ?? []"
         :columns="columns"
         :column-visibility="columnVisibility"
+        :ui="{ tr: 'group' }"
       >
         <template #seller-cell="{ row }">
           <UButton color="neutral" variant="ghost" class="-my-1.5 text-inherit!" :to="`/fv/sellers/${row.original.seller.id}`">{{ row.original.seller.matriculationNumber }} &middot; {{ row.original.seller.fullName }}</UButton>
@@ -95,6 +96,15 @@
           </UPopover>
         </template>
 
+        <template #actions-cell="{ row }">
+          <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <UButtonGroup orientation="horizontal" class="shadow-none">
+              <UButton icon="i-heroicons-banknotes" variant="ghost" :color="row.getValue('active') ? 'primary' : 'neutral'"  :to="`/fv/sell/${row.getValue('id')}`" :disabled="!row.getValue('active')" />
+              <UButton icon="i-lucide-book" variant="ghost" color="secondary"  :to="`/fv/books/${row.original.book.isbn}`" />
+            </UButtonGroup>
+          </div>
+        </template>
+
 
         <template #empty>
           <div class="flex flex-col items-center gap-y-2">
@@ -115,7 +125,7 @@
         <div>Seitengröße</div>
         <USelect v-model="itemsPerPage" :items="pageSizes" />
       </div>
-      <UPagination v-model:page="currentPage" :page-count="Number(itemsPerPage)" :total="data !== null ? data.count : 0" />
+      <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="data !== null ? data.count : 0" />
     </div>
   </div>
 </template>
@@ -189,9 +199,17 @@ const columns: TableColumn<Offer>[] = [
   },
   {
     accessorKey: 'price',
-    header: () => h('div', { class: 'text-right' }, 'Preis'),
+    meta: {
+      class: {
+        th: 'text-right',
+      },
+    },
+    header: 'Preis',
     cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.original.price)),
-  },
+  }, {
+    id: 'actions',
+    enableHiding: false,
+  }
 ]
 const { token } = useAuth()
 const currentPage = ref(1)

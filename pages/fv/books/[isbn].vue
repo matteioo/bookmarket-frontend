@@ -3,52 +3,92 @@
     <UModal v-model:open="editHistoryModal">
       <template #content>
         <div class="p-4">
-          <TimelineContainer>
-            <TimelineItem icon="i-heroicons-user-plus-solid" variant="success" :member="member" :date-time="new Date('2024-04-18T03:24:12')" title="hat den Verkäufer angelegt" />
-            
-            <TimelineItem icon="i-heroicons-user-plus-solid" variant="info" :member="member" :date-time="new Date('2024-04-19T03:24:12')" title="hat den Verkäufer angeschaut" />
-            
-            <TimelineItem icon="i-heroicons-adjustments-horizontal-solid" variant="warning" :member="member" :date-time="new Date('2024-04-20T03:24:12')" title="hat den Verkäufer bearbeitet">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore veritatis iusto facere nostrum quas aspernatur repellendus atque voluptatibus minima ut, pariatur culpa? Dolores, sapiente voluptas consequuntur modi fuga et eos!
-            </TimelineItem>
-      
-            <TimelineItem icon="i-heroicons-adjustments-horizontal-solid" variant="warning" :member="member" :date-time="new Date('2024-04-21T03:24:12')" title="hat den Verkäufer bearbeitet">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore veritatis iusto facere nostrum quas aspernatur repellendus atque voluptatibus minima ut, pariatur culpa? Dolores, sapiente voluptas consequuntur modi fuga et eos!
-            </TimelineItem>
-      
-            <TimelineItem icon="i-heroicons-adjustments-horizontal-solid" variant="warning" :member="member" :date-time="new Date('2024-04-22T03:24:12')" title="hat den Verkäufer bearbeitet">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore veritatis iusto facere nostrum quas aspernatur repellendus atque voluptatibus minima ut, pariatur culpa? Dolores, sapiente voluptas consequuntur modi fuga et eos!
-            </TimelineItem>
-      
-            <TimelineItem icon="i-heroicons-trash-solid" variant="error" :member="member" :date-time="new Date('2024-04-23T03:24:12')" title="hat den Verkäufer gelöscht" />
-          </TimelineContainer>
+          <UTimeline
+            :items="timelineItems"
+            size="xs"
+            class="w-full"
+            :ui="{
+              date: 'float-end ms-1',
+              description: 'px-3 py-2 ring ring-default mt-2 rounded-md text-default'
+            }"
+          >
+            <template #title="{ item }">
+              <span>{{ item.username }}</span>
+              <span class="font-normal text-muted">&nbsp;{{ item.action }}</span>
+            </template>
+
+            <template #date="{ item }">
+              {{ useTimeAgo(new Date(item.date)) }}
+            </template>
+          </UTimeline>
         </div>
       </template>
     </UModal>
     
     <div class="grow flex flex-col gap-y-4 w-full max-w-(--breakpoint-lg) mx-auto">
       <section>
-        <div class="flex items-center justify-between">
-          <div class="inline-flex items-center gap-x-2">
-            <h1 class="text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Verkäufer:in &middot; {{ seller?.fullName }}</h1>
+        <div class="flex items-start justify-between gap-x-2">
+          <div class="inline-flex items-start gap-x-2">
+            <h1 class="text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">{{ book?.title }}</h1>
             <UButton icon="i-heroicons-pencil-square-solid" square variant="ghost" @click="editSellerModal = true" />
-            <FormSellerEdit v-if="seller" v-model="editSellerModal" :initial-seller="seller" :on-submit="onEditSeller" />
+            <FormBookEdit v-if="book" v-model="editSellerModal" :initial-book="book" :on-submit="onEditSeller" />
           </div>
           <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-heroicons-rectangle-stack" @click="editHistoryModal = true" />
         </div>
         <div class="grid grid-cols-2">
-          <DataLabel label="Matrikelnummer" :data="seller?.matriculationNumber" />
-          <DataLabel label="E-Mail" :data="seller?.email" />
-          <DataLabel label="Anmerkungen" :data="seller?.note" :multi-line="true" />
+          <DataLabel label="Autor" :data="book?.authors" />
+          <DataLabel label="Auflage" :data="String(book?.edition)" />
+          <DataLabel label="Verlag" :data="book?.publisher" />
+          <DataLabel label="ISBN" :data="book?.isbn" />
+          <DataLabel label="Prüfung" :data="book?.exam?.name" />
+          <DataLabel label="Max. Preis" :data="book?.maxPrice ? formatPrice(book?.maxPrice) : 'NaN'" />
         </div>
       </section>
       <section class="flex flex-col gap-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-x-2">
             <h2 class="text-xl font-medium text-primary-800 dark:text-primary-200">Angebote</h2>
-            <UBadge v-if="sellerOffers?.count" color="primary" variant="subtle" size="md">{{ sellerOffers?.count }}</UBadge>
+            <UBadge v-if="offers?.count" color="primary" variant="subtle" size="md">{{ offers?.count }}</UBadge>
           </div>
-          <UInput v-model="searchInput" placeholder="Suchen..." />
+          <div class="flex items-center gap-x-2">
+            <ClientOnly>
+              <UModal>
+                <UButton icon="i-lucide-chart-column-stacked" variant="soft" color="primary" />
+  
+                <template #content>
+                  <div class="min-h-32 flex flex-col gap-y-4 p-4 rounded-sm bg-white dark:bg-neutral-900">
+                    <div v-if="bookPriceBins">
+                      <div class="h-48">
+                        <ChartPriceBars :bins="bookPriceBins.priceBins" />
+                      </div>
+                      <div class="flex flex-col gap-y-1">
+                        <div class="flex flex-row justify-between text-neutral-600 dark:text-neutral-400">
+                          <span>Offene Angebote: {{ bookPriceBins.offerStats.totalCount.active }}</span>
+                          <span>Verkaufte Bücher: {{ bookPriceBins.offerStats.totalCount.inactive }}</span>
+                        </div>
+                        <div class="flex flex-row justify-between text-neutral-600 dark:text-neutral-400">
+                          <span>Durchschnittlicher Preis: {{ formatPrice(bookPriceBins.offerStats.averagePrice) }}</span>
+                          <span>Median: {{ formatPrice(bookPriceBins.offerStats.medianPrice) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="flex flex-col gap-4">
+                        <USkeleton class="h-32" />
+                        <div class="grid grid-cols-2 gap-4">
+                          <USkeleton class="h-8 w-full" />
+                          <USkeleton class="h-8 w-full" />
+                          <USkeleton class="h-8 w-full" />
+                          <USkeleton class="h-8 w-full" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </UModal>
+            </ClientOnly>
+            <UInput v-model="searchInput" placeholder="Suchen..." />
+          </div>
         </div>
         <div class="w-full rounded-sm bg-white dark:bg-neutral-900 shadow-sm divide-y divide-neutral-200 dark:divide-neutral-700">
           <div class="px-4 py-3">
@@ -81,8 +121,8 @@
           </div>
           <UTable
             ref="table"
-            :loading="loadingSellerOffers"
-            :data="sellerOffers?.results ?? []"
+            :loading="loadingOffers"
+            :data="offers?.results ?? []"
             :columns="columns"
             :column-visibility="columnVisibility"
           >
@@ -122,13 +162,13 @@
             <template #empty>
               <div class="flex flex-col items-center gap-y-2">
                 <UIcon name="i-heroicons-circle-stack-20-solid" class="w-8 h-8 text-neutral-500 dark:text-neutral-400" />
-                <span class="text-neutral-500 dark:text-neutral-400">Keine Verkäufer:in gefunden.</span>
+                <span class="text-neutral-500 dark:text-neutral-400">Keine Angebote gefunden.</span>
               </div>
             </template>
             <template #loading>
               <div class="flex flex-col items-center gap-y-2">
                 <UIcon name="i-lucide:loader-circle" class="w-8 h-8 text-neutral-500 dark:text-neutral-400 animate-spin" />
-                <span class="text-neutral-500 dark:text-neutral-400">Lade Verkäufer:innen...</span>
+                <span class="text-neutral-500 dark:text-neutral-400">Lade Angebote...</span>
               </div>
             </template>
           </UTable>
@@ -138,7 +178,7 @@
             <div>Seitengröße</div>
             <USelect v-model="itemsPerPage" :items="pageSizes" />
           </div>
-          <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="sellerOffers !== null ? sellerOffers.count : 0" />
+          <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="offers?.count ?? 0" />
         </div>
       </section>
     </div>
@@ -146,22 +186,22 @@
 </template>
 
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import type { Member } from '~/interfaces/Member'
+import type { TableColumn, TimelineItem } from '@nuxt/ui'
+import type { Book } from '~/interfaces/Book'
 import type { Offer } from '~/interfaces/Offer'
 import type { Page } from '~/interfaces/Page'
-import type { Seller } from '~/interfaces/Seller'
+import type { BookPriceBins } from '~/interfaces/PriceBin'
 import { formatDate, formatPrice } from '~/utils/utils'
 
 useSeoMeta({
-  title: 'Verkäufer:in-Profil',
+  title: 'Buch-Details',
 })
 
 definePageMeta({
   layout: 'protected',
   validate: async (route) => {
-    // Check if the id is made up of digits
-    return typeof route.params.id === 'string' && /^\d+$/.test(route.params.id)
+    // Check if the ISBN is either 10 or 13 digits
+    return typeof route.params.isbn === 'string' && /^\d{10}(\d{3})?$/.test(route.params.isbn)
   }
 })
 
@@ -211,10 +251,6 @@ const columns: TableColumn<Offer>[] = [
     header: 'FV-Mitglied',
   },
   {
-    accessorKey: 'book',
-    header: 'ISBN',
-  },
-  {
     accessorKey: 'price',
     meta: {
       class: {
@@ -225,6 +261,37 @@ const columns: TableColumn<Offer>[] = [
     cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.original.price)),
   },
 ]
+const timelineItems = [
+  {
+    username: 'J-Michalek',
+    date: '2025-05-24T14:58:55Z',
+    action: 'opened this',
+    icon: 'i-lucide-git-pull-request',
+  }, {
+    username: 'J-Michalek',
+    date: '2025-05-26T19:30:14+02:00',
+    action: 'marked this pull request as ready for review',
+    icon: 'i-lucide-check-circle',
+  }, {
+    username: 'benjamincanac',
+    date: '2025-05-27T11:01:20Z',
+    action: 'commented on this',
+    description:
+      "I've made a few changes, let me know what you think! Basically I updated the design, removed unnecessary divs, used Avatar component for the indicator since it supports icon already.",
+    icon: 'i-lucide-message-square',
+  }, {
+    username: 'J-Michalek',
+    date: '2025-05-27T11:01:20Z',
+    action: 'commented on this',
+    description: 'Looks great! Good job on cleaning it up.',
+    icon: 'i-lucide-message-square',
+  }, {
+    username: 'benjamincanac',
+    date: '2025-05-27T11:01:20Z',
+    action: 'merged this',
+    icon: 'i-lucide-git-merge',
+  }
+] satisfies TimelineItem[]
 const { token } = useAuth()
 const route = useRoute()
 const router = useRouter()
@@ -234,29 +301,33 @@ const currentPage = ref(1)
 const pageSizes = [5, 10, 20, 50]
 const itemsPerPage = ref(pageSizes[1])
 const searchInput = ref('')
-const member = ref<Member>({
-  id: 1,
-  username: 'max.mustermann',
-  email: '',
-})
+const bookPriceBins = ref(undefined as BookPriceBins | undefined)
+
+fetchPriceBins(Array.isArray(route.params.isbn) ? route.params.isbn[0] : route.params.isbn)
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
   offset: (currentPage.value - 1) * itemsPerPage.value,
   search: searchInput.value,
-  seller: route.params.id,
+  book__isbn: route.params.isbn,
 }))
 
-const { data: seller, refresh: refreshSellerData } = useFetch<Seller>(useRuntimeConfig().public.apiUrl + '/sellers/' + route.params.id, {
+const { data: book, refresh: refreshSellerData } = useFetch<Book>(useRuntimeConfig().public.apiUrl + '/books/' + route.params.isbn, {
   headers: {
     Authorization: `${token.value}`,
   },
   onResponseError: () => {
-    router.push('/fv/sellers')
+    // Try to go back to the previous page
+    if (window.history.length > 1) {
+      router.back()
+    } else {
+      // Fallback to books overview if there's no history
+      router.push('/fv/books')
+    }
   },
 })
 
-const { data: sellerOffers, pending: loadingSellerOffers } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
+const { data: offers, pending: loadingOffers } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
   headers: {
     Authorization: `${token.value}`,
   },
@@ -270,5 +341,20 @@ const columnVisibility = ref({
 
 const onEditSeller = async () => {
   refreshSellerData()
+}
+
+async function fetchPriceBins(isbn: string) {
+  await $fetch(useRuntimeConfig().public.apiUrl + `/books/${isbn}/price-bins`, {
+    headers: {
+      Authorization: `${token.value}`,
+    },
+  })
+  .then((res) => {
+    bookPriceBins.value = res as BookPriceBins
+  })
+  .catch((error) => {
+    console.error('Error while fetching price bins', error)
+    bookPriceBins.value = undefined
+  })
 }
 </script>
