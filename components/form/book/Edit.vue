@@ -147,7 +147,7 @@ async function editBook(event: FormSubmitEvent<BookFields>) {
     book.value = await response.json()
     useToast().add({
       title: 'Erfolg',
-      description: 'Verkäufer:in erfolgreich bearbeitet.',
+      description: 'Buch erfolgreich bearbeitet.',
       icon: 'i-heroicons-check-circle',
       color: 'success',
     })

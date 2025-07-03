@@ -309,7 +309,6 @@ const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
   offset: (currentPage.value - 1) * itemsPerPage.value,
   search: searchInput.value,
-  seller: route.params.id,
   book__isbn: route.params.isbn,
 }))
 
