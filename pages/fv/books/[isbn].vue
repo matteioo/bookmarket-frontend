@@ -50,7 +50,45 @@
             <h2 class="text-xl font-medium text-primary-800 dark:text-primary-200">Angebote</h2>
             <UBadge v-if="offers?.count" color="primary" variant="subtle" size="md">{{ offers?.count }}</UBadge>
           </div>
-          <UInput v-model="searchInput" placeholder="Suchen..." />
+          <div class="flex items-center gap-x-2">
+            <ClientOnly>
+              <UModal>
+                <UButton icon="i-lucide-chart-column-stacked" variant="soft" color="primary" />
+  
+                <template #content>
+                  <div class="min-h-32 flex flex-col gap-y-4 p-4 rounded-sm bg-white dark:bg-neutral-900">
+                    <div v-if="bookPriceBins">
+                      <div class="h-48">
+                        <ChartPriceBars :bins="bookPriceBins.priceBins" />
+                      </div>
+                      <div class="flex flex-col gap-y-1">
+                        <div class="flex flex-row justify-between text-neutral-600 dark:text-neutral-400">
+                          <span>Offene Angebote: {{ bookPriceBins.offerStats.totalCount.active }}</span>
+                          <span>Verkaufte Bücher: {{ bookPriceBins.offerStats.totalCount.inactive }}</span>
+                        </div>
+                        <div class="flex flex-row justify-between text-neutral-600 dark:text-neutral-400">
+                          <span>Durchschnittlicher Preis: {{ formatPrice(bookPriceBins.offerStats.averagePrice) }}</span>
+                          <span>Median: {{ formatPrice(bookPriceBins.offerStats.medianPrice) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="flex flex-col gap-4">
+                        <USkeleton class="h-32" />
+                        <div class="grid grid-cols-2 gap-4">
+                          <USkeleton class="h-8 w-full" />
+                          <USkeleton class="h-8 w-full" />
+                          <USkeleton class="h-8 w-full" />
+                          <USkeleton class="h-8 w-full" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </UModal>
+            </ClientOnly>
+            <UInput v-model="searchInput" placeholder="Suchen..." />
+          </div>
         </div>
         <div class="w-full rounded-sm bg-white dark:bg-neutral-900 shadow-sm divide-y divide-neutral-200 dark:divide-neutral-700">
           <div class="px-4 py-3">
@@ -152,6 +190,7 @@ import type { TableColumn, TimelineItem } from '@nuxt/ui'
 import type { Book } from '~/interfaces/Book'
 import type { Offer } from '~/interfaces/Offer'
 import type { Page } from '~/interfaces/Page'
+import type { BookPriceBins } from '~/interfaces/PriceBin'
 import { formatDate, formatPrice } from '~/utils/utils'
 
 useSeoMeta({
@@ -262,6 +301,9 @@ const currentPage = ref(1)
 const pageSizes = [5, 10, 20, 50]
 const itemsPerPage = ref(pageSizes[1])
 const searchInput = ref('')
+const bookPriceBins = ref(undefined as BookPriceBins | undefined)
+
+fetchPriceBins(Array.isArray(route.params.isbn) ? route.params.isbn[0] : route.params.isbn)
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,
@@ -300,5 +342,20 @@ const columnVisibility = ref({
 
 const onEditSeller = async () => {
   refreshSellerData()
+}
+
+async function fetchPriceBins(isbn: string) {
+  await $fetch(useRuntimeConfig().public.apiUrl + `/books/${isbn}/price-bins`, {
+    headers: {
+      Authorization: `${token.value}`,
+    },
+  })
+  .then((res) => {
+    bookPriceBins.value = res as BookPriceBins
+  })
+  .catch((error) => {
+    console.error('Error while fetching price bins', error)
+    bookPriceBins.value = undefined
+  })
 }
 </script>
