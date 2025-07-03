@@ -3,26 +3,24 @@
     <UModal v-model:open="editHistoryModal">
       <template #content>
         <div class="p-4">
-          TODO: Timeline
-          <!-- <TimelineContainer>
-            <TimelineItem icon="i-heroicons-user-plus-solid" variant="success" :member="member" :date-time="new Date('2024-04-18T03:24:12')" title="hat den Verkäufer angelegt" />
-            
-            <TimelineItem icon="i-heroicons-user-plus-solid" variant="info" :member="member" :date-time="new Date('2024-04-19T03:24:12')" title="hat den Verkäufer angeschaut" />
-            
-            <TimelineItem icon="i-heroicons-adjustments-horizontal-solid" variant="warning" :member="member" :date-time="new Date('2024-04-20T03:24:12')" title="hat den Verkäufer bearbeitet">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore veritatis iusto facere nostrum quas aspernatur repellendus atque voluptatibus minima ut, pariatur culpa? Dolores, sapiente voluptas consequuntur modi fuga et eos!
-            </TimelineItem>
-      
-            <TimelineItem icon="i-heroicons-adjustments-horizontal-solid" variant="warning" :member="member" :date-time="new Date('2024-04-21T03:24:12')" title="hat den Verkäufer bearbeitet">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore veritatis iusto facere nostrum quas aspernatur repellendus atque voluptatibus minima ut, pariatur culpa? Dolores, sapiente voluptas consequuntur modi fuga et eos!
-            </TimelineItem>
-      
-            <TimelineItem icon="i-heroicons-adjustments-horizontal-solid" variant="warning" :member="member" :date-time="new Date('2024-04-22T03:24:12')" title="hat den Verkäufer bearbeitet">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore veritatis iusto facere nostrum quas aspernatur repellendus atque voluptatibus minima ut, pariatur culpa? Dolores, sapiente voluptas consequuntur modi fuga et eos!
-            </TimelineItem>
-      
-            <TimelineItem icon="i-heroicons-trash-solid" variant="error" :member="member" :date-time="new Date('2024-04-23T03:24:12')" title="hat den Verkäufer gelöscht" />
-          </TimelineContainer> -->
+          <UTimeline
+            :items="timelineItems"
+            size="xs"
+            class="w-full"
+            :ui="{
+              date: 'float-end ms-1',
+              description: 'px-3 py-2 ring ring-default mt-2 rounded-md text-default'
+            }"
+          >
+            <template #title="{ item }">
+              <span>{{ item.username }}</span>
+              <span class="font-normal text-muted">&nbsp;{{ item.action }}</span>
+            </template>
+
+            <template #date="{ item }">
+              {{ useTimeAgo(new Date(item.date)) }}
+            </template>
+          </UTimeline>
         </div>
       </template>
     </UModal>
@@ -150,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
+import type { TableColumn, TimelineItem } from '@nuxt/ui'
 import type { Book } from '~/interfaces/Book'
 import type { Offer } from '~/interfaces/Offer'
 import type { Page } from '~/interfaces/Page'
@@ -224,6 +222,37 @@ const columns: TableColumn<Offer>[] = [
     cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.original.price)),
   },
 ]
+const timelineItems = [
+  {
+    username: 'J-Michalek',
+    date: '2025-05-24T14:58:55Z',
+    action: 'opened this',
+    icon: 'i-lucide-git-pull-request',
+  }, {
+    username: 'J-Michalek',
+    date: '2025-05-26T19:30:14+02:00',
+    action: 'marked this pull request as ready for review',
+    icon: 'i-lucide-check-circle',
+  }, {
+    username: 'benjamincanac',
+    date: '2025-05-27T11:01:20Z',
+    action: 'commented on this',
+    description:
+      "I've made a few changes, let me know what you think! Basically I updated the design, removed unnecessary divs, used Avatar component for the indicator since it supports icon already.",
+    icon: 'i-lucide-message-square',
+  }, {
+    username: 'J-Michalek',
+    date: '2025-05-27T11:01:20Z',
+    action: 'commented on this',
+    description: 'Looks great! Good job on cleaning it up.',
+    icon: 'i-lucide-message-square',
+  }, {
+    username: 'benjamincanac',
+    date: '2025-05-27T11:01:20Z',
+    action: 'merged this',
+    icon: 'i-lucide-git-merge',
+  }
+] satisfies TimelineItem[]
 const { token } = useAuth()
 const route = useRoute()
 const router = useRouter()

@@ -39,7 +39,17 @@
         :data="data?.results ?? []"
         :columns="columns"
         :column-visibility="columnVisibility"
+        :ui="{ tr: 'group' }"
       >
+        <template #actions-cell="{ row }">
+          <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <UButtonGroup orientation="horizontal" class="shadow-none">
+              <UButton icon="i-heroicons-list-bullet" variant="ghost" color="primary" :to="`/fv/books/${row.getValue('isbn')}`" />
+            </UButtonGroup>
+          </div>
+        </template>
+
+
         <template #empty>
           <div class="flex flex-col items-center gap-y-2">
             <UIcon name="i-heroicons-circle-stack-20-solid" class="w-8 h-8 text-neutral-500 dark:text-neutral-400" />
@@ -130,7 +140,10 @@ const columns: TableColumn<Book>[] = [
     },
     header: 'Max. Preis',
     cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.getValue('maxPrice'))),
-  },
+  }, {
+    id: 'actions',
+    enableHiding: false,
+  }
 ]
 const { token } = useAuth()
 const currentPage = ref(1)
