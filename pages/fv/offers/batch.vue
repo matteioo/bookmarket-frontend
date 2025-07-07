@@ -61,27 +61,42 @@
             <h2 v-if="!selectedBook" class="uppercase text-neutral-500 dark:text-neutral-400">Schritt 3</h2>
             <span v-if="!selectedBook" class="text-neutral-600 dark:text-neutral-300">Angebotdetails eintragen</span>
             <div v-else>
-              <UInput
-                v-model.number="price"
-                type="number"
-                color="neutral"
-                placeholder="Preis in Euro"
-                :disabled="!selectedBook || !seller"
-              />
-              <UInput
-                v-model="location"
-                type="text"
-                color="neutral"
-                placeholder="Ort (z.B. Reg1)"
-                :disabled="!selectedBook || !seller"
-              />
-              <UCheckbox v-model="marked" label="Markiert" :disabled="!selectedBook || !seller" />
-              <UButton
-                label="Angebot erstellen"
-                color="primary"
-                :disabled="!selectedBook || !seller"
-                @click="createOffer(price, marked, location)"
-              />
+              <UForm 
+                :state="offerFormState"
+                class="grid grid-cols-3 gap-4"
+                @submit="createOffer(offerFormState.price, offerFormState.marked, offerFormState.location)">
+                <UFormField label="Ort" name="location">
+                  <UInput v-model="offerFormState.location" />
+                </UFormField>
+
+                <UFormField label="Buch Zustand" name="marked">
+                  <UCheckbox v-model="offerFormState.marked" label="Beschriftet" />
+                </UFormField>
+
+                <UFormField label="Preis" name="price" required>
+                  <UInputNumber
+                    v-model="offerFormState.price"
+                    :min="0"
+                    :max="999.99"
+                    :step="0.01"
+                    :format-options="{
+                      style: 'currency',
+                      currency: 'EUR',
+                      currencyDisplay: 'symbol',
+                      currencySign: 'accounting'
+                    }"
+                  />
+                </UFormField>
+                
+                <div class="col-span-3 flex flex-row justify-end">
+                  <UButton
+                    label="Erstellen"
+                    color="primary"
+                    variant="solid"
+                    type="submit"
+                  />
+                </div>
+              </UForm>
             </div>
           </div>
         </div>
@@ -116,9 +131,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { Book } from '~/interfaces/Book';
-import type { Offer } from '~/interfaces/Offer';
-import type { Seller } from '~/interfaces/Seller';
+import type { Book } from '~/interfaces/Book'
+import type { Offer } from '~/interfaces/Offer'
+import type { Seller } from '~/interfaces/Seller'
 
 useSeoMeta({
   title: 'Statistiken',
@@ -128,57 +143,29 @@ definePageMeta({
   layout: 'protected',
 })
 
-const { token } = useAuth();
-const offers = ref<Offer[]>([
-  {
-    id: 1010,
-    book: {
-      isbn: '978-3-16-148410-0',
-      title: 'Rechtsgeschichte und Römisches Recht Studienwörterbuch inkl. einem sehr langen weiteren Titel der bestimmt nicht in eine Zeile passt',
-      authors: 'Max Mustermann, Maria Musterfrau, Vorname von Nachname',
-      publisher: 'Verlagshaus Musterverlag',
-      edition: '12',
-      maxPrice: 129.99,
-      exam: {
-        id: 1,
-        name: 'Prüfung 1',
-      },
-    },
-    seller: {
-      id: 1,
-      fullName: 'Max Mustermann',
-      matriculationNumber: '12123456',
-      email: 'user@email.com'
-    },
-    price: 25.00,
-    createdAt: new Date(),
-    modified: new Date(),
-    active: true,
-    member: {
-      id: 1,
-      username: 'max.mustermann',
-      email: 'max@fvjus.at'
-    },
-    marked: false,
-    location: 'Reg1'
-  }
-])
-offers.value.pop();
-const sellerModal = ref<boolean>(false);
-const seller = ref<Seller | null>();
-const isbn = ref<string>('');
-const loadingIsbn = ref<boolean>(false);
-const selectedBook = ref<Book | null>();
-const bookModal = ref<boolean>(false);
-const price = ref<number>(0);
-const location = ref<string>('');
-const marked = ref<boolean>(false);
+const { token } = useAuth()
+const offers = ref<Offer[]>([])
+const sellerModal = ref<boolean>(false)
+const seller = ref<Seller | null>()
+const isbn = ref<string>('')
+const loadingIsbn = ref<boolean>(false)
+const selectedBook = ref<Book | null>()
+const bookModal = ref<boolean>(false)
+const price = ref<number>(0)
+const location = ref<string>('')
+const marked = ref<boolean>(false)
+
+const offerFormState = ref<{price: number, marked: boolean, location: string}>({
+  price: 0,
+  marked: false,
+  location: '',
+})
 
 const handleSellerSubmit = (newSeller: Seller) => {
   // Handle seller submission logic here
-  console.log('Seller submitted:', seller);
-  seller.value = newSeller;
-  sellerModal.value = false;
+  console.log('Seller submitted:', seller)
+  seller.value = newSeller
+  sellerModal.value = false
 }
 
 const handleIsbnSubmit = async () => {
@@ -219,11 +206,11 @@ const handleIsbnSubmit = async () => {
   loadingIsbn.value = false
 }
 
-let dummyId = 1011;
+let dummyId = 1011
 const createOffer = async (price: number, marked: boolean, location: string) => {
   if (!selectedBook.value || !seller.value) {
-    console.error('Selected book or seller is not set');
-    return;
+    console.error('Selected book or seller is not set')
+    return
   }
 
   const newOffer: Offer = {
@@ -243,6 +230,6 @@ const createOffer = async (price: number, marked: boolean, location: string) => 
     location: location,
   }
 
-  offers.value.unshift(newOffer);
+  offers.value.unshift(newOffer)
 }
 </script>
