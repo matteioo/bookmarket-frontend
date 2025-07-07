@@ -9,18 +9,25 @@
           <template #content>
             <div class="p-4 flex flex-col gap-y-2">
               <UButton
+                icon="i-heroicons-tag"
+                color="primary"
+                variant="solid"
+                label="Angebot erstellen"
+                to="/fv/offers/create"
+              />
+              <UButton
+                icon="i-lucide-tags"
+                color="primary"
+                variant="outline"
+                label="Angebote erstellen"
+                to="/fv/offers/batch"
+              />
+              <UButton
                 icon="i-heroicons-plus"
                 color="primary"
                 variant="outline"
                 label="Buch hinzufügen"
                 to="/fv/books/create"
-              />
-              <UButton
-                icon="i-heroicons-tag-solid"
-                color="primary"
-                variant="solid"
-                label="Angebot erstellen"
-                to="/fv/offers/create"
               />
             </div>
           </template>
