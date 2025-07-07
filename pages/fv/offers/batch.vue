@@ -1,13 +1,13 @@
 <template>
-  <div class="w-full max-w-5xl mx-auto flex flex-col gap-y-4">
-    <div class="flex flex-row gap-4">
+  <div class="w-full max-w-5xl mx-auto flex flex-col gap-y-8">
+    <section class="flex flex-row gap-4">
       <div class="w-1/3">
         <div v-if="!seller" class="h-full p-4 flex flex-col items-center justify-center gap-y-2 rounded-lg border-2 border-dashed border-neutral-300 dark:border-neutral-700">
           <h2 class="uppercase text-neutral-500 dark:text-neutral-400">Schritt 1</h2>
           <span class="text-neutral-600 dark:text-neutral-300">Verkäufer:in hinzufügen</span>
           <UButton label="Verkäufer:in auswählen" @click="sellerModal = true" />
         </div>
-        <div v-else class="flex flex-col gap-y-4 p-4 rounded-lg border-2 border-neutral-200 dark:border-neutral-800">
+        <div v-else class="flex flex-col gap-y-4 p-4 rounded-lg bg-white">
           <h2 class="w-full text-center">Verkäufer:in</h2>
           <div>
             <DataLabel label="Name" :data="seller.fullName" />
@@ -37,22 +37,26 @@
       </div>
       <div class="flex flex-col gap-y-4 w-2/3">
         <div class="p-4 rounded-lg" :class="{ 'border-2 border-dashed border-neutral-300 dark:border-neutral-700': !selectedBook, 'bg-white': selectedBook }">
-          <div class="flex flex-col items-center gap-y-2">
+          <div class="flex flex-col gap-y-2" :class="{ 'items-center': !selectedBook }">
             <h2 v-if="!selectedBook" class="uppercase text-neutral-500 dark:text-neutral-400">Schritt 2</h2>
             <span v-if="!selectedBook" class="text-neutral-600 dark:text-neutral-300">Buch hinzufügen und kontrollieren</span>
-            <UButtonGroup>
+            <UButtonGroup class="mx-auto">
               <UInput v-model="isbn" type="text" color="neutral" placeholder="9876543210987" autocomplete="off" :disabled="!seller" @keydown.enter="handleIsbnSubmit" />
               <UButton color="neutral" variant="subtle" icon="i-lucide-search" :disabled="!seller" @click="handleIsbnSubmit" />
             </UButtonGroup>
-            <div v-if="selectedBook">
-              <pre>
-                {{ selectedBook }}
-              </pre>
+            <div v-if="selectedBook" class="grid grid-cols-3 gap-2">
+              <DataLabel label="Titel" :data="selectedBook.title" class="col-span-3" />
+              <DataLabel label="Autoren" :data="selectedBook.authors" class="col-span-3" />
+              <DataLabel label="Verlag" :data="selectedBook.publisher" class="col-span-3" />
+              <DataLabel label="Prüfung" :data="selectedBook.exam?.name" class="col-span-3" />
+              <DataLabel label="ISBN" :data="selectedBook.isbn" />
+              <DataLabel label="Auflage" :data="selectedBook.edition" />
+              <DataLabel label="Max. Preis" :data="formatPrice(selectedBook.maxPrice)" />
             </div>
           </div>
         </div>
-        <div class="relative p-4 rounded-lg border-2" :class="{ 'border-dashed border-neutral-300 dark:border-neutral-700': !selectedBook, 'border-neutral-200 dark:border-neutral-800': selectedBook }">
-          <div v-if="(!seller || !selectedBook) && (price != 0 || location.length > 0 || marked)" class="absolute top-0 left-0 w-full h-full z-10 backdrop-blur-md" />
+        <div class="relative p-4 rounded-lg" :class="{ 'border-2 border-dashed border-neutral-300 dark:border-neutral-700': !selectedBook, 'bg-white': selectedBook }">
+          <div v-if="(!seller || !selectedBook) && (price != 0 || location.length > 0 || marked)" class="absolute top-0 left-0 w-full h-full z-10 backdrop-blur-xs" />
           <div class="flex flex-col gap-y-2" :class="{ 'items-center': !selectedBook }">
             <h2 v-if="!selectedBook" class="uppercase text-neutral-500 dark:text-neutral-400">Schritt 3</h2>
             <span v-if="!selectedBook" class="text-neutral-600 dark:text-neutral-300">Angebotdetails eintragen</span>
@@ -82,7 +86,7 @@
           </div>
         </div>
       </div>
-      <UModal v-model:open="bookModal" title="Verkäuferin auswählen">
+      <UModal v-model:open="bookModal" title="Buch auswählen">
         <template #body>
           <UAlert
             color="warning"
@@ -93,13 +97,20 @@
           />
         </template>
       </UModal>
-    </div>
-    <div class="flex flex-row justify-between">
-      <h1 class="text-2xl">Verlauf</h1>
-      <UButton label="Verkäufer auswählen" />
-    </div>
+    </section>
     <section class="flex flex-col gap-y-4">
-      <OfferBatchOverview v-for="offer in offers" :key="offer.id" :offer="offer" />
+      <div class="flex flex-row justify-center">
+        <h1 class="text-2xl">Verlauf</h1>
+      </div>
+      <section class="flex flex-col gap-y-2" :class="{ 'items-center': offers.length === 0 }">
+        <template v-if="offers.length === 0">
+          <UIcon name="i-lucide-sparkles" class="mt-4 text-neutral-400 w-10 h-10" />
+          <span class="text-neutral-600">Es wurden noch keine neuen Angebote erstellt.</span>
+        </template>
+        <template v-else>
+          <OfferBatchOverview v-for="offer in offers" :key="offer.id" :offer="offer" />
+        </template>
+      </section>
     </section>
   </div>
 </template>
@@ -152,6 +163,7 @@ const offers = ref<Offer[]>([
     location: 'Reg1'
   }
 ])
+offers.value.pop();
 const sellerModal = ref<boolean>(false);
 const seller = ref<Seller | null>();
 const isbn = ref<string>('');
