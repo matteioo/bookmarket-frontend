@@ -52,7 +52,7 @@
           </div>
         </div>
         <div class="relative p-4 rounded-lg border-2" :class="{ 'border-dashed border-neutral-300 dark:border-neutral-700': !selectedBook, 'border-neutral-200 dark:border-neutral-800': selectedBook }">
-          <div v-if="(!seller || !selectedBook) && (price != 0 || location.length > 0 || marked)" class="absolute top-0 left-0 w-full h-full z-10 backdrop-blur-md"></div>
+          <div v-if="(!seller || !selectedBook) && (price != 0 || location.length > 0 || marked)" class="absolute top-0 left-0 w-full h-full z-10 backdrop-blur-md" />
           <div class="flex flex-col gap-y-2" :class="{ 'items-center': !selectedBook }">
             <h2 v-if="!selectedBook" class="uppercase text-neutral-500 dark:text-neutral-400">Schritt 3</h2>
             <span v-if="!selectedBook" class="text-neutral-600 dark:text-neutral-300">Angebotdetails eintragen</span>

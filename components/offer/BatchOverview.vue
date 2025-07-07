@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatPrice, type PropType } from '#imports';
+import { formatPrice } from '#imports';
 import type { Offer } from '~/interfaces/Offer';
 
 const props = defineProps({
