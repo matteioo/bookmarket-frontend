@@ -59,7 +59,7 @@
               variant="outline"
               label="Hinzufügen"
               :disabled="!selected"
-              @click="() => createOffer(selected)"
+              @click="createOffer(selected)"
             />
           </div>
         </div>
@@ -242,6 +242,7 @@ const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
   })
 
   if (response.ok) {
+    // First create the book and then create the offer draft
     const newBook = await response.json()
     createOffer(newBook)
     clearForm()
@@ -275,6 +276,7 @@ const handleSubmitOffers = () => {
   props.onSubmit(offers.value)
 }
 
+// TODO: member will automatically be set by the backend, remove requirement for member by the backend
 const member: Member = {
   id: 0,
   username: 'username',
@@ -314,6 +316,7 @@ const clearForm = () => {
   formState.exam_id = undefined
   
   selected.value = undefined
+  bookPriceBins.value = undefined
 }
 
 async function fetchExams() {
