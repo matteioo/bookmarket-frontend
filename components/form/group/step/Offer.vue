@@ -66,7 +66,14 @@
         <div v-if="bookPriceBins" class="flex flex-col gap-y-4 mt-4 p-2 rounded-sm bg-white dark:bg-neutral-900">
           <div class="w-full text-center text-neutral-600 dark:text-neutral-300">ISBN: {{ bookPriceBins.book.isbn }}</div>
           <div class="h-32">
-            <ChartPriceBars :bins="bookPriceBins.priceBins" />
+            <ClientOnly>
+              <ChartPriceBars :bins="bookPriceBins.priceBins" />
+              <template #fallback>
+                <div class="flex items-center justify-center h-full">
+                  <USkeleton class="h-full w-full" />
+                </div>
+              </template>
+            </ClientOnly>
           </div>
           <div class="flex flex-col gap-y-1">
             <div class="flex flex-row justify-between text-neutral-600 dark:text-neutral-400">
