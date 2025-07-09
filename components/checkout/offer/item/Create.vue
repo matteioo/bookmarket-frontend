@@ -1,5 +1,7 @@
 <template>
-  <div class="animate-fly-in flex flex-row group hover:bg-white dark:hover:bg-neutral-900 rounded-sm overflow-hidden">
+  <div
+    class="animate-fly-in flex flex-row rounded-sm overflow-hidden hover:bg-white dark:hover:bg-neutral-900"
+    :class="{'ring-2 ring-info-500/40': currentPriceBinsIsbn === localOffer.book.isbn}">
     <div class="grow grid grid-cols-12 p-2 gap-x-2 gap-y-1">
       <DataLabel label="Titel" :data="localOffer.book.title" class="col-span-7" />
       <DataLabel label="Autoren" :data="localOffer.book.authors" class="col-span-5" />
@@ -58,6 +60,10 @@ const props = defineProps({
     type: Object as () => Offer,
     required: true
   },
+  currentPriceBinsIsbn: {
+    type: String,
+    default: ''
+  }
 })
 
 const emit = defineEmits<{

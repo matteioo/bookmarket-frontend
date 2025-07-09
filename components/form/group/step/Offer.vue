@@ -85,7 +85,13 @@
     <div class="grow">
       <div v-if="offers.length !== 0" class="flex grow flex-col gap-y-4">
         <div v-for="(offer, index) in offers" :key="offer.id">
-          <CheckoutOfferItemCreate v-model="offers[index]" @fetch-price-bins="fetchPriceBins" @delete-item="handleDeleteItem" @update:has-errors="(newValue: boolean) => offerErrors = newValue" />
+          <CheckoutOfferItemCreate
+            v-model="offers[index]"
+            :current-price-bins-isbn="currentPriceBinsIsbn"
+            @fetch-price-bins="fetchPriceBins"
+            @delete-item="handleDeleteItem"
+            @update:has-errors="(newValue: boolean) => offerErrors = newValue"
+          />
         </div>
         <div class="w-full py-4 inline-flex flex-row justify-end backdrop-blur-md">
           <UButton label="Weiter" :disabled="offerErrors" @click="handleSubmitOffers" />
@@ -147,6 +153,7 @@ const checkedIsbn = ref(false)
 const exams = ref([] as Exam[])
 const offerErrors = ref(false)
 const bookPriceBins = ref(undefined as BookPriceBins | undefined)
+const currentPriceBinsIsbn = ref('')  // Track which offer's price bins are being displayed
 
 const formState = reactive({
   isbn: '',
@@ -317,6 +324,7 @@ const clearForm = () => {
   
   selected.value = undefined
   bookPriceBins.value = undefined
+  currentPriceBinsIsbn.value = ''
 }
 
 async function fetchExams() {
@@ -331,6 +339,7 @@ async function fetchExams() {
 }
 
 async function fetchPriceBins(isbn: string) {
+  currentPriceBinsIsbn.value = isbn
   await $fetch(useRuntimeConfig().public.apiUrl + `/books/${isbn}/price-bins`, {
     headers: {
       Authorization: `${token.value}`,
@@ -342,6 +351,7 @@ async function fetchPriceBins(isbn: string) {
   .catch((error) => {
     console.error('Error while fetching price bins', error)
     bookPriceBins.value = undefined
+    currentPriceBinsIsbn.value = ''
   })
 }
 </script>
