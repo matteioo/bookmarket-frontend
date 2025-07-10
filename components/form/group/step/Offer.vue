@@ -59,14 +59,21 @@
               variant="outline"
               label="Hinzufügen"
               :disabled="!selected"
-              @click="() => createOffer(selected)"
+              @click="createOffer(selected)"
             />
           </div>
         </div>
         <div v-if="bookPriceBins" class="flex flex-col gap-y-4 mt-4 p-2 rounded-sm bg-white dark:bg-neutral-900">
           <div class="w-full text-center text-neutral-600 dark:text-neutral-300">ISBN: {{ bookPriceBins.book.isbn }}</div>
           <div class="h-32">
-            <ChartPriceBars :bins="bookPriceBins.priceBins" />
+            <ClientOnly>
+              <ChartPriceBars :bins="bookPriceBins.priceBins" />
+              <template #fallback>
+                <div class="flex items-center justify-center h-full">
+                  <USkeleton class="h-full w-full" />
+                </div>
+              </template>
+            </ClientOnly>
           </div>
           <div class="flex flex-col gap-y-1">
             <div class="flex flex-row justify-between text-neutral-600 dark:text-neutral-400">
@@ -85,7 +92,13 @@
     <div class="grow">
       <div v-if="offers.length !== 0" class="flex grow flex-col gap-y-4">
         <div v-for="(offer, index) in offers" :key="offer.id">
-          <CheckoutOfferItemCreate v-model="offers[index]" @fetch-price-bins="fetchPriceBins" @delete-item="handleDeleteItem" @update:has-errors="(newValue: boolean) => offerErrors = newValue" />
+          <CheckoutOfferItemCreate
+            v-model="offers[index]"
+            :current-price-bins-isbn="currentPriceBinsIsbn"
+            @fetch-price-bins="fetchPriceBins"
+            @delete-item="handleDeleteItem"
+            @update:has-errors="(newValue: boolean) => offerErrors = newValue"
+          />
         </div>
         <div class="w-full py-4 inline-flex flex-row justify-end backdrop-blur-md">
           <UButton label="Weiter" :disabled="offerErrors" @click="handleSubmitOffers" />
@@ -147,6 +160,7 @@ const checkedIsbn = ref(false)
 const exams = ref([] as Exam[])
 const offerErrors = ref(false)
 const bookPriceBins = ref(undefined as BookPriceBins | undefined)
+const currentPriceBinsIsbn = ref('')  // Track which offer's price bins are being displayed
 
 const formState = reactive({
   isbn: '',
@@ -242,6 +256,7 @@ const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
   })
 
   if (response.ok) {
+    // First create the book and then create the offer draft
     const newBook = await response.json()
     createOffer(newBook)
     clearForm()
@@ -275,6 +290,7 @@ const handleSubmitOffers = () => {
   props.onSubmit(offers.value)
 }
 
+// TODO: member will automatically be set by the backend, remove requirement for member by the backend
 const member: Member = {
   id: 0,
   username: 'username',
@@ -314,6 +330,8 @@ const clearForm = () => {
   formState.exam_id = undefined
   
   selected.value = undefined
+  bookPriceBins.value = undefined
+  currentPriceBinsIsbn.value = ''
 }
 
 async function fetchExams() {
@@ -328,6 +346,7 @@ async function fetchExams() {
 }
 
 async function fetchPriceBins(isbn: string) {
+  currentPriceBinsIsbn.value = isbn
   await $fetch(useRuntimeConfig().public.apiUrl + `/books/${isbn}/price-bins`, {
     headers: {
       Authorization: `${token.value}`,
@@ -339,6 +358,7 @@ async function fetchPriceBins(isbn: string) {
   .catch((error) => {
     console.error('Error while fetching price bins', error)
     bookPriceBins.value = undefined
+    currentPriceBinsIsbn.value = ''
   })
 }
 </script>

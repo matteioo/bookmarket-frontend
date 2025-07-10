@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { VisXYContainer, VisStackedBar, VisAxis, VisTooltip } from '@unovis/vue'
 import { StackedBar } from '@unovis/ts'
-import type { PriceBin } from '~/interfaces/PriceBin';
+import type { PriceBin } from '~/interfaces/PriceBin'
 
 const props = defineProps({
   bins: {
