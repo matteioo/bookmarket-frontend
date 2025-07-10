@@ -95,7 +95,7 @@ const validate = (state: BookFields): FormError[] => {
   if (!state.title) errors.push({ name: 'title', message: 'Titel ist verpflichtend' })
   if (!state.authors) errors.push({ name: 'authors', message: 'Autor(en) sind verpflichtend' })
   if (!state.publisher) errors.push({ name: 'publisher', message: 'Verlag ist verpflichtend' })
-  if (!state.maxPrice) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
+  if (state.maxPrice == null) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
   //if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ name: 'edition', message: 'Auflage ist verpflichtend' })
   if (state.edition && state.edition <= 0) errors.push({ name: 'edition', message: 'Auflage muss größer als 0 sein' })
