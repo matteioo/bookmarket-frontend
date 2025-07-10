@@ -75,7 +75,7 @@ const emit = defineEmits<{
 
 const localOffer = shallowReactive<Offer>({
   ...props.modelValue,
-  price: parseInt(String(props.modelValue.price), 10)
+  price: Math.floor(props.modelValue.price)
 })
 const errors = ref<Errors>({ location: [], price: [] })
 
