@@ -14,11 +14,12 @@
           <div>{{ formatPrice(props.offer.price) }}</div>
         </div>
       </div>
-      <div class="">
+      <div>
         <UButton
           variant="ghost"
           icon="i-lucide-clipboard-check"
           class="rounded-none h-full"
+          @click="handleRemoveItem"
         />
       </div>
     </div>
@@ -64,5 +65,13 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits<{
+  remove: [offer: Offer]
+}>()
+
 const showDetails = ref(false)
+
+const handleRemoveItem = () => {
+  emit('remove', props.offer)
+}
 </script>

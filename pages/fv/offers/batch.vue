@@ -131,7 +131,7 @@
           <span class="text-neutral-600">Es wurden noch keine neuen Angebote erstellt.</span>
         </template>
         <template v-else>
-          <OfferBatchOverview v-for="offer in addedOffers" :key="offer.id" :offer="offer" />
+          <OfferBatchOverview v-for="offer in addedOffers" :key="offer.id" :offer="offer" @remove="handleRemoveOffer" />
         </template>
       </section>
     </section>
@@ -252,7 +252,7 @@ const createOffer = async (event: FormSubmitEvent<OfferFormType>) => {
       color: 'success',
     })
     const createdOffer = await response.json()
-    addedOffers.value.unshift(createdOffer)
+    addedOffers.value.unshift(createdOffer) // Add to beginning for newest-first display
   } else {
     const data = await response.json()
     console.error('No offers created', data)
@@ -263,6 +263,23 @@ const createOffer = async (event: FormSubmitEvent<OfferFormType>) => {
       icon: 'i-heroicons-check-circle',
       color: 'error',
     })
+  }
+}
+
+const handleRemoveOffer = (offerToRemove: Offer) => {
+  if (offerToRemove.id) {
+    const index = addedOffers.value.findIndex(offer => offer.id === offerToRemove.id)
+    if (index !== -1) {
+      addedOffers.value.splice(index, 1)
+    } else {
+      console.error('Offer not found in list')
+      useToast().add({
+        title: 'Fehler',
+        description: 'Angebot nicht in der Liste gefunden.',
+        icon: 'i-heroicons-x-circle',
+        color: 'error',
+      })
+    }
   }
 }
 </script>
