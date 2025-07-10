@@ -16,8 +16,8 @@
       <DataLabelInputPrice
         v-model="localOffer.price"
         label="Preis"
-        :hint="'Max. ' + formatPrice(localOffer.book.maxPrice)"
-        :max-price="localOffer.book.maxPrice"
+        :hint="`Max. ${Math.floor(localOffer.book.maxPrice)} €`"
+        :max-price="Math.floor(localOffer.book.maxPrice)"
         :required="true"
         :errors="errors.price"
         class="col-span-2"
@@ -73,7 +73,10 @@ const emit = defineEmits<{
   'update:hasErrors': [value: boolean]
 }>()
 
-const localOffer = shallowReactive<Offer>({ ...props.modelValue })
+const localOffer = shallowReactive<Offer>({
+  ...props.modelValue,
+  price: parseInt(String(props.modelValue.price), 10)
+})
 const errors = ref<Errors>({ location: [], price: [] })
 
 const formValidate = () => {
