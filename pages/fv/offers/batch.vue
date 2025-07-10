@@ -238,7 +238,6 @@ const createOffer = async (event: FormSubmitEvent<OfferFormType>) => {
     body: JSON.stringify({
       book_id: selectedBook.value.isbn,
       seller_id: seller.value.id,
-      member_id: 1, // TODO: member must be set by the backend!
       price: event.data.price,
       marked: event.data.marked,
       location: event.data.location,

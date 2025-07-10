@@ -61,9 +61,8 @@ const submitOffers = async () => {
   const seller_id = props.modelValue.seller.id
   const createOffers: CreateOffer[] = props.modelValue.offers.map(offer => ({
     book_id: offer.book.isbn,
-    price: offer.price,
     seller_id: seller_id,
-    member_id: 1,
+    price: offer.price,
     marked: offer.marked,
     location: offer.location,
   }))
@@ -103,7 +102,6 @@ interface CreateOffer {
   book_id: string
   price: number
   seller_id: number
-  member_id: number
   marked: boolean
   location: string
 }
