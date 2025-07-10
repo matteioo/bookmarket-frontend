@@ -54,8 +54,8 @@
 </template>
 
 <script lang="ts" setup>
-import { formatPrice } from '#imports';
-import type { Offer } from '~/interfaces/Offer';
+import { formatPrice } from '#imports'
+import type { Offer } from '~/interfaces/Offer'
 
 const props = defineProps({
   offer: {
@@ -64,5 +64,5 @@ const props = defineProps({
   }
 })
 
-const showDetails = ref(false);
+const showDetails = ref(false)
 </script>

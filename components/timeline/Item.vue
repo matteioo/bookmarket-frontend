@@ -25,8 +25,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Member } from '~/interfaces/Member';
-import { formatReadableDate } from '~/utils/utils';
+import type { Member } from '~/interfaces/Member'
+import { formatReadableDate } from '~/utils/utils'
 
 const props = defineProps({
   icon: {
@@ -56,7 +56,7 @@ const props = defineProps({
     required: false,
     default: undefined,
   }
-});
+})
 
 const computedColor = computed(() => {
   const colorMap = {
@@ -64,13 +64,13 @@ const computedColor = computed(() => {
     warning: 'text-yellow-600 dark:text-yellow-500',
     error: 'text-red-600 dark:text-red-500',
     info: 'text-blue-600 dark:text-blue-500'
-  };
-  return colorMap[props.variant as keyof typeof colorMap] || '';
-});
+  }
+  return colorMap[props.variant as keyof typeof colorMap] || ''
+})
 
-const hasContent = ref(false);
-const slots = useSlots();
+const hasContent = ref(false)
+const slots = useSlots()
 watchEffect(() => {
-  hasContent.value = !!slots.default && !!slots.default()[0];
+  hasContent.value = !!slots.default && !!slots.default()[0]
 })
 </script>

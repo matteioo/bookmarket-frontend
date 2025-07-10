@@ -25,7 +25,7 @@ const { signOut } = useAuth()
 
 const logoutAndRedirect = async () => {
   await signOut({ callbackUrl: '/login' })
-};
+}
 
 const links = ref<NavigationMenuItem[]>([{
   label: 'Suchen',

@@ -39,18 +39,18 @@
 
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
-import type { Book } from '~/interfaces/Book';
-import type { Exam } from '~/interfaces/Exam';
-import type { Page } from '~/interfaces/Page';
+import type { Book } from '~/interfaces/Book'
+import type { Exam } from '~/interfaces/Exam'
+import type { Page } from '~/interfaces/Page'
 
 interface BookFields {
-  isbn: string;
-  title: string;
-  authors: string;
-  publisher: string;
-  edition?: number;
-  maxPrice?: number;
-  exam_id?: number;
+  isbn: string
+  title: string
+  authors: string
+  publisher: string
+  edition?: number
+  maxPrice?: number
+  exam_id?: number
 }
 
 const props = defineProps({
@@ -58,14 +58,14 @@ const props = defineProps({
     type: Function as PropType<(userData: Book) => void>,
     required: true
   }
-});
+})
 
-const { token } = useAuth();
+const { token } = useAuth()
 const form = ref()
 const loading = ref(false)
-const exams = ref([] as Exam[]);
+const exams = ref([] as Exam[])
 
-onMounted(fetchExams);
+onMounted(fetchExams)
 
 const state = reactive<BookFields>({
   isbn: '',
@@ -80,7 +80,7 @@ const state = reactive<BookFields>({
 const validate = (state: BookFields): FormError[] => {
   const errors = []
   
-  errors.push(...isbnValidators(state));
+  errors.push(...isbnValidators(state))
   if (!state.title) errors.push({ name: 'title', message: 'Titel ist verpflichtend' })
   if (!state.authors) errors.push({ name: 'authors', message: 'Autor(en) sind verpflichtend' })
   if (!state.publisher) errors.push({ name: 'publisher', message: 'Verlag ist verpflichtend' })
@@ -92,21 +92,21 @@ const validate = (state: BookFields): FormError[] => {
 }
 
 const isbnValidators = (state: BookFields): FormError[] => {
-  const errors = [];
+  const errors = []
 
   if (!state.isbn) errors.push({ name: 'isbn', message: 'ISBN ist verpflichtend' })
   if (state.isbn && !/^\d+$/.test(state.isbn)) errors.push({ name: 'isbn', message: 'ISBN darf nur Ziffern enthalten' })
   if (state.isbn && state.isbn.toString().length !== 13) errors.push({ name: 'isbn', message: 'ISBN muss aus genau 13 Ziffern bestehen' })
 
-  return errors;
+  return errors
 }
 
 async function submitBook(event: FormSubmitEvent<BookFields>) {
-  loading.value = true;
+  loading.value = true
 
-  const body = {...event.data};
+  const body = {...event.data}
   if (body.exam_id === undefined) {
-    delete body.exam_id;
+    delete body.exam_id
   }
 
   const response = await fetch(useRuntimeConfig().public.apiUrl + '/books', {
@@ -120,7 +120,7 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
   loading.value = false
   
   if (response.ok) {
-    const book = await response.json();
+    const book = await response.json()
     useToast().add({
       title: 'Erfolg',
       description: 'Buch erfolgreich angelegt.',
@@ -128,20 +128,20 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
       color: 'success',
     })
 
-    props.onSubmit(book);
+    props.onSubmit(book)
   } else {
     const data = await response.json()
     
-    const errors = [];
+    const errors = []
     for (const field in data) {
       if (data[field].length > 0) {
         errors.push({
           name: field,
           message: data[field][0]
-        });
+        })
       }
     }
-    form.value.setErrors(errors);
+    form.value.setErrors(errors)
 
     useToast().add({
       title: 'Fehler',
@@ -150,16 +150,16 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
       color: 'error',
     })
   }
-};
+}
 
 const clearForm = () => {
-  state.isbn = '';
-  state.title = '';
-  state.authors = '';
-  state.maxPrice = undefined;
-  state.edition = undefined;
-  state.publisher = '';
-  state.exam_id = undefined;
+  state.isbn = ''
+  state.title = ''
+  state.authors = ''
+  state.maxPrice = undefined
+  state.edition = undefined
+  state.publisher = ''
+  state.exam_id = undefined
 }
 
 async function fetchExams() {
@@ -167,9 +167,9 @@ async function fetchExams() {
     headers: {
       Authorization: `${token.value}`,
     },
-  });
+  })
   
-  exams.value.push({id: null, name: '-Keine Prüfung-'});
-  exams.value.push(...response.results);
+  exams.value.push({id: null, name: '-Keine Prüfung-'})
+  exams.value.push(...response.results)
 }
 </script>
