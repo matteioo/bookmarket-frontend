@@ -29,7 +29,18 @@
             </UFormField>
             
             <UFormField label="Max. Preis" name="maxPrice" required>
-              <FormInputPrice v-model="formState.maxPrice" class="w-full" label="maxPrice" />
+              <UInputNumber
+                v-model="formState.maxPrice"
+                class="w-full"
+                :min="0"
+                :max="999"
+                :format-options="{
+                  style: 'currency',
+                  currency: 'EUR',
+                  currencyDisplay: 'symbol',
+                  currencySign: 'accounting'
+                }"
+              />
             </UFormField>
           </div>
 
@@ -38,20 +49,20 @@
           </UFormField>
 
           <div v-if="!selected && checkedIsbn" class="w-full mt-2 flex flex-row justify-end gap-x-2">
-            <UButton color="primary" variant="link" label="Zurücksetzen" @click="clearForm" />
+            <UButton color="primary" variant="link" label="Zurücksetzen" @click="clearForm()" />
             <UButton type="submit" class="float-right" :loading="loading" variant="outline" label="Hinzufügen" />
           </div>
         </UForm>
   
         <div v-if="selected && checkedIsbn" class="w-full mt-4">
           <div class="grid grid-cols-6 gap-2">
-            <DataLabel label="Titel" :data="selected.title" class="col-span-6" />
+            <DataLabel label="Titel" :truncate="false" :data="selected.title" class="col-span-6" />
             <DataLabel label="ISBN" :data="selected.isbn" class="col-span-3" />
             <DataLabel label="Auflage" :data="String(selected.edition)" class="col-span-1" />
             <DataLabel label="Max. Preis" :data="formatPrice(selected.maxPrice)" class="col-span-2" />
             <DataLabel label="Zugehörige Prüfung" :data="selected.exam?.name" class="col-span-6" />
-            <DataLabel label="Autoren" :data="selected.authors" class="col-span-6" />
-            <DataLabel label="Verlag" :data="selected.publisher" class="col-span-6" />
+            <DataLabel label="Autoren" :truncate="false" :data="selected.authors" class="col-span-6" />
+            <DataLabel label="Verlag" :truncate="false" :data="selected.publisher" class="col-span-6" />
           </div>
           <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
             <UButton
@@ -120,7 +131,6 @@ import { formatPrice } from '~/utils/utils'
 import type { Seller } from '~/interfaces/Seller'
 import type { Book } from '~/interfaces/Book'
 import type { Offer } from '~/interfaces/Offer'
-import type { Member } from '~/interfaces/Member'
 import type { Exam } from '~/interfaces/Exam'
 import type { Page } from '~/interfaces/Page'
 import type { BookPriceBins } from '~/interfaces/PriceBin'
@@ -168,7 +178,7 @@ const formState = reactive({
   authors: '',
   publisher: '',
   edition: undefined,
-  maxPrice: undefined,
+  maxPrice: undefined as number | undefined,
   exam_id: undefined,
 })
 
@@ -179,7 +189,7 @@ const formValidate = (state: BookFields): FormError[] => {
   if (!state.title) errors.push({ name: 'title', message: 'Titel ist verpflichtend' })
   if (!state.authors) errors.push({ name: 'authors', message: 'Autor(en) sind verpflichtend' })
   if (!state.publisher) errors.push({ name: 'publisher', message: 'Verlag ist verpflichtend' })
-  //if (!state.maxPrice) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
+  if (state.maxPrice == null) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
   //if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ name: 'edition', message: 'Auflage ist verpflichtend' })
   //if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ name: 'edition', message: 'Auflage muss eine Zahl sein' })
@@ -201,6 +211,7 @@ await fetchExams()
 
 const handleIsbnSearch = async () => {
   loadingIsbn.value = true
+  clearForm(formState.isbn)
 
   // Check if the isbn is of length 13 and only contains numbers
   const errors = isbnValidators(formState)
@@ -259,7 +270,6 @@ const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
     // First create the book and then create the offer draft
     const newBook = await response.json()
     createOffer(newBook)
-    clearForm()
   } else {
     selected.value = undefined
     console.error('No book created')
@@ -290,13 +300,6 @@ const handleSubmitOffers = () => {
   props.onSubmit(offers.value)
 }
 
-// TODO: member will automatically be set by the backend, remove requirement for member by the backend
-const member: Member = {
-  id: 0,
-  username: 'username',
-  email: 'emailAddress', 
-}
-
 function createOffer(book: Book | undefined) {
   if (!book) {
     return
@@ -308,7 +311,6 @@ function createOffer(book: Book | undefined) {
     book: book,
     price: book.maxPrice,
     seller: props.seller,
-    member: member,
     active: true,
     createdAt: new Date(),
     modified: new Date(),
@@ -320,8 +322,8 @@ function createOffer(book: Book | undefined) {
   clearForm()
 }
 
-const clearForm = () => {
-  formState.isbn = ''
+const clearForm = (isbn?: string) => {
+  formState.isbn = isbn || ''
   formState.title = ''
   formState.authors = ''
   formState.maxPrice = undefined
@@ -332,6 +334,8 @@ const clearForm = () => {
   selected.value = undefined
   bookPriceBins.value = undefined
   currentPriceBinsIsbn.value = ''
+
+  form.value?.clear()
 }
 
 async function fetchExams() {

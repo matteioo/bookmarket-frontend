@@ -1,26 +1,31 @@
 <template>
   <div class="w-full">
-    <UFormField :hint="hint && String(hint)" :error="errors.length > 0 ? errors[0] : undefined">
+    <UFormField :hint="hint" :error="errors[0]">
       <template #label>
         <span class="block text-sm text-neutral-600 dark:text-neutral-400">{{ label }}</span>
       </template>
-      <template #default>
-        <UInput ref="inputRef" :required="props.required" :size="size" class="w-full" />
-      </template>
+      <UInputNumber
+        v-model="model"
+        class="w-full"
+        :size="size"
+        :min="0"
+        :max="maxPrice"
+        :format-options="{
+          style: 'currency',
+          currency: 'EUR',
+          currencyDisplay: 'symbol',
+          currencySign: 'accounting'
+        }"
+      />
     </UFormField>
   </div>
 </template>
 
-
 <script setup lang="ts">
-const props = defineProps({
+const _props = defineProps({
   label: {
     type: String,
     required: true,
-  },
-  modelValue: {
-    type: Number,
-    default: 0,
   },
   errors: {
     type: Array as PropType<string[]>,
@@ -32,11 +37,7 @@ const props = defineProps({
   },
   maxPrice: {
     type: Number,
-    default: 999.99,
-  },
-  required: {
-    type: Boolean,
-    default: false,
+    default: 999,
   },
   size: {
     type: String as PropType<'xs' | 'sm' | 'md' | 'lg'>,
@@ -44,17 +45,5 @@ const props = defineProps({
   },
 })
 
-const { inputRef, numberValue, setValue } = useEuroCurrencyInput({ valueRange: { max: props.maxPrice } })
-
-const emit = defineEmits(['update:modelValue'])
-
-watch (numberValue, (newValue) => {
-  if (newValue === null) {
-    setValue(0)
-    emit('update:modelValue', 0)
-  } else {
-    emit('update:modelValue', newValue)
-  }
-
-})
+const model = defineModel<number>()
 </script>

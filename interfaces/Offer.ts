@@ -7,7 +7,7 @@ export interface Offer {
   book: Book;
   price: number;
   seller: Seller;
-  member: Member;
+  member?: Member;
   active: boolean;
   createdAt: Date;
   modified: Date;
