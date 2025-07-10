@@ -45,13 +45,13 @@
   
         <div v-if="selected && checkedIsbn" class="w-full mt-4">
           <div class="grid grid-cols-6 gap-2">
-            <DataLabel label="Titel" :data="selected.title" class="col-span-6" />
+            <DataLabel label="Titel" :truncate="false" :data="selected.title" class="col-span-6" />
             <DataLabel label="ISBN" :data="selected.isbn" class="col-span-3" />
             <DataLabel label="Auflage" :data="String(selected.edition)" class="col-span-1" />
             <DataLabel label="Max. Preis" :data="formatPrice(selected.maxPrice)" class="col-span-2" />
             <DataLabel label="Zugehörige Prüfung" :data="selected.exam?.name" class="col-span-6" />
-            <DataLabel label="Autoren" :data="selected.authors" class="col-span-6" />
-            <DataLabel label="Verlag" :data="selected.publisher" class="col-span-6" />
+            <DataLabel label="Autoren" :truncate="false" :data="selected.authors" class="col-span-6" />
+            <DataLabel label="Verlag" :truncate="false" :data="selected.publisher" class="col-span-6" />
           </div>
           <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
             <UButton
