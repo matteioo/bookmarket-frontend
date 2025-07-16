@@ -45,6 +45,9 @@
         </UInput>
         <h1>Protected Index Page</h1>
         <p>Current user: {{ member?.id }}, {{ member?.email }}, {{ member?.username }}</p>
+        <div>
+          {{ productsList }}
+        </div>
       </div>
     </div>
   </div>
@@ -58,6 +61,15 @@ useSeoMeta({
 definePageMeta({
   layout: 'protected',
 })
+
+const { $api } = useNuxtApp();
+const {
+    data: productsList,
+    pending,
+    error
+  } = await $api.exams.getExams();
+
+console.log('Products List:', productsList, pending, error);
 
 const { data: member } = useAuth()
 const searchQuery = ref('')
