@@ -91,7 +91,8 @@
             </template>
 
             <template #member-cell="{ row }">
-              <UButton color="neutral" variant="ghost" class="-my-1.5 text-inherit!" :to="`/fv/members/${row.original.member.id}`">{{ row.original.member.username }}</UButton>
+              <UButton v-if="row.original.member" color="neutral" variant="ghost" class="-my-1.5 text-inherit!" :to="`/fv/members/${row.original.member.id}`">{{ row.original.member.username }}</UButton>
+              <span v-else class="text-neutral-500 dark:text-neutral-400">-</span>
             </template>
 
             <template #book-cell="{ row }">
@@ -138,7 +139,7 @@
             <div>Seitengröße</div>
             <USelect v-model="itemsPerPage" :items="pageSizes" />
           </div>
-          <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="sellerOffers !== null ? sellerOffers.count : 0" />
+          <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="sellerOffers?.count ?? 0" />
         </div>
       </section>
     </div>
@@ -228,12 +229,12 @@ const columns: TableColumn<Offer>[] = [
 const { token } = useAuth()
 const route = useRoute()
 const router = useRouter()
-const editHistoryModal = ref(false)
-const editSellerModal = ref(false)
-const currentPage = ref(1)
+const editHistoryModal = ref<boolean>(false)
+const editSellerModal = ref<boolean>(false)
+const currentPage = ref<number>(1)
 const pageSizes = [5, 10, 20, 50]
-const itemsPerPage = ref(pageSizes[1])
-const searchInput = ref('')
+const itemsPerPage = ref<number>(pageSizes[1] ?? 10)
+const searchInput = ref<string>('')
 const member = ref<Member>({
   id: 1,
   username: 'max.mustermann',

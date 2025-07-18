@@ -47,7 +47,7 @@
       <div class="grow">
         <div v-if="addedOffers.length !== 0" class="flex grow flex-col gap-y-4">
           <div v-for="(offer, index) in addedOffers" :key="offer.id">
-            <CheckoutOfferItemSell v-model="addedOffers[index]" @delete-item="removeOffer" />
+            <CheckoutOfferItemSell v-if="addedOffers[index]" v-model="addedOffers[index]" @delete-item="removeOffer" />
           </div>
           <div class="w-full inline-flex justify-between items-center">
             <div>
@@ -131,16 +131,17 @@ definePageMeta({
 
 const route = useRoute()
 const { token } = useAuth()
-const loadingOffer = ref(false)
+const loadingOffer = ref<boolean>(false)
 const selectedOffer = ref<Offer | null>(null)
 const addedOffers = ref<Offer[]>([])
-const confirmModalOpen = ref(false)
+const confirmModalOpen = ref<boolean>(false)
 const errorMsg = ref<string | null>(null)
-const loadingCheckout = ref(false)
-const updatingAddedOffers = ref(false)
+const loadingCheckout = ref<boolean>(false)
+const updatingAddedOffers = ref<boolean>(false)
 
+const offerId = Array.isArray(route.params.offerId) ? route.params.offerId[0] : route.params.offerId
 const state = reactive({
-  offerId: route.params.offerId[0] ?? '',
+  offerId: offerId ?? '',
 })
 
 if (state.offerId !== '') {

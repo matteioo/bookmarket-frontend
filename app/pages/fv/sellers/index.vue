@@ -47,7 +47,7 @@
         <div>Seitengröße</div>
         <USelect v-model="itemsPerPage" :items="pageSizes" />
       </div>
-      <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="data !== null ? data.count : 0" variant="outline" />
+      <UPagination v-model:page="currentPage" :items-per-page="Number(itemsPerPage)" :total="data?.count ?? 0" variant="outline" />
     </div>
   </div>
 </template>
@@ -66,11 +66,11 @@ definePageMeta({
 })
 
 const { token } = useAuth()
-const currentPage = ref(1)
+const currentPage = ref<number>(1)
 const pageSizes = [5, 10, 20, 50]
-const itemsPerPage = ref(pageSizes[1])
-const searchInput = ref('')
-const editSellerModal = ref(false)
+const itemsPerPage = ref<number>(pageSizes[1] ?? 10)
+const searchInput = ref<string>('')
+const editSellerModal = ref<boolean>(false)
 const editSellerData = ref<Seller>({
   id: 0,
   matriculationNumber: '',

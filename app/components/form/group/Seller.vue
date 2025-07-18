@@ -60,8 +60,8 @@ const props = defineProps({
 const { token } = useAuth()
 const router = useRouter()
 const form = ref()
-const loading = ref(false)
-const user = ref(null as Seller | null)
+const loading = ref<boolean>(false)
+const user = ref<Seller>()
 
 const state = reactive({
   fullName: '',

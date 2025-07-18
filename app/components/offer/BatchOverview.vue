@@ -69,7 +69,7 @@ const emit = defineEmits<{
   remove: [offer: Offer]
 }>()
 
-const showDetails = ref(false)
+const showDetails = ref<boolean>(false)
 
 const handleRemoveItem = () => {
   emit('remove', props.offer)

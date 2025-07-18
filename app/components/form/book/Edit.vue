@@ -78,9 +78,9 @@ const showModal = defineModel<boolean>()
 
 const { token } = useAuth()
 const form = ref()
-const loading = ref(false)
-const book = ref(null as Book | null)
-const exams = ref([] as Exam[])
+const loading = ref<boolean>(false)
+const book = ref<Book>()
+const exams = ref<Exam[]>([])
 
 const state = reactive<BookFields>({
   isbn: props.initialBook.isbn,

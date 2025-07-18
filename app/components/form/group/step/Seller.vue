@@ -63,7 +63,7 @@ const props = defineProps({
   },
 })
 
-const selected = ref(props.currentSeller)
+const selected = ref<Seller>(props.currentSeller)
 const { token } = useAuth()
 
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
@@ -75,7 +75,7 @@ const handleSearchSubmit = () => {
   }
 }
 
-const searchTerm = ref('')
+const searchTerm = ref<string>('')
 const searchTermDebounced = useDebounce(searchTerm, 500)
 
 const fetchParams = computed(() => ({

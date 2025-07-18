@@ -65,7 +65,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:priceFilter'])
 
-const popoverOpen = ref(false)
+const popoverOpen = ref<boolean>(false)
 const localPriceFilter = ref<Filter<PriceFilter>>(props.priceFilter)
 const filterActive = computed(() => props.priceFilter.value.min !== undefined || props.priceFilter.value.max !== undefined)
 const errors = ref<string[]>([])

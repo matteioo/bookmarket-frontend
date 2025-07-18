@@ -72,5 +72,5 @@ const _props = defineProps({
   },
 })
 
-const modalOpen = ref(false)
+const modalOpen = ref<boolean>(false)
 </script>

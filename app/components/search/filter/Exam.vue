@@ -61,7 +61,7 @@ const props = defineProps({
 const emit = defineEmits(['update:examFilter'])
 
 const { token } = useAuth()
-const popoverOpen = ref(false)
+const popoverOpen = ref<boolean>(false)
 const localExamFilter = ref<Filter<ExamFilter>>(props.examFilter)
 
 const exams = [] as string[]

@@ -146,10 +146,10 @@ const columns: TableColumn<Book>[] = [
   }
 ]
 const { token } = useAuth()
-const currentPage = ref(1)
+const currentPage = ref<number>(1)
 const pageSizes = [5, 10, 20, 50]
-const itemsPerPage = ref(pageSizes[1])
-const searchInput = ref('')
+const itemsPerPage = ref<number>(pageSizes[1] ?? 10)
+const searchInput = ref<string>('')
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,

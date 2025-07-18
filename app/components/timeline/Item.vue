@@ -68,7 +68,7 @@ const computedColor = computed(() => {
   return colorMap[props.variant as keyof typeof colorMap] || ''
 })
 
-const hasContent = ref(false)
+const hasContent = ref<boolean>(false)
 const slots = useSlots()
 watchEffect(() => {
   hasContent.value = !!slots.default && !!slots.default()[0]

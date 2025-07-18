@@ -161,16 +161,16 @@ const props = defineProps({
 })
 
 const { token } = useAuth()
-const loading = ref(false)
-const loadingIsbn = ref(false)
 const form = ref()
-const selected = ref(undefined as Book | undefined)
-const offers = ref(props.currentOffers as Offer[])
-const checkedIsbn = ref(false)
-const exams = ref([] as Exam[])
-const offerErrors = ref(false)
-const bookPriceBins = ref(undefined as BookPriceBins | undefined)
-const currentPriceBinsIsbn = ref('')  // Track which offer's price bins are being displayed
+const loading = ref<boolean>(false)
+const loadingIsbn = ref<boolean>(false)
+const selected = ref<Book>()
+const offers = ref<Offer[]>(props.currentOffers)
+const checkedIsbn = ref<boolean>(false)
+const exams = ref<Exam[]>([])
+const offerErrors = ref<boolean>(false)
+const bookPriceBins = ref<BookPriceBins>()
+const currentPriceBinsIsbn = ref<string>('')  // Track which offer's price bins are being displayed
 
 const formState = reactive({
   isbn: '',

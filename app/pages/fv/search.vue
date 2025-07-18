@@ -70,7 +70,7 @@ definePageMeta({
   layout: 'protected',
 })
 
-const searchQuery = ref(useRoute().query.q as string || '')
+const searchQuery = ref<string>(useRoute().query.q as string || '')
 const searchQueryDebounced = refDebounced(searchQuery, 250)
 
 onMounted(() => {
@@ -79,8 +79,8 @@ onMounted(() => {
 })
 
 const { token } = useAuth()
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
+const currentPage = ref<number>(1)
+const itemsPerPage = ref<number>(10)
 const filter = ref({
   price: {
     active: false,

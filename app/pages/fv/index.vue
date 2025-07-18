@@ -44,7 +44,7 @@
           </template>
         </UInput>
         <h1>Protected Index Page</h1>
-        <p>Current user: {{ member?.id }}, {{ member?.email }}, {{ member?.username }}</p>
+        <p>Current user: <span v-if="member">ID: {{ member.id }}, Email: {{ member.email }}, Username: {{ member.username }}</span></p>
       </div>
     </div>
   </div>
@@ -60,7 +60,7 @@ definePageMeta({
 })
 
 const { data: member } = useAuth()
-const searchQuery = ref('')
+const searchQuery = ref<string>('')
 
 async function search() {
   if (searchQuery.value && searchQuery.value !== '') {

@@ -131,7 +131,8 @@
             </template>
 
             <template #member-cell="{ row }">
-              <UButton color="neutral" variant="ghost" class="-my-1.5 text-inherit!" :to="`/fv/members/${row.original.member.id}`">{{ row.original.member.username }}</UButton>
+              <UButton v-if="row.original.member" color="neutral" variant="ghost" class="-my-1.5 text-inherit!" :to="`/fv/members/${row.original.member.id}`">{{ row.original.member.username }}</UButton>
+              <span v-else class="text-neutral-500 dark:text-neutral-400">-</span>
             </template>
 
             <template #book-cell="{ row }">
@@ -295,15 +296,18 @@ const timelineItems = [
 const { token } = useAuth()
 const route = useRoute()
 const router = useRouter()
-const editHistoryModal = ref(false)
-const editSellerModal = ref(false)
-const currentPage = ref(1)
+const editHistoryModal = ref<boolean>(false)
+const editSellerModal = ref<boolean>(false)
+const currentPage = ref<number>(1)
 const pageSizes = [5, 10, 20, 50]
-const itemsPerPage = ref(pageSizes[1])
-const searchInput = ref('')
-const bookPriceBins = ref(undefined as BookPriceBins | undefined)
+const itemsPerPage = ref<number>(pageSizes[1] ?? 10)
+const searchInput = ref<string>('')
+const bookPriceBins = ref<BookPriceBins | undefined>(undefined)
 
-fetchPriceBins(Array.isArray(route.params.isbn) ? route.params.isbn[0] : route.params.isbn)
+const isbn = Array.isArray(route.params.isbn) ? route.params.isbn[0] : route.params.isbn
+if (isbn) {
+  fetchPriceBins(isbn)
+}
 
 const fetchParams = computed(() => ({
   limit: itemsPerPage.value,

@@ -73,8 +73,8 @@ const props = defineProps({
 
 const { token } = useAuth()
 const form = ref()
-const loading = ref(false)
-const exams = ref([] as Exam[])
+const loading = ref<boolean>(false)
+const exams = ref<Exam[]>([])
 
 onMounted(fetchExams)
 

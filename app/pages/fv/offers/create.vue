@@ -29,8 +29,8 @@ definePageMeta({
   layout: 'protected',
 })
 
-const currentStep = ref(1)
-const offers = ref({} as NewOffers)
+const currentStep = ref<number>(1)
+const offers = ref<NewOffers>({} as NewOffers)
 
 const steps = [
   { step: 1, title: 'Verkäufer:in zuordnen' },

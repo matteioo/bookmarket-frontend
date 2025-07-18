@@ -61,7 +61,7 @@ const state = reactive<LoginFields>({
   password: '',
 })
 
-const loading = ref(false)
+const loading = ref<boolean>(false)
 
 const validate = (state: LoginFields): FormError[] => {
   const errors = []

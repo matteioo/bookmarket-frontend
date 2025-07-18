@@ -66,7 +66,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:markedFilter'])
 
-const popoverOpen = ref(false)
+const popoverOpen = ref<boolean>(false)
 const localMarkedFilter = ref<MarkedFilter>(props.markedFilter)
 const filterActive = computed(() => !localMarkedFilter.value.value.marked || !localMarkedFilter.value.value.unmarked)
 
