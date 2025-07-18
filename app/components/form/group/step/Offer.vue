@@ -104,7 +104,7 @@
       <div v-if="offers.length !== 0" class="flex grow flex-col gap-y-4">
         <div v-for="(offer, index) in offers" :key="offer.id">
           <CheckoutOfferItemCreate
-            v-model="offers[index]"
+            v-model="offers[index]!"
             :current-price-bins-isbn="currentPriceBinsIsbn"
             @fetch-price-bins="fetchPriceBins"
             @delete-item="handleDeleteItem"
