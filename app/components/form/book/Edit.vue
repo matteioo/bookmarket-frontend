@@ -79,7 +79,7 @@ const showModal = defineModel<boolean>()
 const { token } = useAuth()
 const form = ref()
 const loading = ref<boolean>(false)
-const book = ref<Book>()
+const book = ref<Book | undefined>()
 const exams = ref<Exam[]>([])
 
 const state = reactive<BookFields>({
