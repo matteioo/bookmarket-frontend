@@ -314,7 +314,7 @@ function createOffer(book: Book | undefined) {
     active: true,
     createdAt: new Date(),
     modified: new Date(),
-    marked: false,
+    marked: true,
     location: '',
   }
 
