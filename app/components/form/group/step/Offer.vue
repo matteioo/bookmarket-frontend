@@ -169,7 +169,7 @@ const offers = ref<Offer[]>(props.currentOffers)
 const checkedIsbn = ref<boolean>(false)
 const exams = ref<Exam[]>([])
 const offerErrors = ref<boolean>(false)
-const bookPriceBins = ref<BookPriceBins>()
+const bookPriceBins = ref<BookPriceBins | undefined>()
 const currentPriceBinsIsbn = ref<string>('')  // Track which offer's price bins are being displayed
 
 const formState = reactive({
