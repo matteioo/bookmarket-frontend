@@ -1,5 +1,3 @@
-import tailwindcss from "@tailwindcss/vite";
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-02-06',
@@ -13,11 +11,6 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@vueuse/nuxt'
   ],
-  vite: {
-    plugins: [
-      tailwindcss(),
-    ],
-  },
   app: {
     head: {
       link: [
@@ -36,7 +29,7 @@ export default defineNuxtConfig({
     },
   },
   security: {
-    enabled: process.env.NODE_ENV !== 'development',
+    enabled: process.env.NODE_ENV === 'production',
     headers: {
       contentSecurityPolicy: {
         "script-src": [
