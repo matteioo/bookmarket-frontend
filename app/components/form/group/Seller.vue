@@ -61,7 +61,7 @@ const { token } = useAuth()
 const router = useRouter()
 const form = ref()
 const loading = ref<boolean>(false)
-const user = ref<Seller>()
+const user = ref<Seller | undefined>()
 
 const state = reactive({
   fullName: '',
