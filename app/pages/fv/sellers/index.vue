@@ -19,7 +19,7 @@
         <template #actions-cell="{ row }">
           <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <UButtonGroup orientation="horizontal" class="shadow-none">
-              <UButton icon="i-heroicons-information-circle" color="info" variant="ghost" :to="`/fv/sellers/${row.id}`" />
+              <UButton icon="i-heroicons-information-circle" color="info" variant="ghost" :to="`/fv/sellers/${row.original.id}`" />
               <UButton icon="i-heroicons-pencil-square" color="primary" variant="ghost" @click="openModal(row.original)" />
               <UButton icon="i-heroicons-trash" color="error" variant="ghost" />
             </UButtonGroup>
@@ -35,7 +35,7 @@
         </template>
         <template #loading>
           <div class="flex flex-col items-center gap-y-2">
-            <UIcon name="i-heroicons-arrow-path-20-solid" class="w-8 h-8 text-neutral-500 dark:text-neutral-400 animate-spin" />
+            <UIcon name="i-lucide-loader-circle" class="w-8 h-8 text-neutral-500 dark:text-neutral-400 animate-spin" />
             <span class="text-neutral-500 dark:text-neutral-400">Lade Verkäufer:innen...</span>
           </div>
         </template>
