@@ -316,10 +316,7 @@ const fetchParams = computed(() => ({
   book__isbn: route.params.isbn,
 }))
 
-const { data: book, refresh: refreshSellerData } = useFetch<Book>(useRuntimeConfig().public.apiUrl + '/books/' + route.params.isbn, {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data: book, refresh: refreshSellerData } = useApiFetch<Book>('/books/' + route.params.isbn, {
   onResponseError: () => {
     // Try to go back to the previous page
     if (window.history.length > 1) {
@@ -331,10 +328,7 @@ const { data: book, refresh: refreshSellerData } = useFetch<Book>(useRuntimeConf
   },
 })
 
-const { data: offers, pending: loadingOffers } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data: offers, pending: loadingOffers } = useApiFetch<Page<Offer>>('/offers', {
   params: fetchParams,
 })
 

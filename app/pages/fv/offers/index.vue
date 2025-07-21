@@ -219,7 +219,6 @@ const columns: TableColumn<Offer>[] = [
     enableHiding: false,
   }
 ]
-const { token } = useAuth()
 const currentPage = ref<number>(1)
 const pageSizes = [5, 10, 20, 50]
 const itemsPerPage = ref<number>(pageSizes[1] ?? 10)
@@ -236,11 +235,8 @@ const columnVisibility = ref({
   createdAt: false,
 })
 
-const { data, pending } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
+const { data, pending } = useApiFetch<Page<Offer>>('/offers', {
   key: 'offers',
-  headers: {
-    Authorization: `${token.value}`,
-  },
   params: fetchParams,
 })
 

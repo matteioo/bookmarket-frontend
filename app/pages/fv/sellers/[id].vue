@@ -226,7 +226,6 @@ const columns: TableColumn<Offer>[] = [
     cell: ({ row }) => h('div', { class: 'text-right' }, formatPrice(row.original.price)),
   },
 ]
-const { token } = useAuth()
 const route = useRoute()
 const router = useRouter()
 const editHistoryModal = ref<boolean>(false)
@@ -248,19 +247,13 @@ const fetchParams = computed(() => ({
   seller: route.params.id,
 }))
 
-const { data: seller, refresh: refreshSellerData } = useFetch<Seller>(useRuntimeConfig().public.apiUrl + '/sellers/' + route.params.id, {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data: seller, refresh: refreshSellerData } = useApiFetch<Seller>('/sellers/' + route.params.id, {
   onResponseError: () => {
     router.push('/fv/sellers')
   },
 })
 
-const { data: sellerOffers, pending: loadingSellerOffers } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data: sellerOffers, pending: loadingSellerOffers } = useApiFetch<Page<Offer>>('/offers', {
   params: fetchParams,
 })
 

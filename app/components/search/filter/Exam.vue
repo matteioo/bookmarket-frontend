@@ -60,7 +60,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:examFilter'])
 
-const { token } = useAuth()
 const popoverOpen = ref<boolean>(false)
 const localExamFilter = ref<Filter<ExamFilter>>(props.examFilter)
 
@@ -70,11 +69,7 @@ const state = reactive({
 })
 
 onMounted(async () => {
-  const { data: examsPage } = await useFetch<Page<Exam>>(useRuntimeConfig().public.apiUrl + '/exams', {
-    headers: {
-      Authorization: `${token.value}`,
-    },
-  })
+  const { data: examsPage } = await useApiFetch<Page<Exam>>('/exams')
 
   exams.push(...(examsPage.value?.results.map((exam) => exam.name) ?? []))
   

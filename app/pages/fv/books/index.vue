@@ -145,7 +145,6 @@ const columns: TableColumn<Book>[] = [
     enableHiding: false,
   }
 ]
-const { token } = useAuth()
 const currentPage = ref<number>(1)
 const pageSizes = [5, 10, 20, 50]
 const itemsPerPage = ref<number>(pageSizes[1] ?? 10)
@@ -160,10 +159,7 @@ const fetchParams = computed(() => ({
 const columnVisibility = ref({
 })
 
-const { data, pending } = useFetch<Page<Book>>(useRuntimeConfig().public.apiUrl + '/books', {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data, pending } = useApiFetch<Page<Book>>('/books', {
   params: fetchParams,
 })
 </script>

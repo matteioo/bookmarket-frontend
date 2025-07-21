@@ -65,7 +65,6 @@ definePageMeta({
   layout: 'protected',
 })
 
-const { token } = useAuth()
 const currentPage = ref<number>(1)
 const pageSizes = [5, 10, 20, 50]
 const itemsPerPage = ref<number>(pageSizes[1] ?? 10)
@@ -85,10 +84,7 @@ const fetchParams = computed(() => ({
   search: searchInput.value,
 }))
 
-const { data, pending, refresh } = useFetch<Page<Seller>>(useRuntimeConfig().public.apiUrl + '/sellers', {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data, pending, refresh } = useApiFetch<Page<Seller>>('/sellers', {
   params: fetchParams,
 })
 

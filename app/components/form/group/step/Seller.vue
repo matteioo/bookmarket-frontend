@@ -4,7 +4,7 @@
       <USelectMenu
         v-model="selected"
         v-model:search-term="searchTerm"
-        :items="sellers || []"
+        :items="sellersPage?.results || []"
         :search-input="{
           placeholder: 'Suche nach Verkäufer:in...',
           icon: 'i-lucide-search',
@@ -64,7 +64,6 @@ const props = defineProps({
 })
 
 const selected = ref<Seller>(props.currentSeller)
-const { token } = useAuth()
 
 // This anonymous function is called by the USelectMenu component to pass the selected seller to the parent component
 const handleSearchSubmit = () => {
@@ -84,14 +83,8 @@ const fetchParams = computed(() => ({
   limit: 20,
 }))
 
-const { data: sellers, status } = await useFetch(useRuntimeConfig().public.apiUrl + '/sellers', {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data: sellersPage, status } = await useApiFetch<Page<Seller>>('/sellers', {
   params: fetchParams,
-  transform: (data: Page<Seller>) => {
-    return data.results as Seller[]
-  },
   lazy: true,
   watch: [searchTermDebounced],
 })
