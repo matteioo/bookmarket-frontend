@@ -15,24 +15,30 @@
             <UInput v-model="state.publisher" type="text" placeholder="FVJus Verlag" class="w-full" />
           </UFormField>
 
+          <UFormField label="Prüfung" name="exam_id">
+            <USelect v-model="state.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
+          </UFormField>
+
           <div class="grid grid-cols-2 gap-x-4">
-            <UFormField label="Prüfung" name="exam_id">
-              <USelect v-model="state.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
-            </UFormField>
-  
             <UFormField label="Auflage" name="edition" required>
               <UInput v-model="state.edition" type="text" placeholder="14" class="w-full" />
             </UFormField>
-          </div>
 
-          <DataLabelInputPrice
-            v-model="state.maxPrice"
-            label="Preis"
-            :max-price="999.99"
-            :required="true"
-            size="md"
-            class="col-span-2"
-          />
+            <UFormField label="Max. Preis" name="maxPrice" required>
+              <UInputNumber
+                v-model="state.maxPrice"
+                class="w-full"
+                :min="0"
+                :max="999"
+                :format-options="{
+                  style: 'currency',
+                  currency: 'EUR',
+                  currencyDisplay: 'symbol',
+                  currencySign: 'accounting'
+                }"
+              />
+            </UFormField>
+          </div>
 
           <div class="inline-flex flex-row-reverse gap-x-2 w-full">
             <UButton type="submit" :loading="loading" variant="solid">
@@ -76,7 +82,7 @@ const props = defineProps({
 })
 const showModal = defineModel<boolean>()
 
-const { token } = useAuth()
+const { $api } = useNuxtApp()
 const form = ref()
 const loading = ref<boolean>(false)
 const book = ref<Book | undefined>()
@@ -109,8 +115,8 @@ const validate = (state: BookFields): FormError[] => {
   if (!state.title) errors.push({ name: 'title', message: 'Titel ist verpflichtend' })
   if (!state.authors) errors.push({ name: 'authors', message: 'Autor(en) sind verpflichtend' })
   if (!state.publisher) errors.push({ name: 'publisher', message: 'Verlag ist verpflichtend' })
-  //if (!state.maxPrice) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
-  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
+  if (!state.maxPrice) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
+  if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ name: 'edition', message: 'Auflage ist verpflichtend' })
   //if (state.edition && !/^\d+$/.test(state.edition)) errors.push({ name: 'edition', message: 'Auflage muss eine Zahl sein' })
   //if (state.edition && state.edition <= 0) errors.push({ name: 'edition', message: 'Auflage muss größer als 0 sein' })
@@ -131,48 +137,45 @@ const onSubmit = async (event: FormSubmitEvent<BookFields>) => {
 
 async function editBook(event: FormSubmitEvent<BookFields>) {
   loading.value = true
-  form.value.clear()
+  form.value.clear() 
 
-  const response = await fetch(useRuntimeConfig().public.apiUrl + '/books/' + props.initialBook.isbn, {
+  const editedBook = await $api<Book>('/books/' + props.initialBook.isbn, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${token.value}`,
+    body: event.data,
+    onResponse: () => {
+      loading.value = false
     },
-    body: JSON.stringify(event.data),
-  })
-  loading.value = false
-  
-  if (response.ok) {
-    book.value = await response.json()
-    useToast().add({
-      title: 'Erfolg',
-      description: 'Buch erfolgreich bearbeitet.',
-      icon: 'i-heroicons-check-circle',
-      color: 'success',
-    })
-    showModal.value = false
-  } else {
-    const data = await response.json()
-    
-    const errors = []
-    for (const field in data) {
-      if (data[field].length > 0) {
-        errors.push({
-          name: field,
-          message: data[field][0]
-        })
-      }
-    }
-    form.value.setErrors(errors)
+    onResponseError: ({ response }) => {
+      const data = response._data
 
-    useToast().add({
-      title: 'Fehler',
-      description: 'Buch konnte nicht bearbeitet werden!',
-      icon: 'i-heroicons-exclamation-triangle',
-      color: 'error',
-    })
-  }
+      const errors = []
+      for (const field in data) {
+        if (data[field].length > 0) {
+          errors.push({
+            name: field,
+            message: data[field][0]
+          })
+        }
+      }
+      form.value.setErrors(errors)
+
+      useToast().add({
+        title: 'Fehler',
+        description: 'Buch konnte nicht bearbeitet werden!',
+        icon: 'i-heroicons-exclamation-triangle',
+        color: 'error',
+      })
+    }
+  })
+
+  book.value = editedBook
+
+  useToast().add({
+    title: 'Erfolg',
+    description: 'Buch erfolgreich bearbeitet.',
+    icon: 'i-heroicons-check-circle',
+    color: 'success',
+  })
 }
 
 const clearForm = () => {
@@ -188,13 +191,7 @@ const clearForm = () => {
 }
 
 async function fetchExams() {
-  const response = await $fetch<Page<Exam>>(useRuntimeConfig().public.apiUrl + '/exams', {
-    headers: {
-      Authorization: `${token.value}`,
-    },
-  })
-  
-  exams.value.push({id: null, name: '-Keine Prüfung-'})
-  exams.value.push(...response.results)
+  const { data } = await useApiFetch<Page<Exam>>('/exams')
+  exams.value.push(...data.value?.results || [])
 }
 </script>
