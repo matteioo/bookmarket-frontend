@@ -1,0 +1,9 @@
+ignoredBuiltDependencies:
+  - maplibre-gl
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@tailwindcss/oxide'
+  - esbuild
+  - unrs-resolver
+  - vue-demi
