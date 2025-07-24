@@ -14,7 +14,8 @@
           style: 'currency',
           currency: 'EUR',
           currencyDisplay: 'symbol',
-          currencySign: 'accounting'
+          currencySign: 'accounting',
+          maximumFractionDigits: 0,
         }"
       />
     </UFormField>

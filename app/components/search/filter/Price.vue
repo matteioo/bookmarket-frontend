@@ -13,12 +13,36 @@
         <UForm :state="state" class="space-y-4" @submit="onSubmit">
           <div class="p-4 flex flex-col gap-y-4">
             <div class="inline-flex flex-row gap-x-2 items-center">
-              <UFormField class="w-24" name="minPrice">
-                <FormInputPrice v-model="state.min" label="maxPrice" placeholder="Min." :min-price="0" :max-price="999.99" />
+              <UFormField class="w-32" name="minPrice">
+                <UInputNumber
+                  v-model="state.min"
+                  class="w-full"
+                  :min="0"
+                  :max="state.max ? Math.max(state.max - 1, 0) : 999"
+                  :format-options="{
+                    style: 'currency',
+                    currency: 'EUR',
+                    currencyDisplay: 'symbol',
+                    currencySign: 'accounting',
+                    maximumFractionDigits: 0,
+                  }"
+                />
               </UFormField>
               <span>bis</span>
-              <UFormField class="w-24" name="maxPrice">
-                <FormInputPrice v-model="state.max" label="maxPrice" placeholder="Max." :min-price="0" :max-price="999.99" />
+              <UFormField class="w-32" name="maxPrice">
+                <UInputNumber
+                  v-model="state.max"
+                  class="w-full"
+                  :min="state.min ? Math.min(state.min + 1, 999) : 0"
+                  :max="999"
+                  :format-options="{
+                    style: 'currency',
+                    currency: 'EUR',
+                    currencyDisplay: 'symbol',
+                    currencySign: 'accounting',
+                    maximumFractionDigits: 0,
+                  }"
+                />
               </UFormField>
             </div>
             <div class="inline-flex flex-row-reverse gap-x-2 justify-stretch flex-wrap">
