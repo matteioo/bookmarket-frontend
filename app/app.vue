@@ -12,6 +12,9 @@
 import { de } from '@nuxt/ui/locale'
 
 useHead({
+  htmlAttrs: {
+    lang: 'de'
+  },
   titleTemplate: title => title ? `${title} · Bücherbörse der FVJus` : 'Bücherbörse der FVJus',
 })
 </script>
