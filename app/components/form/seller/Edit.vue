@@ -54,9 +54,9 @@ const props = defineProps({
     required: true
   },
 })
-const showModal = defineModel<boolean>()
 
-const { token } = useAuth()
+const showModal = defineModel<boolean>()
+const { $api } = useNuxtApp()
 const form = ref()
 const loading = ref<boolean>(false)
 const user = ref<Seller | undefined>()
@@ -89,9 +89,7 @@ const validate = (state: SellerFields): FormError[] => {
 }
 
 const onSubmit = async (event: FormSubmitEvent<SellerFields>) => {
-  loading.value = true
   await editSeller(event)
-  loading.value = false
 
   if (user.value) {
     props.onSubmit(user.value)
@@ -104,46 +102,42 @@ async function editSeller(event: FormSubmitEvent<SellerFields>) {
   loading.value = true
   form.value.clear()
 
-  const response = await fetch(useRuntimeConfig().public.apiUrl + '/sellers/' + props.initialSeller.id, {
+  user.value = await $api(`/sellers/${props.initialSeller.id}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${token.value}`,
+    body: event.data,
+    onResponse: () => {
+      loading.value = false
     },
-    body: JSON.stringify(event.data),
-  })
-  loading.value = false
-  
-  if (response.ok) {
-    user.value = await response.json()
-    useToast().add({
-      title: 'Erfolg',
-      description: 'Verkäufer:in erfolgreich bearbeitet.',
-      icon: 'i-heroicons-check-circle',
-      color: 'success',
-    })
-    showModal.value = false
-  } else {
-    const data = await response.json()
-    
-    const errors = []
-    for (const field in data) {
-      if (data[field].length > 0) {
-        errors.push({
-          name: field,
-          message: data[field][0]
-        })
-      }
-    }
-    form.value.setErrors(errors)
+    onResponseError: ({ response }) => {
+      const data = response._data
 
-    useToast().add({
-      title: 'Fehler',
-      description: 'Verkäufer:in konnte nicht bearbeitet werden!',
-      icon: 'i-heroicons-exclamation-triangle',
-      color: 'error',
-    })
-  }
+      const errors = []
+      for (const field in data) {
+        if (data[field].length > 0) {
+          errors.push({
+            name: field,
+            message: data[field][0]
+          })
+        }
+      }
+      form.value.setErrors(errors)
+
+      useToast().add({
+        title: 'Fehler',
+        description: 'Verkäufer:in konnte nicht bearbeitet werden!',
+        icon: 'i-heroicons-exclamation-triangle',
+        color: 'error',
+      })
+    }
+  })
+
+  useToast().add({
+    title: 'Erfolg',
+    description: 'Verkäufer:in erfolgreich bearbeitet.',
+    icon: 'i-heroicons-check-circle',
+    color: 'success',
+  })
+  showModal.value = false
 }
 
 const clearForm = () => {

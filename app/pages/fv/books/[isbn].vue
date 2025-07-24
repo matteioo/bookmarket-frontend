@@ -206,6 +206,7 @@ definePageMeta({
   }
 })
 
+const { $api } = useNuxtApp()
 const UIcon = resolveComponent('UIcon')
 const table = useTemplateRef('table')
 const columns: TableColumn<Offer>[] = [
@@ -293,7 +294,6 @@ const timelineItems = [
     icon: 'i-lucide-git-merge',
   }
 ] satisfies TimelineItem[]
-const { token } = useAuth()
 const route = useRoute()
 const router = useRouter()
 const editHistoryModal = ref<boolean>(false)
@@ -316,10 +316,7 @@ const fetchParams = computed(() => ({
   book__isbn: route.params.isbn,
 }))
 
-const { data: book, refresh: refreshSellerData } = useFetch<Book>(useRuntimeConfig().public.apiUrl + '/books/' + route.params.isbn, {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data: book, refresh: refreshSellerData } = useApiFetch<Book>('/books/' + route.params.isbn, {
   onResponseError: () => {
     // Try to go back to the previous page
     if (window.history.length > 1) {
@@ -331,10 +328,7 @@ const { data: book, refresh: refreshSellerData } = useFetch<Book>(useRuntimeConf
   },
 })
 
-const { data: offers, pending: loadingOffers } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
-  headers: {
-    Authorization: `${token.value}`,
-  },
+const { data: offers, pending: loadingOffers } = useApiFetch<Page<Offer>>('/offers', {
   params: fetchParams,
 })
 
@@ -348,13 +342,9 @@ const onEditSeller = async () => {
 }
 
 async function fetchPriceBins(isbn: string) {
-  await $fetch(useRuntimeConfig().public.apiUrl + `/books/${isbn}/price-bins`, {
-    headers: {
-      Authorization: `${token.value}`,
-    },
-  })
+  await $api<BookPriceBins>(`/books/${isbn}/price-bins`)
   .then((res) => {
-    bookPriceBins.value = res as BookPriceBins
+    bookPriceBins.value = res
   })
   .catch((error) => {
     console.error('Error while fetching price bins', error)

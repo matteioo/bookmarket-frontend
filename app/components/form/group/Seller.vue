@@ -57,7 +57,7 @@ const props = defineProps({
   }
 })
 
-const { token } = useAuth()
+const { $api } = useNuxtApp()
 const router = useRouter()
 const form = ref()
 const loading = ref<boolean>(false)
@@ -79,6 +79,7 @@ const validate = (state: SellerFields): FormError[] => {
   if (state.matriculationNumber && state.matriculationNumber.toString().length !== 8)
     errors.push({ name: 'matriculationNumber', message: 'Matrikelnummer muss genau 8 Ziffern haben' })
   if (!state.email) errors.push({ name: 'email', message: 'Email ist verpflichtend' })
+  if (state.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) errors.push({ name: 'email', message: 'Email ist ungültig' })
   if (state.note && state.note.length > 255) errors.push({ name: 'note', message: 'Anmerkung darf maximal 255 Zeichen enthalten' })
   return errors
 }
@@ -97,48 +98,45 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
   loading.value = true
   form.value.clear()
 
-  const response = await fetch(useRuntimeConfig().public.apiUrl + '/sellers', {
+  const response = await $api<Seller>('/sellers', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${token.value}`,
+    body: event.data,
+    onResponse: () => {
+      loading.value = false
     },
-    body: JSON.stringify(event.data),
-  })
-  loading.value = false
-  
-  if (response.ok) {
-    user.value = await response.json()
-    useToast().add({
-      title: 'Erfolg',
-      description: 'Verkäufer:in erfolgreich angelegt.',
-      icon: 'i-heroicons-check-circle',
-      color: 'success',
-    })
+    onResponseError: ({ response }) => {
+      const data = response._data
     
-    if (props.to) {
-      router.push(props.to)
-    }
-  } else {
-    const data = await response.json()
-    
-    const errors = []
-    for (const field in data) {
-      if (data[field].length > 0) {
-        errors.push({
-          name: field,
-          message: data[field][0]
-        })
+      const errors = []
+      for (const field in data) {
+        if (data[field].length > 0) {
+          errors.push({
+            name: field,
+            message: data[field][0]
+          })
+        }
       }
-    }
-    form.value.setErrors(errors)
+      form.value.setErrors(errors)
 
-    useToast().add({
-      title: 'Fehler',
-      description: 'Verkäufer:in konnte nicht angelegt werden!',
-      icon: 'i-heroicons-exclamation-triangle',
-      color: 'error',
-    })
+      useToast().add({
+        title: 'Fehler',
+        description: 'Verkäufer:in konnte nicht angelegt werden!',
+        icon: 'i-heroicons-exclamation-triangle',
+        color: 'error',
+      })
+    }
+  })
+  
+  user.value = response
+  useToast().add({
+    title: 'Erfolg',
+    description: 'Verkäufer:in erfolgreich angelegt.',
+    icon: 'i-heroicons-check-circle',
+    color: 'success',
+  })
+  
+  if (props.to) {
+    router.push(props.to)
   }
 }
 </script>

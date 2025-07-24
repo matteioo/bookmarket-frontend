@@ -16,11 +16,15 @@
       <UInput v-model="state.publisher" type="text" placeholder="FVJus Verlag" class="w-full" />
     </UFormField>
 
-    <div class="inline-flex flex-row gap-x-2">
+    <UFormField label="Prüfung" name="exam_id">
+      <USelect v-model="state.exam_id" :items="exams" label-key="name" value-key="id" placeholder="Prüfung auswählen" class="w-full" />
+    </UFormField>
+
+    <div class="grid grid-cols-2 gap-x-4">
       <UFormField label="Auflage" name="edition" required>
-        <UInput v-model="state.edition" type="number" placeholder="14" class="w-full" />
+        <UInput v-model="state.edition" type="text" placeholder="14" class="w-full" />
       </UFormField>
-      
+
       <UFormField label="Max. Preis" name="maxPrice" required>
         <UInputNumber
           v-model="state.maxPrice"
@@ -36,10 +40,6 @@
         />
       </UFormField>
     </div>
-
-    <UFormField label="Prüfung" name="exam_id">
-      <USelect v-model="state.exam_id" :items="exams" label-key="name" value-key="id" class="w-full" placeholder="Prüfung auswählen" />
-    </UFormField>
 
     <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
       <UButton color="primary" variant="outline" label="Zurücksetzen" @click="clearForm" />
@@ -71,14 +71,14 @@ const props = defineProps({
   }
 })
 
-const { token } = useAuth()
+const { $api } = useNuxtApp()
 const form = ref()
 const loading = ref<boolean>(false)
-const exams = ref<Exam[]>([])
+const exams = ref<Exam[]>([{ id: null, name: '-Keine Prüfung-' }])
 
-onMounted(fetchExams)
+fetchExams()
 
-const state = reactive<BookFields>({
+const initialState: BookFields = {
   isbn: '',
   title: '',
   authors: '',
@@ -86,7 +86,8 @@ const state = reactive<BookFields>({
   edition: undefined,
   maxPrice: undefined,
   exam_id: undefined,
-})
+}
+const state = reactive<BookFields>({ ...initialState })
 
 const validate = (state: BookFields): FormError[] => {
   const errors = []
@@ -96,7 +97,7 @@ const validate = (state: BookFields): FormError[] => {
   if (!state.authors) errors.push({ name: 'authors', message: 'Autor(en) sind verpflichtend' })
   if (!state.publisher) errors.push({ name: 'publisher', message: 'Verlag ist verpflichtend' })
   if (state.maxPrice == null) errors.push({ name: 'maxPrice', message: 'Max. Preis ist verpflichtend' })
-  //if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
+  if (state.maxPrice && state.maxPrice <= 0) errors.push({ name: 'maxPrice', message: 'Max. Preis muss größer als 0 sein' })
   if (!state.edition) errors.push({ name: 'edition', message: 'Auflage ist verpflichtend' })
   if (state.edition && state.edition <= 0) errors.push({ name: 'edition', message: 'Auflage muss größer als 0 sein' })
   return errors
@@ -116,71 +117,56 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
   loading.value = true
 
   const body = {...event.data}
-  if (body.exam_id === undefined) {
+  if (body.exam_id === null || body.exam_id === undefined) {
     delete body.exam_id
   }
 
-  const response = await fetch(useRuntimeConfig().public.apiUrl + '/books', {
+  const createdBook = await $api<Book>('/books', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${token.value}`,
+    body: body,
+    onResponse: () => {
+      loading.value = false
     },
-    body: JSON.stringify(event.data),
-  })
-  loading.value = false
-  
-  if (response.ok) {
-    const book = await response.json()
-    useToast().add({
-      title: 'Erfolg',
-      description: 'Buch erfolgreich angelegt.',
-      icon: 'i-heroicons-check-circle',
-      color: 'success',
-    })
-
-    props.onSubmit(book)
-  } else {
-    const data = await response.json()
+    onResponseError: ({ response }) => {
+      const data = response._data
     
-    const errors = []
-    for (const field in data) {
-      if (data[field].length > 0) {
-        errors.push({
-          name: field,
-          message: data[field][0]
-        })
+      const errors = []
+      for (const field in data) {
+        if (data[field].length > 0) {
+          errors.push({
+            name: field,
+            message: data[field][0]
+          })
+        }
       }
+      form.value.setErrors(errors)
+
+      useToast().add({
+        title: 'Fehler',
+        description: 'Buch konnte nicht angelegt werden!',
+        icon: 'i-heroicons-exclamation-triangle',
+        color: 'error',
+      })
     }
-    form.value.setErrors(errors)
+  })
 
-    useToast().add({
-      title: 'Fehler',
-      description: 'Buch konnte nicht angelegt werden!',
-      icon: 'i-heroicons-exclamation-triangle',
-      color: 'error',
-    })
-  }
-}
+  useToast().add({
+    title: 'Erfolg',
+    description: 'Buch erfolgreich angelegt.',
+    icon: 'i-heroicons-check-circle',
+    color: 'success',
+  })
 
-const clearForm = () => {
-  state.isbn = ''
-  state.title = ''
-  state.authors = ''
-  state.maxPrice = undefined
-  state.edition = undefined
-  state.publisher = ''
-  state.exam_id = undefined
+  props.onSubmit(createdBook)
 }
 
 async function fetchExams() {
-  const response = await $fetch<Page<Exam>>(useRuntimeConfig().public.apiUrl + '/exams', {
-    headers: {
-      Authorization: `${token.value}`,
-    },
-  })
-  
-  exams.value.push({id: null, name: '-Keine Prüfung-'})
-  exams.value.push(...response.results)
+  const { data } = await useApiFetch<Page<Exam>>('/exams')
+  exams.value.push(...data.value?.results || [])
+}
+
+const clearForm = () => {
+  form.value.clear()
+  Object.assign(state, initialState)
 }
 </script>

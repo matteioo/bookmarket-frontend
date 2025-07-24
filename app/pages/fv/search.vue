@@ -78,7 +78,6 @@ onMounted(() => {
   search()
 })
 
-const { token } = useAuth()
 const currentPage = ref<number>(1)
 const itemsPerPage = ref<number>(10)
 const filter = ref({
@@ -117,11 +116,8 @@ const fetchParams = computed(() => ({
   active: filter.value.active.active ? undefined : 'true',
 }))
 
-const { data: offerResults, refresh } = useFetch<Page<Offer>>(useRuntimeConfig().public.apiUrl + '/offers', {
+const { data: offerResults, refresh } = useApiFetch<Page<Offer>>('/offers', {
   params: fetchParams,
-  headers: {
-    Authorization: `${token.value}`,
-  },
   onResponse: async () => {
     await navigateTo({
       path: '/fv/search',

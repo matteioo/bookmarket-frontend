@@ -130,7 +130,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { token } = useAuth()
+const { $api } = useNuxtApp()
 const loadingOffer = ref<boolean>(false)
 const selectedOffer = ref<Offer | null>(null)
 const addedOffers = ref<Offer[]>([])
@@ -183,24 +183,12 @@ async function searchOffer () {
 
   const offerId = Number(state.offerId)
   try {
-    const offerById = await $fetch<Offer>(useRuntimeConfig().public.apiUrl + '/offers/' + offerId, {
-      method: 'GET',
-      headers: {
-        Authorization: `${token.value}`,
-      },
-    })
+    selectedOffer.value = await fetchOffer(offerId)
 
-    if (offerById) {
-      selectedOffer.value = offerById
-
-      if (!selectedOffer.value.active) {
-        errorMsg.value = 'Angebot ist nicht aktiv!'
-        state.offerId = ''
-        selectedOffer.value = null
-      }
-    } else {
+    if (!selectedOffer.value.active) {
+      errorMsg.value = 'Angebot ist nicht aktiv!'
+      state.offerId = ''
       selectedOffer.value = null
-      console.error('No offer found with ID:', offerId)
     }
   } catch {
     selectedOffer.value = null
@@ -228,49 +216,44 @@ function removeOffer(offer: Offer) {
 async function checkout() {
   loadingCheckout.value = true
 
-  try {
-    await $fetch(useRuntimeConfig().public.apiUrl + '/offers/sell' , {
-      method: 'POST',
-      headers: {
-        Authorization: `${token.value}`,
-      },
-      body: JSON.stringify({
-        offers: addedOfferIds(),
-      }),
-    })
-
-    useToast().add({
-      title: 'Bücher wurden erfolgreich verkauft!',
-      icon: 'i-heroicons-check-circle',
-      color: 'success',
-    })
-
-    await navigateTo({
-      path: '/fv',
-    })
-
-  } catch {
-    confirmModalOpen.value = false
-    await updateOffers()
-    useToast().add({
-      title: 'Fehler',
-      description: 'Bücher konnten nicht verkauft werden!',
-      icon: 'i-heroicons-exclamation-triangle',
-      color: 'error',
-      actions: [{
-        label: 'Zurücksetzen',
-        variant: 'outline',
+  await $api('/offers/sell' , {
+    method: 'POST',
+    body: {
+      offers: addedOfferIds(),
+    },
+    onResponse: () => {
+      loadingCheckout.value = false
+      confirmModalOpen.value = false
+    },
+    onResponseError: async () => {
+      await updateOffers()
+      useToast().add({
+        title: 'Fehler',
+        description: 'Bücher konnten nicht verkauft werden!',
+        icon: 'i-heroicons-exclamation-triangle',
         color: 'error',
-        onClick: () => {
-          addedOffers.value = []
-        },
-      }]
-    })
-  } finally {
-    loadingCheckout.value = false
-  }
+        actions: [{
+          label: 'Zurücksetzen',
+          variant: 'outline',
+          color: 'error',
+          onClick: () => {
+            // TODO: Reset only inactive offers instead of all
+            addedOffers.value = []
+          },
+        }]
+      })
+    }
+  })
 
-  confirmModalOpen.value = false
+  useToast().add({
+    title: 'Bücher wurden erfolgreich verkauft!',
+    icon: 'i-heroicons-check-circle',
+    color: 'success',
+  })
+
+  await navigateTo({
+    path: '/fv',
+  })
 }
 
 function addedOfferIds() {
@@ -288,11 +271,11 @@ async function updateOffers() {
       return
     }
 
-    const refetchedOffer = await refetchOffer(offer.id)
-    if (refetchedOffer) {
+    try {
+      const refetchedOffer = await fetchOffer(offer.id)
       offer.active = refetchedOffer.active
-    } else {
-      // If the offer is not found, set active to false
+    } catch {
+      // If the offer is not found or any error occurs, set active to false
       offer.active = false
     }
   })
@@ -302,23 +285,15 @@ async function updateOffers() {
   updatingAddedOffers.value = false
 }
 
-async function refetchOffer(id: number): Promise<Offer | null> {
-  try {
-    const offerById = await $fetch<Offer>(useRuntimeConfig().public.apiUrl + '/offers/' + id, {
-      method: 'GET',
-      headers: {
-        Authorization: `${token.value}`,
-      },
-    })
-
-    if (offerById) {
-      return offerById
-    } else {
-      console.error('No offer found with ID:', id)
-      return null
-    }
-  } catch {
-    return null
-  }
+async function fetchOffer(id: number): Promise<Offer> {
+  return await $api<Offer>('/offers/' + id, {
+    onResponseError: ({ response }) => {
+      if (response.status === 404) {
+        console.error('Offer not found:', id)
+      } else {
+        console.error('Failed to refetch offer:', response)
+      }
+    },
+  })
 }
 </script>

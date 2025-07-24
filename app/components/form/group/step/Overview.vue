@@ -51,7 +51,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const { token } = useAuth()
+const { $api } = useNuxtApp()
 
 const buttonLabel = computed(() => {
   return props.modelValue.offers.length === 1 ? 'Angebot anlegen' : 'Angebote anlegen'
@@ -67,35 +67,26 @@ const submitOffers = async () => {
     location: offer.location,
   }))
 
-  const response = await fetch(useRuntimeConfig().public.apiUrl + '/offers/bulk', {
+  await $api('/offers/bulk', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${token.value}`,
-    },
-    body: JSON.stringify(createOffers),
+    body: createOffers,
+    onResponseError: () => {
+      useToast().add({
+        title: 'Fehler',
+        description: 'Angebote konnten nicht angelegt werden.',
+        icon: 'i-heroicons-x-circle',
+        color: 'error',
+      })
+    }
   })
 
-  if (response.ok) {
-    useToast().add({
-      title: 'Erfolg',
-      description: 'Angebot erfolgreich angelegt.',
-      icon: 'i-heroicons-check-circle',
-      color: 'success',
-    })
-    
-    router.push('/fv/offers')
-  } else {
-    const data = await response.json()
-    console.error('No offers created', data)
-    
-    useToast().add({
-      title: 'Fehler',
-      description: data,
-      icon: 'i-heroicons-check-circle',
-      color: 'error',
-    })
-  }
+  useToast().add({
+    title: 'Erfolg',
+    description: 'Angebote erfolgreich angelegt.',
+    icon: 'i-heroicons-check-circle',
+    color: 'success',
+  })
+  router.push('/fv/offers')
 }
 
 interface CreateOffer {
