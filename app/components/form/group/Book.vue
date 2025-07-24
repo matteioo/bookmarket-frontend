@@ -117,7 +117,7 @@ async function submitBook(event: FormSubmitEvent<BookFields>) {
   loading.value = true
 
   const body = {...event.data}
-  if (body.exam_id === null) {
+  if (body.exam_id === null || body.exam_id === undefined) {
     delete body.exam_id
   }
 
