@@ -20,7 +20,7 @@
 
 <style lang="css" scoped>
 .gradient-border {
-  background: linear-gradient(var(--gradient-angle), var(--color-yellow-400), rgb(var(--color-yellow-400) / 0.6), rgb(255 255 255 / 0.8), var(--color-yellow-400));
+  background: linear-gradient(var(--gradient-angle), var(--color-yellow-400), var(--color-yellow-400), rgb(255 255 255 / 0.8), var(--color-yellow-400));
 }
 @media (prefers-color-scheme: dark) {
   .gradient-border {
