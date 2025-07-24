@@ -83,16 +83,8 @@
                 </UFormField>
 
                 <UFormField label="Preis" name="price">
-                  <UInputNumber
+                  <FormInputPrice
                     v-model="offerFormState.price"
-                    :min="0"
-                    :max="999"
-                    :format-options="{
-                      style: 'currency',
-                      currency: 'EUR',
-                      currencyDisplay: 'symbol',
-                      currencySign: 'accounting'
-                    }"
                   />
                 </UFormField>
                 

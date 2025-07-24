@@ -4,18 +4,11 @@
       <template #label>
         <span class="block text-sm text-neutral-600 dark:text-neutral-400">{{ label }}</span>
       </template>
-      <UInputNumber
+      <FormInputPrice
         v-model="model"
         class="w-full"
         :size="size"
-        :min="0"
         :max="maxPrice"
-        :format-options="{
-          style: 'currency',
-          currency: 'EUR',
-          currencyDisplay: 'symbol',
-          currencySign: 'accounting'
-        }"
       />
     </UFormField>
   </div>
