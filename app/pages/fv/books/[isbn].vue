@@ -206,6 +206,7 @@ definePageMeta({
   }
 })
 
+const { $api } = useNuxtApp()
 const UIcon = resolveComponent('UIcon')
 const table = useTemplateRef('table')
 const columns: TableColumn<Offer>[] = [
@@ -293,7 +294,6 @@ const timelineItems = [
     icon: 'i-lucide-git-merge',
   }
 ] satisfies TimelineItem[]
-const { token } = useAuth()
 const route = useRoute()
 const router = useRouter()
 const editHistoryModal = ref<boolean>(false)
@@ -342,13 +342,9 @@ const onEditSeller = async () => {
 }
 
 async function fetchPriceBins(isbn: string) {
-  await $fetch(useRuntimeConfig().public.apiUrl + `/books/${isbn}/price-bins`, {
-    headers: {
-      Authorization: `${token.value}`,
-    },
-  })
+  await $api<BookPriceBins>(`/books/${isbn}/price-bins`)
   .then((res) => {
-    bookPriceBins.value = res as BookPriceBins
+    bookPriceBins.value = res
   })
   .catch((error) => {
     console.error('Error while fetching price bins', error)

@@ -161,7 +161,7 @@ type OfferFormType = {
   location: string
 }
 
-const { token } = useAuth()
+const { $api } = useNuxtApp()
 const addedOffers = ref<Offer[]>([])
 const sellerModal = ref<boolean>(false)
 const seller = ref<Seller | null>()
@@ -198,29 +198,21 @@ const isbnValidators = (state: IsbnFormType): FormError[] => {
 const handleIsbnSubmit = async (event: FormSubmitEvent<IsbnFormType>) => {
   loadingIsbn.value = true
 
-  try {
-    const singleBook = await $fetch<Book>(useRuntimeConfig().public.apiUrl + `/books/${event.data.isbn}`, {
-      headers: {
-        Authorization: `${token.value}`,
-      },
-    })
-
-    if (singleBook) {
-      selectedBook.value = singleBook
-    } else {
+  selectedBook.value = await $api<Book>(`/books/${event.data.isbn}`, {
+    onResponse: () => {
+      loadingIsbn.value = false
+    },
+    onResponseError: () => {
       selectedBook.value = null
-      console.error('No book found')
+      useToast().add({
+        title: 'Fehler',
+        description: 'Kein Buch mit dieser ISBN gefunden.',
+        icon: 'i-lucide-book-dashed',
+        color: 'error',
+      })
+      bookModal.value = true
     }
-  } catch (error) {
-    selectedBook.value = null
-    console.error('Error while fetching book', error)
-  }
-
-  if (!selectedBook.value) {
-    bookModal.value = true
-  }
-
-  loadingIsbn.value = false
+  })
 }
 
 const createOffer = async (event: FormSubmitEvent<OfferFormType>) => {
@@ -229,41 +221,34 @@ const createOffer = async (event: FormSubmitEvent<OfferFormType>) => {
     return
   }
 
-  const response = await fetch(useRuntimeConfig().public.apiUrl + '/offers', {
+  const response = await $api<Offer>('/offers', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${token.value}`,
-    },
-    body: JSON.stringify({
+    body: {
       book_id: selectedBook.value.isbn,
       seller_id: seller.value.id,
       price: event.data.price,
       marked: event.data.marked,
       location: event.data.location,
-    }),
+    },
+    onResponseError: ({ response }) => {
+      console.error('Failed to create offer', response.body, response._data)
+
+      useToast().add({
+        title: 'Fehler',
+        description: 'Angebot konnte nicht erstellt werden!',
+        icon: 'i-heroicons-check-circle',
+        color: 'error',
+      })
+    }
   })
 
-  if (response.ok) {
-    useToast().add({
-      title: 'Erfolg',
-      description: 'Angebot erfolgreich angelegt.',
-      icon: 'i-heroicons-check-circle',
-      color: 'success',
-    })
-    const createdOffer = await response.json()
-    addedOffers.value.unshift(createdOffer) // Add to beginning for newest-first display
-  } else {
-    const data = await response.json()
-    console.error('No offers created', data)
-    
-    useToast().add({
-      title: 'Fehler',
-      description: data,
-      icon: 'i-heroicons-check-circle',
-      color: 'error',
-    })
-  }
+  useToast().add({
+    title: 'Erfolg',
+    description: 'Angebot erfolgreich angelegt.',
+    icon: 'i-heroicons-check-circle',
+    color: 'success',
+  })
+  addedOffers.value.unshift(response) // Add to beginning for newest-first display
 }
 
 const handleRemoveOffer = (offerToRemove: Offer) => {

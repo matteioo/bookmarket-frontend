@@ -139,7 +139,7 @@ async function editBook(event: FormSubmitEvent<BookFields>) {
   loading.value = true
   form.value.clear() 
 
-  const editedBook = await $api<Book>('/books/' + props.initialBook.isbn, {
+  const editedBook = await $api<Book>(`/books/${props.initialBook.isbn}`, {
     method: 'PUT',
     body: event.data,
     onResponse: () => {

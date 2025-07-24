@@ -160,14 +160,14 @@ const props = defineProps({
   }
 })
 
-const { token } = useAuth()
+const { $api } = useNuxtApp()
 const form = ref()
 const loading = ref<boolean>(false)
 const loadingIsbn = ref<boolean>(false)
 const selected = ref<Book | undefined>()
 const offers = ref<Offer[]>(props.currentOffers)
 const checkedIsbn = ref<boolean>(false)
-const exams = ref<Exam[]>([])
+const exams = ref<Exam[]>([{id: null, name: '-Keine Prüfung-'}])
 const offerErrors = ref<boolean>(false)
 const bookPriceBins = ref<BookPriceBins | undefined>()
 const currentPriceBinsIsbn = ref<string>('')  // Track which offer's price bins are being displayed
@@ -222,29 +222,19 @@ const handleIsbnSearch = async () => {
     return
   }
 
-  try {
-    const singleBook = await $fetch<Book>(useRuntimeConfig().public.apiUrl + `/books/${formState.isbn}`, {
-      headers: {
-        Authorization: `${token.value}`,
-      },
-    })
-
-    if (singleBook) {
-      selected.value = singleBook
-      fetchPriceBins(singleBook.isbn)
-    } else {
+  selected.value = await $api<Book>(`/books/${formState.isbn}`, {
+    onResponse: () => {
+      checkedIsbn.value = true
+      loadingIsbn.value = false
+    },
+    onResponseError: () => {
+      console.error('No book found with this ISBN')
       selected.value = undefined
-      console.error('No book found')
+      bookPriceBins.value = undefined
     }
-  } catch (error) {
-    selected.value = undefined
-    console.error('Error while fetching book', error)
+  })
 
-    bookPriceBins.value = undefined
-  }
-
-  checkedIsbn.value = true
-  loadingIsbn.value = false
+  fetchPriceBins(selected.value.isbn)
 }
 
 // This anonymous function is called by the UForm component to create a new book
@@ -257,36 +247,31 @@ const onBookCreate = async (event: FormSubmitEvent<BookFields>) => {
     delete body.exam_id
   }
 
-  const response = await fetch(useRuntimeConfig().public.apiUrl + '/books', {
+  const newBook = await $api<Book>('/books', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${token.value}`,
+    body: body,
+    onResponse: () => {
+      loading.value = false
     },
-    body: JSON.stringify(body),
+    onResponseError: ({ response }) => {
+      selected.value = undefined
+      console.error('No book created')
+
+      const data = response._data
+      const errors = []
+      for (const field in data) {
+        if (data[field].length > 0) {
+          errors.push({
+            name: field,
+            message: data[field][0]
+          })
+        }
+      }
+      form.value.setErrors(errors)
+    }
   })
 
-  if (response.ok) {
-    // First create the book and then create the offer draft
-    const newBook = await response.json()
-    createOffer(newBook)
-  } else {
-    selected.value = undefined
-    console.error('No book created')
-
-    const data = await response.json()
-    const errors = []
-    for (const field in data) {
-      if (data[field].length > 0) {
-        errors.push({
-          name: field,
-          message: data[field][0]
-        })
-      }
-    }
-    form.value.setErrors(errors)
-  }
-  loading.value = false
+  createOffer(newBook)
 }
 
 const handleDeleteItem = (item: Offer) => {
@@ -339,25 +324,15 @@ const clearForm = (isbn?: string) => {
 }
 
 async function fetchExams() {
-  const response = await $fetch<Page<Exam>>(useRuntimeConfig().public.apiUrl + '/exams', {
-    headers: {
-      Authorization: `${token.value}`,
-    },
-  })
-  
-  exams.value.push({id: null, name: '-Keine Prüfung-'})
+  const response = await $api<Page<Exam>>('/exams')
   exams.value.push(...response.results)
 }
 
 async function fetchPriceBins(isbn: string) {
   currentPriceBinsIsbn.value = isbn
-  await $fetch(useRuntimeConfig().public.apiUrl + `/books/${isbn}/price-bins`, {
-    headers: {
-      Authorization: `${token.value}`,
-    },
-  })
+  await $api<BookPriceBins>(`/books/${isbn}/price-bins`)
   .then((res) => {
-    bookPriceBins.value = res as BookPriceBins
+    bookPriceBins.value = res
   })
   .catch((error) => {
     console.error('Error while fetching price bins', error)
