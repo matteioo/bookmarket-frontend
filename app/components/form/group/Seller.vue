@@ -120,7 +120,7 @@ async function createSeller(event: FormSubmitEvent<SellerFields>) {
 
       useToast().add({
         title: 'Fehler',
-        description: 'Buch konnte nicht angelegt werden!',
+        description: 'Verkäufer:in konnte nicht angelegt werden!',
         icon: 'i-heroicons-exclamation-triangle',
         color: 'error',
       })
