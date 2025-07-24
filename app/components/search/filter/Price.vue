@@ -77,13 +77,7 @@ import type { Filter, PriceFilter } from '~/interfaces/SearchFilters'
 
 const props = defineProps({
   priceFilter: {
-    type: Object as PropType<{
-      active: boolean
-      value: {
-        min: number | undefined
-        max: number | undefined
-      }
-    }>,
+    type: Object as PropType<Filter<PriceFilter>>,
     required: true,
   }
 })
@@ -116,11 +110,14 @@ const validate = (state: PriceFilter) => {
 
 const priceLabel = computed(() => {
   if (localPriceFilter.value.value.min !== undefined && localPriceFilter.value.value.max !== undefined) {
-    return `Preis: ${localPriceFilter.value.value.min.toFixed(2)} - ${localPriceFilter.value.value.max.toFixed(2)} €`
+    if (localPriceFilter.value.value.min === localPriceFilter.value.value.max) {
+      return `Preis: ${localPriceFilter.value.value.min} €`
+    }
+    return `Preis: ${localPriceFilter.value.value.min} - ${localPriceFilter.value.value.max} €`
   } else if (localPriceFilter.value.value.min !== undefined) {
-    return `Preis: ab ${localPriceFilter.value.value.min.toFixed(2)} €`
+    return `Preis: ab ${localPriceFilter.value.value.min} €`
   } else if (localPriceFilter.value.value.max !== undefined) {
-    return `Preis: bis ${localPriceFilter.value.value.max.toFixed(2)} €`
+    return `Preis: bis ${localPriceFilter.value.value.max} €`
   } else {
     return 'Preis'
   }
