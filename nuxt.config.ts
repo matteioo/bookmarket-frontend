@@ -1,8 +1,6 @@
-import tailwindcss from "@tailwindcss/vite";
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-02-06',
+  compatibilityDate: '2025-07-25',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   modules: [
@@ -13,11 +11,6 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@vueuse/nuxt'
   ],
-  vite: {
-    plugins: [
-      tailwindcss(),
-    ],
-  },
   app: {
     head: {
       link: [
@@ -31,12 +24,12 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      appVersion: 'v0.1.0-beta',
+      appVersion: 'v0.1.0',
       apiUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
     },
   },
   security: {
-    enabled: process.env.NODE_ENV !== 'development',
+    enabled: process.env.NODE_ENV === 'production',
     headers: {
       contentSecurityPolicy: {
         "script-src": [
@@ -61,6 +54,7 @@ export default defineNuxtConfig({
       endpoints: {
         signIn: { path: '/login', method: 'post' },
         getSession: { path: '/user', method: 'get' },
+        signOut: false,
       },
       session: {
         dataType: {
