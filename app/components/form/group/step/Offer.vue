@@ -29,17 +29,9 @@
             </UFormField>
             
             <UFormField label="Max. Preis" name="maxPrice" required>
-              <UInputNumber
+              <FormInputPrice
                 v-model="formState.maxPrice"
                 class="w-full"
-                :min="0"
-                :max="999"
-                :format-options="{
-                  style: 'currency',
-                  currency: 'EUR',
-                  currencyDisplay: 'symbol',
-                  currencySign: 'accounting'
-                }"
               />
             </UFormField>
           </div>

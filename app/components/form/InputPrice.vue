@@ -1,46 +1,64 @@
 <template>
-  <div class="w-full">
-    <UInput ref="inputRef" :required="props.required" :size="(props.size as InputSize)" :placeholder="props.placeholder" />
-  </div>
+  <UInputNumber
+    v-model="modelValue"
+    v-bind="$attrs"
+    :min="min"
+    :max="max"
+    :format-options="formatOptions"
+    :class="inputClass"
+  />
 </template>
 
-
 <script setup lang="ts">
-type InputSize = 'xs' | 'md'
+/**
+ * A wrapper around UInputNumber with sensible defaults for price inputs.
+ * 
+ * Default configuration:
+ * - Range: 0 to 999
+ * - Currency: EUR with symbol display
+ * - No decimal places
+ * - Full width
+ * 
+ * All props can be overridden as needed.
+ */
 
-const props = defineProps({
-  modelValue: {
-    type: Number,
-    default: 0,
-  },
-  minPrice: {
-    type: Number,
-    default: 0,
-  },
-  maxPrice: {
-    type: Number,
-    default: 999.99,
-  },
-  size: {
-    type: String as PropType<InputSize>,
-    default: 'md',
-  },
-  required: {
-    type: Boolean,
-    default: false,
-  },
-  placeholder: {
-    type: String,
-    required: false,
-    default: '',
-  }
+interface Props {
+  /** The v-model value */
+  modelValue?: number | null
+  /** Minimum allowed value (default: 0) */
+  min?: number
+  /** Maximum allowed value (default: 999) */
+  max?: number
+  /** Number formatting options (default: EUR currency format) */
+  formatOptions?: Intl.NumberFormatOptions
+  /** CSS classes for the input (default: 'w-full') */
+  class?: string
+}
+
+interface Emits {
+  (e: 'update:modelValue', value: number | null): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: null,
+  min: 0,
+  max: 999,
+  formatOptions: () => ({
+    style: 'currency',
+    currency: 'EUR',
+    currencyDisplay: 'symbol',
+    currencySign: 'accounting',
+    maximumFractionDigits: 0,
+  }),
+  class: 'w-full'
 })
 
-const { inputRef, numberValue } = useEuroCurrencyInput({ valueRange: { min: props.minPrice, max: props.maxPrice }})
+const emit = defineEmits<Emits>()
 
-const emit = defineEmits(['update:modelValue'])
-
-watch (numberValue, (newValue) => {
-  emit('update:modelValue', newValue)
+const modelValue = computed({
+  get: () => props.modelValue,
+  set: (value: number | null | undefined) => emit('update:modelValue', value ?? null)
 })
+
+const inputClass = computed(() => props.class)
 </script>
