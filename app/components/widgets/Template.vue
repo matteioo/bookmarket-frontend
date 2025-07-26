@@ -1,10 +1,12 @@
 <template>
   <div class="group relative gradient-container rounded-lg z-20 bg-neutral-200 dark:bg-neutral-800">
     <div class="absolute inset-0 w-full h-full opacity-0 gradient-border gradient-border -z-1 rounded-lg group-hover:opacity-100 group-hover:transition-all group-hover:duration-300 group-hover:ease-linear" />
-    <div class="group-hover:opacity-20 absolute inset-0 w-full bg-linear-to-bl to-transparent to-40% from-yellow-400/75 rounded-lg opacity-0 transition-opacity duration-300" />
     <div class="w-full h-full p-px">
-      <div class="h-full flex flex-col gap-2 p-4 rounded-lg bg-white dark:bg-neutral-900">
-        <slot />
+      <div class="relative h-full flex flex-col gap-2 p-4 rounded-lg bg-white dark:bg-neutral-900">
+        <div class="z-1">
+          <slot />
+        </div>
+        <div class="group-hover:opacity-20 absolute inset-0 w-full bg-linear-to-bl to-transparent to-40% from-yellow-400/75 rounded-lg opacity-0 transition-opacity duration-300" />
       </div>
     </div>
   </div>
