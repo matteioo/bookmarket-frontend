@@ -5,15 +5,13 @@
       :class="gradientBorderClass"
     />
     <div class="w-full h-full p-px">
-      <div class="relative h-full flex flex-col gap-2 p-4 rounded-lg bg-white dark:bg-neutral-900">
-        <div class="z-1">
-          <slot />
-        </div>
-        <div 
-          class="group-hover:opacity-20 absolute inset-0 w-full bg-linear-to-bl to-transparent to-25% rounded-lg opacity-0 transition-opacity duration-300"
-          :class="overlayClass"
-        />
+      <div class="z-1 h-full p-4 rounded-lg bg-white dark:bg-neutral-900">
+        <slot />
       </div>
+      <div 
+        class="group-hover:opacity-20 absolute inset-0 w-full bg-linear-to-bl to-transparent to-25% rounded-lg opacity-0 transition-opacity duration-300"
+        :class="overlayClass"
+      />
     </div>
   </div>
 </template>
