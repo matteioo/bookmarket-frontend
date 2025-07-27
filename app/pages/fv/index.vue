@@ -5,7 +5,7 @@
       <WidgetsStatisticsSoldBooks />
       <WidgetsStatisticsRevenue />
       <WidgetsStatisticsRevenue class="sm:col-span-2 sm:row-span-2" />
-      <WidgetsStatisticsRevenue />
+      <WidgetsStatisticsOffers />
       <WidgetsStatisticsSoldBooks />
       <!-- Widgets: Meistgesucht, Meistverkauft -->
     </div>
