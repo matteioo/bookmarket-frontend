@@ -1,5 +1,5 @@
 <template>
-  <WidgetsTemplate color="sky">
+  <WidgetsTemplate color="sky" icon="i-lucide-book-check">
     <div class="flex flex-col gap-2">
       <div class="flex flex-row gap-2 font-semibold">
         <h2 class="text-neutral-700 dark:text-neutral-300">Verkaufte Bücher</h2>
