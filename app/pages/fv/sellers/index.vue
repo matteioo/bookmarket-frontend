@@ -42,7 +42,7 @@
       </UTable>
       <FormSellerEdit v-model="editSellerModal" :initial-seller="editSellerData" :on-submit="onEditSeller" />
     </div>
-    <div class="w-full flex flex-row justify-between text-neutral-700 dark:text-neutral-300">
+    <div class="w-full flex flex-col-reverse sm:flex-row items-center justify-between gap-y-4 text-neutral-700 dark:text-neutral-300">
       <div class="inline-flex items-center gap-x-2">
         <div>Seitengröße</div>
         <USelect v-model="itemsPerPage" :items="pageSizes" />
