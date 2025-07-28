@@ -17,7 +17,7 @@
         :columns="columns"
         :ui="{ tr: 'group' }">
         <template #actions-cell="{ row }">
-          <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div class="float-end lg:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <UButtonGroup orientation="horizontal" class="shadow-none">
               <UButton icon="i-heroicons-information-circle" color="info" variant="ghost" :to="`/fv/sellers/${row.original.id}`" />
               <UButton icon="i-heroicons-pencil-square" color="primary" variant="ghost" @click="openModal(row.original)" />

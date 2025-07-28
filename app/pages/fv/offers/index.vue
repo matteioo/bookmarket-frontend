@@ -105,7 +105,7 @@
         </template>
 
         <template #actions-cell="{ row }">
-          <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div class="float-end lg:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <UButtonGroup orientation="horizontal" class="shadow-none">
               <UButton icon="i-heroicons-banknotes" variant="ghost" :color="row.getValue('active') ? 'primary' : 'neutral'"  :to="`/fv/sell/${row.getValue('id')}`" :disabled="!row.getValue('active')" />
               <UButton icon="i-lucide-book" variant="ghost" color="secondary"  :to="`/fv/books/${row.original.book.isbn}`" />
