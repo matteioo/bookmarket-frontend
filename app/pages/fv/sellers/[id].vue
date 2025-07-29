@@ -28,15 +28,15 @@
     
     <div class="grow flex flex-col gap-y-4 w-full max-w-(--breakpoint-lg) mx-auto">
       <section>
-        <div class="flex flex-col sm:flex-row items-end sm:items-start justify-between gap-2">
+        <div class="flex flex-col sm:flex-row justify-between gap-2">
           <div class="inline-flex items-center gap-x-2">
-            <h1 class="flex-grow text-xl md:text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Verkäufer:in &middot; {{ seller?.fullName }}</h1>
+            <h1 class="text-xl md:text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Verkäufer:in &middot; {{ seller?.fullName }}</h1>
             <UButton icon="i-heroicons-pencil-square-solid" square variant="ghost" @click="editSellerModal = true" />
             <FormSellerEdit v-if="seller" v-model="editSellerModal" :initial-seller="seller" :on-submit="onEditSeller" />
           </div>
-          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-lucide-history" @click="editHistoryModal = true" />
+          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-lucide-history" class="self-end" @click="editHistoryModal = true" />
         </div>
-        <div class="grid sm:grid-cols-3">
+        <div class="mt-2 grid sm:grid-cols-3">
           <DataLabel label="Matrikelnummer" :data="seller?.matriculationNumber" />
           <DataLabel label="E-Mail" :data="seller?.email" class="sm:col-span-2" />
           <DataLabel label="Anmerkungen" :data="seller?.note" :multi-line="true" />

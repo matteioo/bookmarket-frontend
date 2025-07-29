@@ -27,15 +27,15 @@
     
     <div class="grow flex flex-col gap-y-4 w-full max-w-(--breakpoint-lg) mx-auto">
       <section>
-        <div class="flex flex-col sm:flex-row items-end sm:items-start justify-between gap-2">
+        <div class="flex flex-col sm:flex-row justify-between gap-2">
           <div class="inline-flex items-start gap-x-2">
-            <h1 class="flex-grow text-xl md:text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">{{ book?.title }}</h1>
+            <h1 class="text-xl md:text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">{{ book?.title }}</h1>
             <UButton icon="i-heroicons-pencil-square-solid" square variant="ghost" @click="editSellerModal = true" />
             <FormBookEdit v-if="book" v-model="editSellerModal" :initial-book="book" :on-submit="onEditSeller" />
           </div>
-          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-lucide-history" @click="editHistoryModal = true" />
+          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-lucide-history" class="self-end" @click="editHistoryModal = true" />
         </div>
-        <div class="mt-4 grid grid-cols-4">
+        <div class="mt-2 grid grid-cols-4">
           <DataLabel multi-line label="Autor" :data="book?.authors" class="col-span-4" />
           <DataLabel multi-line label="Verlag" :data="book?.publisher" class="col-span-4 lg:col-span-2" />
           <DataLabel multi-line label="Prüfung" :data="book?.exam?.name" class="col-span-4 lg:col-span-2" />
