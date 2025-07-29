@@ -16,7 +16,7 @@
       <UTextarea v-model="state.note" autoresize :maxrows="5" placeholder="Anmerkung über Verkäufer:in" class="w-full" />
     </UFormField>
 
-    <UButton type="submit" class="float-right" :loading="loading" :variant="(props.buttonVariant as ButtonVariant)">
+    <UButton block type="submit" class="float-right sm:w-auto" :loading="loading" :variant="(props.buttonVariant as ButtonVariant)">
       {{ props.buttonContent }}
     </UButton>
   </UForm>
