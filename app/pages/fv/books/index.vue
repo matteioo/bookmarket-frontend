@@ -44,7 +44,7 @@
         <template #actions-cell="{ row }">
           <div class="float-end lg:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <UButtonGroup orientation="horizontal" class="shadow-none">
-              <UButton icon="i-heroicons-list-bullet" variant="ghost" color="primary" :to="`/fv/books/${row.getValue('isbn')}`" />
+              <UButton icon="i-lucide-info" variant="ghost" color="info" :to="`/fv/books/${row.getValue('isbn')}`" />
             </UButtonGroup>
           </div>
         </template>
