@@ -33,9 +33,9 @@
       </UFormField>
     </div>
 
-    <div class="w-full mt-2 flex flex-row justify-end gap-x-2">
-      <UButton color="primary" variant="outline" label="Zurücksetzen" @click="clearForm" />
-      <UButton type="submit" class="float-right" :loading="loading" variant="solid" label="Anlegen" />
+    <div class="w-full mt-8 flex flex-col sm:flex-row sm:justify-end gap-2">
+      <UButton color="primary" variant="outline" label="Zurücksetzen" block class="md:w-auto" @click="clearForm" />
+      <UButton type="submit" :loading="loading" block variant="solid" class="md:w-auto" label="Anlegen" />
     </div>
   </UForm>
 </template>
