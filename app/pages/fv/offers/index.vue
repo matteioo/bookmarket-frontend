@@ -1,6 +1,6 @@
 <template>
   <div class="grow flex flex-col items-center gap-y-4 w-full mx-auto">
-    <div class="w-full inline-flex flex-row justify-between">
+    <div class="w-full inline-flex flex-row justify-between gap-x-2">
       <UInput v-model="searchInput" placeholder="Suchen..." />
       <div class="inline-flex gap-x-4">
         <UPopover mode="hover" :content="{ align: 'end', side: 'bottom' }">

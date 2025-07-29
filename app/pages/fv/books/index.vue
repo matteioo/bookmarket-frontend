@@ -1,6 +1,6 @@
 <template>
   <div class="grow flex flex-col items-center gap-y-4 w-full mx-auto">
-    <div class="w-full inline-flex flex-row justify-between">
+    <div class="w-full inline-flex flex-row justify-between gap-x-2">
       <UInput v-model="searchInput" placeholder="Suchen..." />
       <UButton color="primary" label="Hinzufügen" trailing-icon="i-heroicons-plus" to="/fv/books/create" />
     </div>
