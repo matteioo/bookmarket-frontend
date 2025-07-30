@@ -114,7 +114,7 @@
         </div>
       </div>
     </section>
-    <div class="md:hidden mt-4 sticky bottom-2 w-full p-2 sm:p-4 flex flex-col gap-y-4 rounded-md border border-neutral-800 bg-neutral-900/50 backdrop-blur-md">
+    <div class="md:hidden mt-4 sticky bottom-2 w-full p-2 sm:p-4 flex flex-col gap-y-2 rounded-md border border-neutral-800 bg-neutral-900/50 backdrop-blur-md">
       <div class="flex flex-row justify-between items-center">
         <div class="flex items-center gap-x-4">
           <UIcon name="i-lucide-shopping-basket" class="w-10 h-10 text-neutral-400" />
@@ -123,25 +123,28 @@
             <div><span class="hidden sm:inline">Gesamtpreis: </span><b>{{ selectedOfferPrice }}</b></div>
           </div>
         </div>
-        <!-- <UButton
-          color="primary"
-          variant="solid"
-          label="Verkaufen"
-          :disabled="addedOffers.length === 0 || !addedOffersActive || updatingAddedOffers"
-          @click="confirmModalOpen = true"
-        /> -->
         <UButton
           color="primary"
-          variant="solid"
+          variant="subtle"
           :label="showAddedOffers ? 'Angebote verbergen' : 'Angebote anzeigen'"
           :disabled="addedOffers.length === 0 || !addedOffersActive || updatingAddedOffers"
           @click="showAddedOffers = !showAddedOffers"
         />
       </div>
-      <div v-if="showAddedOffers" class="max-h-40 overflow-scroll">
-        <div v-for="(offer, index) in addedOffers" :key="offer.id">
-          <CheckoutOfferItemSell v-if="addedOffers[index]" v-model="addedOffers[index]" @delete-item="removeOffer" />
+      <div v-if="showAddedOffers">
+        <div class="max-h-52 overflow-scroll">
+          <div v-for="(offer, index) in addedOffers" :key="offer.id">
+            <CheckoutOfferItemSell v-if="addedOffers[index]" v-model="addedOffers[index]" @delete-item="removeOffer" />
+          </div>
         </div>
+        <UButton
+          color="primary"
+          variant="solid"
+          label="Verkaufen"
+          block
+          :disabled="addedOffers.length === 0 || !addedOffersActive || updatingAddedOffers"
+          @click="confirmModalOpen = true"
+        />
       </div>
     </div>
   </div>
