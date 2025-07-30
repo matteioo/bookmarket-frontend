@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full max-w-(--breakpoint-lg) mx-auto">
+  <div class="grow w-full flex flex-col max-w-(--breakpoint-lg) mx-auto">
     <h1 class="text-center text-xl uppercase text-primary-600 dark:text-primary-400 tracking-wider">Bücher verkaufen</h1>
 
-    <section class="mt-8 flex flex-row gap-x-8">
+    <section class="grow mt-8 flex flex-row gap-x-8">
       <!-- left side -->
-      <aside class="shrink-0 w-80">
+      <aside class="shrink-0 w-full sm:w-96 md:w-80 mx-auto">
         <div class="sticky w-full h-fit top-4">
           <div>
             <UButtonGroup orientation="horizontal" class="w-full">
@@ -44,7 +44,7 @@
         </div>
       </aside>
       <!-- right side -->
-      <div class="grow">
+      <div class="grow hidden md:block">
         <div v-if="addedOffers.length !== 0" class="flex grow flex-col gap-y-4">
           <div v-for="(offer, index) in addedOffers" :key="offer.id">
             <CheckoutOfferItemSell v-if="addedOffers[index]" v-model="addedOffers[index]" @delete-item="removeOffer" />
@@ -114,6 +114,36 @@
         </div>
       </div>
     </section>
+    <div class="md:hidden mt-4 sticky bottom-2 w-full p-2 sm:p-4 flex flex-col gap-y-4 rounded-md border border-neutral-800 bg-neutral-900/50 backdrop-blur-md">
+      <div class="flex flex-row justify-between items-center">
+        <div class="flex items-center gap-x-4">
+          <UIcon name="i-lucide-shopping-basket" class="w-10 h-10 text-neutral-400" />
+          <div>
+            <div><span class="hidden sm:inline">Ausgewählte Angebote: </span>{{ offerCount }}</div>
+            <div><span class="hidden sm:inline">Gesamtpreis: </span><b>{{ selectedOfferPrice }}</b></div>
+          </div>
+        </div>
+        <!-- <UButton
+          color="primary"
+          variant="solid"
+          label="Verkaufen"
+          :disabled="addedOffers.length === 0 || !addedOffersActive || updatingAddedOffers"
+          @click="confirmModalOpen = true"
+        /> -->
+        <UButton
+          color="primary"
+          variant="solid"
+          :label="showAddedOffers ? 'Angebote verbergen' : 'Angebote anzeigen'"
+          :disabled="addedOffers.length === 0 || !addedOffersActive || updatingAddedOffers"
+          @click="showAddedOffers = !showAddedOffers"
+        />
+      </div>
+      <div v-if="showAddedOffers" class="max-h-40 overflow-scroll">
+        <div v-for="(offer, index) in addedOffers" :key="offer.id">
+          <CheckoutOfferItemSell v-if="addedOffers[index]" v-model="addedOffers[index]" @delete-item="removeOffer" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -138,6 +168,7 @@ const confirmModalOpen = ref<boolean>(false)
 const errorMsg = ref<string | null>(null)
 const loadingCheckout = ref<boolean>(false)
 const updatingAddedOffers = ref<boolean>(false)
+const showAddedOffers = ref<boolean>(false)
 
 const offerId = Array.isArray(route.params.offerId) ? route.params.offerId[0] : route.params.offerId
 const state = reactive({
