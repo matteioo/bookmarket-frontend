@@ -223,6 +223,8 @@ async function searchOffer () {
       errorMsg.value = 'Angebot ist nicht aktiv!'
       state.offerId = ''
       selectedOffer.value = null
+    } else {
+      showAddedOffers.value = false // Relevant for mobile screen
     }
   } catch {
     selectedOffer.value = null
