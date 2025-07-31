@@ -152,6 +152,7 @@
 
 <script setup lang="ts">
 import type { Offer } from '~/interfaces/Offer'
+import type { FetchError } from 'ofetch'
 import { formatPrice } from '~/utils/utils'
 
 useSeoMeta({
@@ -226,9 +227,15 @@ async function searchOffer () {
     } else {
       showAddedOffers.value = false // Relevant for mobile screen
     }
-  } catch {
+  } catch (error) {
+    const fetchError = error as FetchError
+
     selectedOffer.value = null
-    console.error('Failed to fetch offer')
+    if (fetchError.statusCode === 404) {
+      errorMsg.value = 'Angebot nicht gefunden!'
+    } else {
+      errorMsg.value = 'Fehler beim Laden des Angebots!'
+    }
   }
 
   loadingOffer.value = false
