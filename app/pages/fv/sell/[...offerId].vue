@@ -114,26 +114,40 @@
         </div>
       </div>
     </section>
-    <div class="md:hidden mt-4 sticky bottom-4 w-full p-2 sm:p-4 flex flex-col gap-y-2 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-md">
+    <div
+      class="md:hidden mt-4 sticky bottom-4 w-full p-2 sm:p-4 flex flex-col gap-y-2 rounded-md border backdrop-blur-md"
+      :class="addedOffersActive ? 'border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50' : 'border-orange-200 dark:border-orange-800 bg-orange-50/35 dark:bg-orange-900/25'"
+    >
       <div class="flex flex-row justify-between items-center">
         <div class="flex items-center gap-x-4">
-          <UIcon name="i-lucide-shopping-basket" class="w-10 h-10 text-neutral-400" />
+          <UIcon
+            name="i-lucide-shopping-basket"
+            class="w-10 h-10"
+            :class="addedOffersActive ? 'text-neutral-400 dark:text-neutral-600' : 'text-orange-400 dark:text-orange-500'"
+          />
           <div>
-            <div><span class="hidden sm:inline">Ausgewählte Angebote: </span>{{ offerCount }}</div>
-            <div><span class="hidden sm:inline">Gesamtpreis: </span><b>{{ selectedOfferPrice }}</b></div>
+            <div :class="addedOffersActive ? 'text-neutral-700 dark:text-neutral-300' : 'text-orange-700 dark:text-orange-300'">
+              <span class="hidden sm:inline">Ausgewählte Angebote: </span>{{ offerCount }}
+            </div>
+            <div :class="addedOffersActive ? 'text-neutral-700 dark:text-neutral-300' : 'text-orange-700 dark:text-orange-300'">
+              <span class="hidden sm:inline">Gesamtpreis: </span><b>{{ selectedOfferPrice }}</b>
+            </div>
           </div>
         </div>
         <UButton
-          color="primary"
           variant="subtle"
+          :color="addedOffersActive ? 'primary' : 'error'"
           :label="showAddedOffers ? 'Angebote verbergen' : 'Angebote anzeigen'"
-          :disabled="addedOffers.length === 0 || !addedOffersActive || updatingAddedOffers"
+          :disabled="addedOffers.length === 0 || updatingAddedOffers"
           @click="showAddedOffers = !showAddedOffers"
         />
       </div>
-      <div v-if="showAddedOffers">
-        <div class="max-h-52 overflow-scroll">
-          <div v-for="(offer, index) in addedOffers" :key="offer.id">
+      <div 
+        class="transition-all duration-300 ease-in-out overflow-hidden"
+        :class="showAddedOffers ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'"
+      >
+        <div class="max-h-52 overflow-y-scroll">
+          <div v-for="(offer, index) in addedOffers" :key="offer.id" class="mb-2">
             <CheckoutOfferItemSell v-if="addedOffers[index]" v-model="addedOffers[index]" @delete-item="removeOffer" />
           </div>
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="animate-fly-in group rounded-sm overflow-hidden" :class="{ 'hover:bg-white dark:hover:bg-neutral-900': isActive, 'border border-orange-300 dark:border-orange-600 bg-orange-50/50 hover:bg-orange-50/25 dark:bg-orange-950/25 dark:hover:bg-orange-950/50': !isActive }">
+  <div class="md:animate-fly-in group rounded-sm overflow-hidden" :class="{ 'hover:bg-white dark:hover:bg-neutral-900': isActive, 'border border-orange-300 dark:border-orange-600 bg-orange-50/50 hover:bg-orange-50/25 dark:bg-orange-950/25 dark:hover:bg-orange-950/50': !isActive }">
     <div class="flex flex-row">
       <div class="grow grid grid-cols-1 lg:grid-cols-12 p-2 gap-x-2 gap-y-1">
         <DataLabel multi-line label="Titel" :data="props.modelValue.book.title" class="col-span-7" />
