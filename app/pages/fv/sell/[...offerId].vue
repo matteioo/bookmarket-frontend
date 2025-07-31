@@ -1,5 +1,5 @@
 <template>
-  <div class="grow w-full flex flex-col max-w-(--breakpoint-lg) mx-auto">
+  <div class="grow w-full flex flex-col max-w-(--breakpoint-xl) mx-auto">
     <h1 class="text-center text-xl uppercase text-primary-600 dark:text-primary-400 tracking-wider">Bücher verkaufen</h1>
 
     <section class="grow mt-8 flex flex-row gap-x-8">
@@ -17,13 +17,13 @@
           </div>
           <div v-if="selectedOffer && selectedOffer.active && !isIdInvalid" class="w-full mt-4">
             <div class="grid grid-cols-6 gap-2">
-              <DataLabel label="Titel" :data="selectedOffer.book.title" class="col-span-6" />
+              <DataLabel multi-line label="Titel" :data="selectedOffer.book.title" class="col-span-6" />
               <DataLabel label="ISBN" :data="selectedOffer.book.isbn" class="col-span-3" />
               <DataLabel label="Auflage" :data="String(selectedOffer.book.edition)" class="col-span-1" />
               <DataLabel label="Max. Preis" :data="formatPrice(selectedOffer.book.maxPrice)" class="col-span-2" />
-              <DataLabel label="Autoren" :data="selectedOffer.book.authors" class="col-span-6" />
-              <DataLabel label="Verlag" :data="selectedOffer.book.publisher" class="col-span-6" />
-              <DataLabel label="Zugehörige Prüfung" :data="selectedOffer.book.exam?.name" class="col-span-6" />
+              <DataLabel multi-line label="Autoren" :data="selectedOffer.book.authors" class="col-span-6" />
+              <DataLabel multi-line label="Verlag" :data="selectedOffer.book.publisher" class="col-span-6" />
+              <DataLabel multi-line label="Zugehörige Prüfung" :data="selectedOffer.book.exam?.name" class="col-span-6" />
               <USeparator class="col-span-6" label="Angebotdetails" />
               <DataLabel label="Verkäufer" :data="`${selectedOffer.seller.fullName}`" class="col-span-6" />
               <DataLabel label="Markiert" :data="selectedOffer.marked ? 'Ja' : 'Nein'" class="col-span-2" />
@@ -114,7 +114,7 @@
         </div>
       </div>
     </section>
-    <div class="md:hidden mt-4 sticky bottom-2 w-full p-2 sm:p-4 flex flex-col gap-y-2 rounded-md border border-neutral-800 bg-neutral-900/50 backdrop-blur-md">
+    <div class="md:hidden mt-4 sticky bottom-4 w-full p-2 sm:p-4 flex flex-col gap-y-2 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-md">
       <div class="flex flex-row justify-between items-center">
         <div class="flex items-center gap-x-4">
           <UIcon name="i-lucide-shopping-basket" class="w-10 h-10 text-neutral-400" />

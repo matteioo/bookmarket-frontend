@@ -2,8 +2,8 @@
   <div class="animate-fly-in group rounded-sm overflow-hidden" :class="{ 'hover:bg-white dark:hover:bg-neutral-900': isActive, 'border border-orange-300 dark:border-orange-600 bg-orange-50/50 hover:bg-orange-50/25 dark:bg-orange-950/25 dark:hover:bg-orange-950/50': !isActive }">
     <div class="flex flex-row">
       <div class="grow grid grid-cols-1 lg:grid-cols-12 p-2 gap-x-2 gap-y-1">
-        <DataLabel label="Titel" :data="props.modelValue.book.title" class="col-span-7" />
-        <DataLabel label="Autoren" :data="props.modelValue.book.authors" class="col-span-5" />
+        <DataLabel multi-line label="Titel" :data="props.modelValue.book.title" class="col-span-7" />
+        <DataLabel multi-line label="Autoren" :data="props.modelValue.book.authors" class="col-span-5" />
         <DataLabel label="ISBN" :data="props.modelValue.book.isbn" class="col-span-3" />
         <DataLabel label="Auflage" :data="String(props.modelValue.book.edition)" class="col-span-2" />
         <DataLabel label="Angebot-ID" :data="String(props.modelValue.id)" class="col-span-3" />
