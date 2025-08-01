@@ -4,7 +4,7 @@
       <div class="max-w-3xl mx-auto flex flex-col justify-items-stretch gap-y-2">
         <UInput
           v-model="searchQuery"
-          size="lg"
+          size="xl"
           name="q"
           placeholder="Suche nach ISBN, Titel, Autor, ..."
           autocomplete="off"
