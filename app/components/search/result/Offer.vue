@@ -26,18 +26,18 @@
 
   <UModal v-model:open="modalOpen" :ui="{ content: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl'}">
     <template #content>
-      <div class="p-4 grid grid-cols-6">
-        <h2 class="mb-2 col-span-6 block font-semibold text-neutral-800 dark:text-neutral-200">{{ offer.book.title }}</h2>
-        <DataLabel class="col-span-6" label="Autoren" :multi-line="true" :data="offer.book.authors" />
-        <DataLabel class="col-span-1" label="Auflage" :data="String(offer.book.edition)" />
-        <DataLabel class="col-span-3" label="Verlag" :data="offer.book.publisher" />
+      <div class="p-4 grid grid-cols-3 sm:grid-cols-6">
+        <h2 class="mb-2 col-span-3 sm:col-span-6 block font-semibold text-neutral-800 dark:text-neutral-200">{{ offer.book.title }}</h2>
+        <DataLabel multi-line class="col-span-3 sm:col-span-6" label="Autoren" :data="offer.book.authors" />
+        <DataLabel multi-line class="col-span-3" label="Verlag" :data="offer.book.publisher" />
         <DataLabel class="col-span-2" label="ISBN" :data="offer.book.isbn" />
-        <DataLabel label="Prüfung" :data="offer.book.exam?.name" />
-        <USeparator class="col-span-6 py-2" label="Angebotdetails" />
+        <DataLabel class="col-span-1" label="Auflage" :data="String(offer.book.edition)" />
+        <DataLabel multi-line class="col-span-3" label="Prüfung" :data="offer.book.exam?.name" />
+        <USeparator class="col-span-3 sm:col-span-6 py-2" label="Angebotdetails" />
         <DataLabel class="col-span-1" label="Angebots-ID" :data="String(offer.id)" />
         <DataLabel class="col-span-1" label="Markiert" :data="offer.marked ? 'Ja' : 'Nein'" />
         <DataLabel class="col-span-1" label="Ort" :data="offer.location" />
-        <DataLabelSlotted class="col-span-3" label="Verkäufer">
+        <DataLabelSlotted class="col-span-3" label="Verkäufer:in">
           <ULink
             :to="`/fv/sellers/${offer.seller.id}`"
             class="inline-flex flex-row gap-x-1 items-center text-neutral-700 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-400"
