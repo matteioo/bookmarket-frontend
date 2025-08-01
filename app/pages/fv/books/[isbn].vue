@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-16">
+  <div class="md:mt-16">
     <UModal v-model:open="editHistoryModal">
       <template #content>
         <div class="p-4">
@@ -27,28 +27,28 @@
     
     <div class="grow flex flex-col gap-y-4 w-full max-w-(--breakpoint-lg) mx-auto">
       <section>
-        <div class="flex items-start justify-between gap-x-2">
+        <div class="flex flex-col sm:flex-row justify-between gap-2">
           <div class="inline-flex items-start gap-x-2">
-            <h1 class="text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">{{ book?.title }}</h1>
+            <h1 class="text-xl md:text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">{{ book?.title }}</h1>
             <UButton icon="i-heroicons-pencil-square-solid" square variant="ghost" @click="editSellerModal = true" />
             <FormBookEdit v-if="book" v-model="editSellerModal" :initial-book="book" :on-submit="onEditSeller" />
           </div>
-          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-heroicons-rectangle-stack" @click="editHistoryModal = true" />
+          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-lucide-history" class="self-end" @click="editHistoryModal = true" />
         </div>
-        <div class="grid grid-cols-2">
-          <DataLabel label="Autor" :data="book?.authors" />
-          <DataLabel label="Auflage" :data="String(book?.edition)" />
-          <DataLabel label="Verlag" :data="book?.publisher" />
-          <DataLabel label="ISBN" :data="book?.isbn" />
-          <DataLabel label="Prüfung" :data="book?.exam?.name" />
-          <DataLabel label="Max. Preis" :data="book?.maxPrice ? formatPrice(book?.maxPrice) : 'NaN'" />
+        <div class="mt-2 grid grid-cols-4">
+          <DataLabel multi-line label="Autor" :data="book?.authors" class="col-span-4" />
+          <DataLabel multi-line label="Verlag" :data="book?.publisher" class="col-span-4 lg:col-span-2" />
+          <DataLabel multi-line label="Prüfung" :data="book?.exam?.name" class="col-span-4 lg:col-span-2" />
+          <DataLabel multi-line label="ISBN" :data="book?.isbn" class="col-span-4 sm:col-span-2" />
+          <DataLabel multi-line label="Auflage" :data="String(book?.edition)" class="col-span-2 sm:col-span-1" />
+          <DataLabel label="Max. Preis" :data="book?.maxPrice ? formatPrice(book?.maxPrice) : 'NaN'" class="col-span-2 sm:col-span-1" />
         </div>
       </section>
       <section class="flex flex-col gap-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-x-2">
-            <h2 class="text-xl font-medium text-primary-800 dark:text-primary-200">Angebote</h2>
-            <UBadge v-if="offers?.count" color="primary" variant="subtle" size="md">{{ offers?.count }}</UBadge>
+        <div class="flex items-center justify-between gap-x-2">
+          <div class="flex items-center gap-x-1 sm:gap-x-2">
+            <h2 class="sm:text-xl font-medium text-primary-800 dark:text-primary-200">Angebote</h2>
+            <UBadge color="primary" variant="subtle" size="md">{{ offers?.count ?? 0 }}</UBadge>
           </div>
           <div class="flex items-center gap-x-2">
             <ClientOnly>
@@ -174,7 +174,7 @@
             </template>
           </UTable>
         </div>
-        <div class="w-full flex flex-row justify-between text-neutral-700 dark:text-neutral-300">
+        <div class="w-full flex flex-col-reverse sm:flex-row items-center justify-between gap-y-4 text-neutral-700 dark:text-neutral-300">
           <div class="inline-flex items-center gap-x-2">
             <div>Seitengröße</div>
             <USelect v-model="itemsPerPage" :items="pageSizes" />

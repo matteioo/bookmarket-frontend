@@ -1,6 +1,6 @@
 <template>
   <div class="grow flex flex-col items-center gap-y-4 w-full mx-auto">
-    <div class="w-full inline-flex flex-row justify-between">
+    <div class="w-full inline-flex flex-row justify-between gap-x-2">
       <UInput v-model="searchInput" placeholder="Suchen..." />
       <UButton color="primary" label="Hinzufügen" trailing-icon="i-heroicons-plus" to="/fv/books/create" />
     </div>
@@ -42,9 +42,9 @@
         :ui="{ tr: 'group' }"
       >
         <template #actions-cell="{ row }">
-          <div class="float-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div class="float-end lg:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <UButtonGroup orientation="horizontal" class="shadow-none">
-              <UButton icon="i-heroicons-list-bullet" variant="ghost" color="primary" :to="`/fv/books/${row.getValue('isbn')}`" />
+              <UButton icon="i-lucide-info" variant="ghost" color="info" :to="`/fv/books/${row.getValue('isbn')}`" />
             </UButtonGroup>
           </div>
         </template>
@@ -64,7 +64,7 @@
         </template>
       </UTable>
     </div>
-    <div class="w-full flex flex-row justify-between text-neutral-700 dark:text-neutral-300">
+    <div class="w-full flex flex-col-reverse sm:flex-row items-center justify-between gap-y-4 text-neutral-700 dark:text-neutral-300">
       <div class="inline-flex items-center gap-x-2">
         <div>Seitengröße</div>
         <USelect v-model="itemsPerPage" :items="pageSizes" />

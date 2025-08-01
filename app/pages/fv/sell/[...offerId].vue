@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full max-w-(--breakpoint-lg) mx-auto">
+  <div class="grow w-full flex flex-col max-w-(--breakpoint-xl) mx-auto">
     <h1 class="text-center text-xl uppercase text-primary-600 dark:text-primary-400 tracking-wider">Bücher verkaufen</h1>
 
-    <section class="mt-8 flex flex-row gap-x-8">
+    <section class="grow mt-8 flex flex-row gap-x-8">
       <!-- left side -->
-      <aside class="shrink-0 w-80">
+      <aside class="shrink-0 w-full sm:w-96 md:w-80 mx-auto">
         <div class="sticky w-full h-fit top-4">
           <div>
             <UButtonGroup orientation="horizontal" class="w-full">
@@ -17,13 +17,13 @@
           </div>
           <div v-if="selectedOffer && selectedOffer.active && !isIdInvalid" class="w-full mt-4">
             <div class="grid grid-cols-6 gap-2">
-              <DataLabel label="Titel" :data="selectedOffer.book.title" class="col-span-6" />
+              <DataLabel multi-line label="Titel" :data="selectedOffer.book.title" class="col-span-6" />
               <DataLabel label="ISBN" :data="selectedOffer.book.isbn" class="col-span-3" />
               <DataLabel label="Auflage" :data="String(selectedOffer.book.edition)" class="col-span-1" />
               <DataLabel label="Max. Preis" :data="formatPrice(selectedOffer.book.maxPrice)" class="col-span-2" />
-              <DataLabel label="Autoren" :data="selectedOffer.book.authors" class="col-span-6" />
-              <DataLabel label="Verlag" :data="selectedOffer.book.publisher" class="col-span-6" />
-              <DataLabel label="Zugehörige Prüfung" :data="selectedOffer.book.exam?.name" class="col-span-6" />
+              <DataLabel multi-line label="Autoren" :data="selectedOffer.book.authors" class="col-span-6" />
+              <DataLabel multi-line label="Verlag" :data="selectedOffer.book.publisher" class="col-span-6" />
+              <DataLabel multi-line label="Zugehörige Prüfung" :data="selectedOffer.book.exam?.name" class="col-span-6" />
               <USeparator class="col-span-6" label="Angebotdetails" />
               <DataLabel label="Verkäufer" :data="`${selectedOffer.seller.fullName}`" class="col-span-6" />
               <DataLabel label="Markiert" :data="selectedOffer.marked ? 'Ja' : 'Nein'" class="col-span-2" />
@@ -44,7 +44,7 @@
         </div>
       </aside>
       <!-- right side -->
-      <div class="grow">
+      <div class="grow hidden md:block">
         <div v-if="addedOffers.length !== 0" class="flex grow flex-col gap-y-4">
           <div v-for="(offer, index) in addedOffers" :key="offer.id">
             <CheckoutOfferItemSell v-if="addedOffers[index]" v-model="addedOffers[index]" @delete-item="removeOffer" />
@@ -114,11 +114,59 @@
         </div>
       </div>
     </section>
+    <div
+      class="md:hidden mt-4 sticky bottom-4 w-full p-2 sm:p-4 flex flex-col gap-y-2 rounded-md border backdrop-blur-md"
+      :class="addedOffersActive ? 'border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50' : 'border-orange-200 dark:border-orange-800 bg-orange-50/35 dark:bg-orange-900/25'"
+    >
+      <div class="flex flex-row justify-between items-center">
+        <div class="flex items-center gap-x-4">
+          <UIcon
+            name="i-lucide-shopping-basket"
+            class="w-10 h-10"
+            :class="addedOffersActive ? 'text-neutral-400 dark:text-neutral-600' : 'text-orange-400 dark:text-orange-500'"
+          />
+          <div>
+            <div :class="addedOffersActive ? 'text-neutral-700 dark:text-neutral-300' : 'text-orange-700 dark:text-orange-300'">
+              <span class="hidden sm:inline">Ausgewählte Angebote: </span>{{ offerCount }}
+            </div>
+            <div :class="addedOffersActive ? 'text-neutral-700 dark:text-neutral-300' : 'text-orange-700 dark:text-orange-300'">
+              <span class="hidden sm:inline">Gesamtpreis: </span><b>{{ selectedOfferPrice }}</b>
+            </div>
+          </div>
+        </div>
+        <UButton
+          variant="subtle"
+          :color="addedOffersActive ? 'primary' : 'error'"
+          :label="showAddedOffers ? 'Angebote verbergen' : 'Angebote anzeigen'"
+          :disabled="addedOffers.length === 0 || updatingAddedOffers"
+          @click="showAddedOffers = !showAddedOffers"
+        />
+      </div>
+      <div 
+        class="transition-all duration-300 ease-in-out overflow-hidden"
+        :class="showAddedOffers ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'"
+      >
+        <div class="max-h-52 overflow-y-scroll">
+          <div v-for="(offer, index) in addedOffers" :key="offer.id" class="mb-2">
+            <CheckoutOfferItemSell v-if="addedOffers[index]" v-model="addedOffers[index]" @delete-item="removeOffer" />
+          </div>
+        </div>
+        <UButton
+          color="primary"
+          variant="solid"
+          label="Verkaufen"
+          block
+          :disabled="addedOffers.length === 0 || !addedOffersActive || updatingAddedOffers"
+          @click="confirmModalOpen = true"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Offer } from '~/interfaces/Offer'
+import type { FetchError } from 'ofetch'
 import { formatPrice } from '~/utils/utils'
 
 useSeoMeta({
@@ -138,6 +186,7 @@ const confirmModalOpen = ref<boolean>(false)
 const errorMsg = ref<string | null>(null)
 const loadingCheckout = ref<boolean>(false)
 const updatingAddedOffers = ref<boolean>(false)
+const showAddedOffers = ref<boolean>(false)
 
 const offerId = Array.isArray(route.params.offerId) ? route.params.offerId[0] : route.params.offerId
 const state = reactive({
@@ -189,10 +238,18 @@ async function searchOffer () {
       errorMsg.value = 'Angebot ist nicht aktiv!'
       state.offerId = ''
       selectedOffer.value = null
+    } else {
+      showAddedOffers.value = false // Relevant for mobile screen
     }
-  } catch {
+  } catch (error) {
+    const fetchError = error as FetchError
+
     selectedOffer.value = null
-    console.error('Failed to fetch offer')
+    if (fetchError.statusCode === 404) {
+      errorMsg.value = 'Angebot nicht gefunden!'
+    } else {
+      errorMsg.value = 'Fehler beim Laden des Angebots!'
+    }
   }
 
   loadingOffer.value = false

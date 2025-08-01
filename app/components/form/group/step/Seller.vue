@@ -29,11 +29,13 @@
           <DataLabel label="Matrikelnr." :data="selected.matriculationNumber" class="col-span-1" />
           <DataLabel label="Email" :data="selected.email" class="col-span-4" />
         </div>
-        <div class="float-right">
+        <div class="mt-4 sm:float-right">
           <UButton
+            block
             color="primary"
             variant="outline"
             label="Weiter"
+            class="sm:w-auto"
             :disabled="!selected"
             @click="handleSearchSubmit"
           />

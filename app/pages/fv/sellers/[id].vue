@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-16">
+  <div class="md:mt-16">
     <UModal v-model:open="editHistoryModal">
       <template #content>
         <div class="p-4">
@@ -28,17 +28,17 @@
     
     <div class="grow flex flex-col gap-y-4 w-full max-w-(--breakpoint-lg) mx-auto">
       <section>
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row justify-between gap-2">
           <div class="inline-flex items-center gap-x-2">
-            <h1 class="text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Verkäufer:in &middot; {{ seller?.fullName }}</h1>
+            <h1 class="text-xl md:text-2xl tracking-wide font-medium text-primary-600 dark:text-primary-400">Verkäufer:in &middot; {{ seller?.fullName }}</h1>
             <UButton icon="i-heroicons-pencil-square-solid" square variant="ghost" @click="editSellerModal = true" />
             <FormSellerEdit v-if="seller" v-model="editSellerModal" :initial-seller="seller" :on-submit="onEditSeller" />
           </div>
-          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-heroicons-rectangle-stack" @click="editHistoryModal = true" />
+          <UButton label="Bearbeitungsverlauf" variant="outline" icon="i-lucide-history" class="self-end" @click="editHistoryModal = true" />
         </div>
-        <div class="grid grid-cols-2">
+        <div class="mt-2 grid sm:grid-cols-3">
           <DataLabel label="Matrikelnummer" :data="seller?.matriculationNumber" />
-          <DataLabel label="E-Mail" :data="seller?.email" />
+          <DataLabel label="E-Mail" :data="seller?.email" class="sm:col-span-2" />
           <DataLabel label="Anmerkungen" :data="seller?.note" :multi-line="true" />
         </div>
       </section>
@@ -46,7 +46,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-x-2">
             <h2 class="text-xl font-medium text-primary-800 dark:text-primary-200">Angebote</h2>
-            <UBadge v-if="sellerOffers?.count" color="primary" variant="subtle" size="md">{{ sellerOffers?.count }}</UBadge>
+            <UBadge color="primary" variant="subtle" size="md">{{ sellerOffers?.count ?? 0 }}</UBadge>
           </div>
           <UInput v-model="searchInput" placeholder="Suchen..." />
         </div>
@@ -134,7 +134,7 @@
             </template>
           </UTable>
         </div>
-        <div class="w-full flex flex-row justify-between text-neutral-700 dark:text-neutral-300">
+        <div class="w-full flex flex-col-reverse sm:flex-row items-center justify-between gap-y-4 text-neutral-700 dark:text-neutral-300">
           <div class="inline-flex items-center gap-x-2">
             <div>Seitengröße</div>
             <USelect v-model="itemsPerPage" :items="pageSizes" />
