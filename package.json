@@ -20,7 +20,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@unovis/ts": "^1.5.2",
     "@unovis/vue": "^1.5.2",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.18",
     "tailwindcss": "^4.1.11",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
